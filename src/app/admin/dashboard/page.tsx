@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useMemo } from 'react';
@@ -44,7 +45,7 @@ const ALL_PENDING_REGISTRATIONS = [
     trade: 'Electrician', 
     session: '2024-26', 
     father: 'Shri Ram Tyagi',
-    dob: '2004-08-12',
+    dob: '12-08-2004',
     mobile: '+91 99887 76655',
     address: 'Village Pilkhani, Saharanpur, UP',
     aadhaar: '1234 5678 9012',
@@ -58,7 +59,7 @@ const ALL_PENDING_REGISTRATIONS = [
     trade: 'HSI', 
     session: '2024-25', 
     father: 'Shri KL Verma',
-    dob: '2005-02-20',
+    dob: '20-02-2005',
     mobile: '+91 88776 65544',
     address: 'Chilkana Road, Saharanpur, UP',
     aadhaar: '9876 5432 1098',
@@ -72,7 +73,7 @@ const ALL_PENDING_REGISTRATIONS = [
     trade: 'Fitter', 
     session: '2023-25', 
     father: 'Shri OP Sharma',
-    dob: '2003-11-05',
+    dob: '05-11-2003',
     mobile: '+91 77665 54433',
     address: 'Nanauta, Saharanpur, UP',
     aadhaar: '5566 7788 9900',

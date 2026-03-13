@@ -8,16 +8,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { User, Phone, MapPin, GraduationCap, Save, ArrowLeft, CreditCard, Calendar } from 'lucide-react';
+import { User, MapPin, GraduationCap, ArrowLeft, CreditCard, Calendar, Lock } from 'lucide-react';
 import Link from 'next/link';
-import { useToast } from '@/hooks/use-toast';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function StudentProfilePage() {
-  const { toast } = useToast();
-  const [isEditing, setIsEditing] = useState(false);
-  
-  const [profile, setProfile] = useState({
+  const [profile] = useState({
     name: 'Rahul Kumar',
     father: 'Shri Suresh Kumar',
     trade: 'Electrician',
@@ -26,18 +22,10 @@ export default function StudentProfilePage() {
     mobile: '+91 98765 43210',
     aadhaar: '1234 5678 9012',
     category: 'OBC',
-    dob: '2002-05-15',
+    dob: '15-05-2002', // Updated to DD-MM-YYYY
     address: 'Near Delhi Road, Saharanpur, UP',
     photo: PlaceHolderImages.find(i => i.id === 'student-1')?.imageUrl
   });
-
-  const handleSave = () => {
-    setIsEditing(false);
-    toast({
-      title: "Profile Updated",
-      description: "Your changes have been saved successfully.",
-    });
-  };
 
   return (
     <main className="min-h-screen bg-muted/30">
@@ -50,9 +38,9 @@ export default function StudentProfilePage() {
                 <ArrowLeft className="w-4 h-4"/> Back to Dashboard
               </Link>
             </Button>
-            <Button onClick={() => isEditing ? handleSave() : setIsEditing(true)} className="gap-2">
-              {isEditing ? <><Save className="w-4 h-4"/> Save Profile</> : <><User className="w-4 h-4"/> Edit Profile</>}
-            </Button>
+            <Badge variant="outline" className="gap-2 border-amber-200 bg-amber-50 text-amber-700 font-bold py-1.5 px-4">
+              <Lock className="w-3 h-3" /> Profile Locked by Admin
+            </Badge>
           </header>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -79,44 +67,38 @@ export default function StudentProfilePage() {
             <Card className="md:col-span-2 border-none shadow-lg">
               <CardHeader>
                 <CardTitle>Academic & Personal Details</CardTitle>
-                <CardDescription>Verified information from your admission record</CardDescription>
+                <CardDescription>Official verified record. Contact admin office to request changes.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label>Full Name</Label>
-                    <Input value={profile.name} readOnly className="bg-muted/50" />
+                    <Label className="text-slate-500">Full Name</Label>
+                    <Input value={profile.name} readOnly className="bg-muted/50 font-bold" />
                   </div>
                   <div className="space-y-2">
-                    <Label>Father's Name</Label>
-                    <Input value={profile.father} readOnly className="bg-muted/50" />
+                    <Label className="text-slate-500">Father's Name</Label>
+                    <Input value={profile.father} readOnly className="bg-muted/50 font-bold" />
                   </div>
                   <div className="space-y-2">
-                    <Label>Mobile Number</Label>
-                    <Input 
-                      value={profile.mobile} 
-                      onChange={e => setProfile({...profile, mobile: e.target.value})} 
-                      readOnly={!isEditing} 
-                      className={!isEditing ? "bg-muted/50" : ""}
-                    />
+                    <Label className="text-slate-500">Mobile Number</Label>
+                    <Input value={profile.mobile} readOnly className="bg-muted/50 font-bold" />
                   </div>
                   <div className="space-y-2">
-                    <Label>Date of Birth</Label>
+                    <Label className="text-slate-500">Date of Birth (DD-MM-YYYY)</Label>
                     <div className="relative">
-                       <Input value={profile.dob} readOnly className="bg-muted/50 pl-9" />
+                       <Input value={profile.dob} readOnly className="bg-muted/50 pl-9 font-bold" />
                        <Calendar className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground" />
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Permanent Address</Label>
+                  <Label className="text-slate-500">Permanent Address</Label>
                   <div className="relative">
                     <Input 
                       value={profile.address} 
-                      onChange={e => setProfile({...profile, address: e.target.value})} 
-                      readOnly={!isEditing} 
-                      className={!isEditing ? "bg-muted/50 pl-9" : "pl-9"}
+                      readOnly 
+                      className="bg-muted/50 pl-9 font-bold"
                     />
                     <MapPin className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground" />
                   </div>
@@ -124,12 +106,12 @@ export default function StudentProfilePage() {
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label>Category</Label>
-                    <Input value={profile.category} readOnly className="bg-muted/50" />
+                    <Label className="text-slate-500">Category</Label>
+                    <Input value={profile.category} readOnly className="bg-muted/50 font-bold" />
                   </div>
                   <div className="space-y-2">
-                    <Label>Academic Year</Label>
-                    <Input value={profile.year} readOnly className="bg-muted/50" />
+                    <Label className="text-slate-500">Academic Year</Label>
+                    <Input value={profile.year} readOnly className="bg-muted/50 font-bold" />
                   </div>
                 </div>
               </CardContent>

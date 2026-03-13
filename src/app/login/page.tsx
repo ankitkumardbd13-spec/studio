@@ -67,14 +67,15 @@ function LoginContent() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">{loginType === 'admin' ? "Password" : "Date of Birth (YYYY-MM-DD)"}</Label>
+              <Label htmlFor="password">{loginType === 'admin' ? "Password" : "Password (DOB Format: DDMMYYYY)"}</Label>
               <Input 
                 id="password" 
                 type={loginType === 'admin' ? "password" : "text"} 
-                placeholder={loginType === 'admin' ? "••••••••" : "2002-05-15"} 
+                placeholder={loginType === 'admin' ? "••••••••" : "15052002"} 
                 required 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                maxLength={loginType === 'admin' ? undefined : 8}
               />
             </div>
 

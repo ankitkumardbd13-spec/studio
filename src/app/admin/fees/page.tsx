@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Search, Filter, CreditCard, Download, Plus, User, History, Printer, X } from 'lucide-react';
+import { Search, Filter, CreditCard, Download, Plus, User, History, Printer, X, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { 
   Dialog, 
@@ -144,7 +144,6 @@ export default function AdminFeesPage() {
 
   const ReceiptCard = ({ payment }: { payment: any }) => (
     <div className="receipt-slip bg-white border-b-2 border-dashed border-slate-400 p-[0.8cm] w-[21cm] h-[9cm] overflow-hidden flex flex-col relative shrink-0 box-border">
-      {/* LOGO ONLY AS WATERMARK */}
       <div className="absolute inset-0 flex items-center justify-center opacity-[0.05] pointer-events-none grayscale">
         {logoUrl && <img src={logoUrl} alt="watermark" className="w-[12cm] h-[12cm] object-contain" />}
       </div>
@@ -211,7 +210,7 @@ export default function AdminFeesPage() {
         <header className="mb-8 flex justify-between items-center">
           <div>
             <h1 className="font-headline text-4xl text-slate-900 font-bold">Fee Management</h1>
-            <p className="text-muted-foreground">Print 3 standard slips (21cm x 9cm) on A4 paper</p>
+            <p className="text-muted-foreground">Manage payments and generate individual receipts (21cm x 9cm)</p>
           </div>
           <div className="flex gap-3">
              <Button onClick={() => setIsStructureOpen(true)} variant="outline" className="gap-2 border-primary text-primary">
@@ -361,7 +360,7 @@ export default function AdminFeesPage() {
                             <TableCell className="font-bold">₹{h.amount}</TableCell>
                             <TableCell className="text-right">
                               <Button variant="ghost" size="sm" className="text-primary gap-1" onClick={() => openReceipt(h)}>
-                                <Printer className="w-3 h-3"/> View Slip
+                                <Printer className="w-3 h-3"/> View Receipt
                               </Button>
                             </TableCell>
                           </TableRow>
@@ -376,22 +375,18 @@ export default function AdminFeesPage() {
         </Dialog>
       </main>
 
-      {/* 3-Slip Container specifically for printing */}
       <Dialog open={isReceiptOpen} onOpenChange={setIsReceiptOpen}>
         <DialogContent className="max-w-[22cm] p-0 border-none bg-transparent shadow-none">
           <div className="bg-white p-6 rounded-xl shadow-2xl print:shadow-none print:p-0 flex flex-col items-center">
              <div className="flex justify-between items-center w-full mb-4 print:hidden">
-               <DialogTitle className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Print Preview (3 Slips on A4)</DialogTitle>
+               <DialogTitle className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Receipt Preview (21cm x 9cm)</DialogTitle>
                <div className="flex gap-2">
                  <Button onClick={handlePrint} size="sm" className="gap-2 bg-primary h-8"><Printer className="w-3 h-3"/> Print Now</Button>
                  <Button onClick={() => setIsReceiptOpen(false)} variant="ghost" size="icon" className="h-8 w-8"><X className="w-4 h-4"/></Button>
                </div>
              </div>
              
-             {/* This wrapper is the only thing visible in print mode */}
              <div id="receipts-wrapper" className="flex flex-col">
-                <ReceiptCard payment={selectedReceipt} />
-                <ReceiptCard payment={selectedReceipt} />
                 <ReceiptCard payment={selectedReceipt} />
              </div>
           </div>
@@ -410,11 +405,9 @@ export default function AdminFeesPage() {
             padding: 0 !important;
             -webkit-print-color-adjust: exact;
           }
-          /* Hide everything by default */
           body * {
             visibility: hidden;
           }
-          /* Show the receipts wrapper and its content */
           #receipts-wrapper, #receipts-wrapper * {
             visibility: visible;
           }
@@ -423,7 +416,7 @@ export default function AdminFeesPage() {
             left: 0 !important;
             top: 0 !important;
             width: 21cm !important;
-            height: 27cm !important;
+            height: auto !important;
             display: flex !important;
             flex-direction: column !important;
             gap: 0 !important;
@@ -438,7 +431,7 @@ export default function AdminFeesPage() {
             display: flex !important;
             flex-direction: column !important;
             page-break-inside: avoid !important;
-            page-break-after: avoid !important;
+            page-break-after: always !important;
             border-bottom: 2px dashed #999 !important;
             box-sizing: border-box !important;
             margin: 0 !important;

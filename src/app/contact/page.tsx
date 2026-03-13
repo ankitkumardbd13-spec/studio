@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -7,11 +8,30 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { MapPin, Phone, Mail, Clock, Send } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useFirestore, useDoc } from '@/firebase';
+import { doc } from 'firebase/firestore';
+import { useMemoFirebase } from '@/firebase/hooks/use-memo-firebase';
 
 export default function ContactPage() {
   const { toast } = useToast();
+  const db = useFirestore();
+  const configQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return doc(db, 'siteSettings', 'config');
+  }, [db]);
+
+  const { data: siteSettings, loading } = useDoc(configQuery);
+
+  const defaultData = {
+    address: 'Village Post Rankhandi, Deoband, Dist Saharanpur, UP, PIN 247554',
+    phone1: '+91 98765 43210',
+    phone2: '+91 12345 67890',
+    email: 'info@mpitisre.edu.in',
+  };
+
+  const data = siteSettings ? { ...defaultData, ...siteSettings } : defaultData;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,6 +41,14 @@ export default function ContactPage() {
     });
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Loader2 className="w-10 h-10 animate-spin text-primary" />
+      </div>
+    );
+  }
+
   return (
     <main className="min-h-screen bg-background">
       <Navbar />
@@ -28,11 +56,10 @@ export default function ContactPage() {
         <div className="max-w-6xl mx-auto">
           <header className="text-center mb-16">
             <h1 className="font-headline text-5xl text-primary font-bold mb-4">Contact Us</h1>
-            <p className="text-muted-foreground text-xl">Get in touch with Maharana Pratap ITI Rankhandi for any queries.</p>
+            <p className="text-muted-foreground text-xl">Get in touch with Maharana Pratap ITI Rankhandi.</p>
           </header>
 
           <div className="grid lg:grid-cols-3 gap-12">
-            {/* Contact Info */}
             <div className="space-y-8 lg:col-span-1">
               <Card className="border-none shadow-lg">
                 <CardContent className="p-6 space-y-6">
@@ -42,7 +69,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <h3 className="font-bold text-lg">Visit Us</h3>
-                      <p className="text-muted-foreground text-sm">Village Post Rankhandi, Deoband, Dist Saharanpur, UP, PIN 247554</p>
+                      <p className="text-muted-foreground text-sm">{data.address}</p>
                     </div>
                   </div>
 
@@ -52,7 +79,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <h3 className="font-bold text-lg">Call Us</h3>
-                      <p className="text-muted-foreground text-sm">+91 98765 43210<br />+91 12345 67890</p>
+                      <p className="text-muted-foreground text-sm">{data.phone1}<br />{data.phone2}</p>
                     </div>
                   </div>
 
@@ -62,7 +89,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <h3 className="font-bold text-lg">Email Us</h3>
-                      <p className="text-muted-foreground text-sm">info@mpitisre.edu.in</p>
+                      <p className="text-muted-foreground text-sm">{data.email}</p>
                     </div>
                   </div>
 
@@ -79,7 +106,6 @@ export default function ContactPage() {
               </Card>
             </div>
 
-            {/* Contact Form */}
             <Card className="lg:col-span-2 border-none shadow-2xl">
               <CardHeader className="bg-primary text-primary-foreground rounded-t-lg">
                 <CardTitle className="text-2xl font-headline">Send a Message</CardTitle>
@@ -95,14 +121,6 @@ export default function ContactPage() {
                     <div className="space-y-2">
                       <Label htmlFor="email">Email Address</Label>
                       <Input id="email" type="email" placeholder="john@example.com" required />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="phone">Phone Number</Label>
-                      <Input id="phone" type="tel" placeholder="+91" required />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="subject">Subject</Label>
-                      <Input id="subject" placeholder="Admission Query" required />
                     </div>
                   </div>
                   <div className="space-y-2">

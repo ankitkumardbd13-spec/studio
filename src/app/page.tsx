@@ -50,10 +50,10 @@ export default function Home() {
           </p>
           <div className="mt-8 flex gap-4">
             <Button size="lg" asChild className="bg-secondary hover:bg-secondary/90 text-white border-none">
-              <Link href="/admission">Admission 2024 Open</Link>
+              <Link href="/signup">Admission 2024 Open</Link>
             </Button>
             <Button size="lg" variant="outline" asChild className="bg-white/10 text-white border-white hover:bg-white/20">
-              <Link href="/courses">Explore Courses</Link>
+              <Link href="/login">Student Portal</Link>
             </Button>
           </div>
         </div>
@@ -91,7 +91,6 @@ export default function Home() {
           </div>
         </div>
         <div className="bg-muted rounded-2xl overflow-hidden aspect-video relative">
-          {/* Mock Google Map or Location Image */}
           <div className="absolute inset-0 flex items-center justify-center bg-primary/10">
              <MapPin className="w-20 h-20 text-primary opacity-20" />
           </div>
@@ -187,10 +186,9 @@ export default function Home() {
           <h2 className="font-headline text-3xl mb-4">Maharana Pratap ITI Saharanpur</h2>
           <p className="opacity-80 mb-8">Empowering Skills, Enabling Futures.</p>
           <div className="flex justify-center gap-6 mb-8">
-             <Link href="/about" className="hover:underline">About Us</Link>
+             <Link href="/" className="hover:underline">Home</Link>
              <Link href="/contact" className="hover:underline">Contact</Link>
-             <Link href="/admission" className="hover:underline">Admissions</Link>
-             <Link href="/syllabus" className="hover:underline">Syllabus</Link>
+             <Link href="/signup" className="hover:underline">Admissions</Link>
           </div>
           <p className="text-sm opacity-60">© 2024 MPITI Saharanpur Connect. All Rights Reserved.</p>
         </div>

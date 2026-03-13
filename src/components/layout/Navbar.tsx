@@ -11,7 +11,8 @@ import {
   Phone, 
   FileText, 
   ClipboardList,
-  GraduationCap
+  GraduationCap,
+  UserPlus
 } from 'lucide-react';
 import {
   Sheet,
@@ -33,13 +34,24 @@ export function Navbar() {
 
         <div className="hidden lg:flex items-center gap-8">
           <Link href="/" className="text-sm font-medium hover:text-primary transition-colors">Home</Link>
-          <Link href="/syllabus" className="text-sm font-medium hover:text-primary transition-colors">Trade Syllabus</Link>
-          <Link href="/mock-tests" className="text-sm font-medium hover:text-primary transition-colors">Mock Tests</Link>
-          <Link href="/admission" className="text-sm font-medium hover:text-primary transition-colors">Admission Form</Link>
+          <Link href="/signup" className="text-sm font-medium hover:text-primary transition-colors">Admission Form</Link>
           <Link href="/contact" className="text-sm font-medium hover:text-primary transition-colors">Contact</Link>
+          <Separator orientation="vertical" className="h-6" />
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" asChild size="sm">
+              <Link href="/login" className="gap-2">
+                <LogIn className="w-4 h-4" /> Student Login
+              </Link>
+            </Button>
+            <Button asChild size="sm" className="bg-secondary hover:bg-secondary/90 text-white">
+              <Link href="/signup" className="gap-2">
+                <UserPlus className="w-4 h-4" /> Registration
+              </Link>
+            </Button>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="lg:hidden flex items-center gap-2">
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
@@ -52,18 +64,18 @@ export function Navbar() {
               </SheetHeader>
               <div className="mt-8 space-y-6">
                 <div>
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Login Options</h3>
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Student Portal</h3>
                   <div className="grid grid-cols-1 gap-2">
                     <Button asChild variant="outline" className="justify-start gap-3">
                       <Link href="/login?type=student">
                         <GraduationCap className="w-4 h-4" />
-                        Student Login
+                        Portal Login
                       </Link>
                     </Button>
                     <Button asChild variant="outline" className="justify-start gap-3">
                       <Link href="/login?type=admin">
                         <LogIn className="w-4 h-4" />
-                        Admin Login
+                        Admin Access
                       </Link>
                     </Button>
                   </div>
@@ -72,22 +84,16 @@ export function Navbar() {
                 <Separator />
 
                 <div>
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Resources</h3>
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Information</h3>
                   <div className="grid grid-cols-1 gap-1">
                     <Button asChild variant="ghost" className="justify-start gap-3 w-full">
-                      <Link href="/syllabus">
+                      <Link href="/">
                         <BookOpen className="w-4 h-4" />
-                        Trade Syllabus
+                        Home
                       </Link>
                     </Button>
                     <Button asChild variant="ghost" className="justify-start gap-3 w-full">
-                      <Link href="/mock-tests">
-                        <ClipboardList className="w-4 h-4" />
-                        Online Mock Test
-                      </Link>
-                    </Button>
-                    <Button asChild variant="ghost" className="justify-start gap-3 w-full">
-                      <Link href="/admission">
+                      <Link href="/signup">
                         <FileText className="w-4 h-4" />
                         Admission Form
                       </Link>

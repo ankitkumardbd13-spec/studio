@@ -44,9 +44,9 @@ export function Navbar() {
                 <LogIn className="w-4 h-4" /> Student Login
               </Link>
             </Button>
-            <Button asChild size="sm" className="bg-secondary hover:bg-secondary/90 text-white">
-              <Link href="/signup" className="gap-2">
-                <UserPlus className="w-4 h-4" /> Portal Registration
+            <Button asChild size="sm" className="bg-primary hover:bg-primary/90 text-white">
+              <Link href="/login?type=admin" className="gap-2">
+                <ShieldCheck className="w-4 h-4" /> Admin Login
               </Link>
             </Button>
           </div>
@@ -65,18 +65,18 @@ export function Navbar() {
               </SheetHeader>
               <div className="mt-8 space-y-6">
                 <div>
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Student Portal</h3>
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Portals</h3>
                   <div className="grid grid-cols-1 gap-2">
                     <Button asChild variant="outline" className="justify-start gap-3">
                       <Link href="/login?type=student">
                         <GraduationCap className="w-4 h-4" />
-                        Portal Login
+                        Student Login
                       </Link>
                     </Button>
-                    <Button asChild variant="outline" className="justify-start gap-3">
-                      <Link href="/signup">
-                        <UserPlus className="w-4 h-4" />
-                        Portal Registration
+                    <Button asChild variant="default" className="justify-start gap-3 bg-primary">
+                      <Link href="/login?type=admin">
+                        <ShieldCheck className="w-4 h-4" />
+                        Admin Login
                       </Link>
                     </Button>
                     <Button asChild variant="ghost" className="justify-start gap-3">
@@ -86,18 +86,6 @@ export function Navbar() {
                       </Link>
                     </Button>
                   </div>
-                </div>
-
-                <Separator />
-
-                <div>
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Administration</h3>
-                  <Button asChild variant="outline" className="justify-start gap-3 w-full border-primary/20 hover:bg-primary/5">
-                    <Link href="/login?type=admin">
-                      <ShieldCheck className="w-4 h-4 text-primary" />
-                      Admin Login
-                    </Link>
-                  </Button>
                 </div>
 
                 <Separator />
@@ -115,6 +103,12 @@ export function Navbar() {
                       <Link href="/admission">
                         <FileText className="w-4 h-4" />
                         Admission Form
+                      </Link>
+                    </Button>
+                    <Button asChild variant="ghost" className="justify-start gap-3 w-full">
+                      <Link href="/signup">
+                        <UserPlus className="w-4 h-4" />
+                        New Registration
                       </Link>
                     </Button>
                     <Button asChild variant="ghost" className="justify-start gap-3 w-full">

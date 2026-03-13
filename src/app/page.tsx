@@ -231,7 +231,7 @@ export default function Home() {
               <ul className="space-y-3 text-lg opacity-80">
                 <li><Link href="/" className="hover:text-primary transition-colors">Home</Link></li>
                 <li><Link href="/admission" className="hover:text-primary transition-colors">Admission Inquiry</Link></li>
-                <li><Link href="/signup" className="hover:text-primary transition-colors">Portal Registration</Link></li>
+                <li><Link href="/login?type=admin" className="hover:text-primary transition-colors">Admin Login</Link></li>
                 <li><Link href="/login" className="hover:text-primary transition-colors">Student Login</Link></li>
               </ul>
             </div>

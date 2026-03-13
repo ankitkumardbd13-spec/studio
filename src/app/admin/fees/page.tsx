@@ -7,14 +7,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Search, Filter, CreditCard, Download, Plus, Save, User, Receipt, Calculator, Printer, History, X } from 'lucide-react';
+import { Search, Filter, CreditCard, Download, Plus, User, History, Printer, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { 
   Dialog, 
   DialogContent, 
   DialogHeader, 
   DialogTitle, 
-  DialogFooter,
   DialogDescription
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
@@ -76,7 +75,6 @@ export default function AdminFeesPage() {
 
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
   const [selectedReceipt, setSelectedReceipt] = useState<any>(null);
-
   const [siteSettings, setSiteSettings] = useState<any>(null);
 
   useEffect(() => {
@@ -144,23 +142,6 @@ export default function AdminFeesPage() {
     window.print();
   };
 
-  const exportFeeReport = () => {
-    const headers = ["Name", "Father Name", "Roll No", "Trade", "Total Fee", "Paid", "Pending", "Status"];
-    const rows = filteredData.map(f => [
-      `"${f.name}"`, `"${f.fatherName}"`, `"${f.rollNo}"`, `"${f.trade}"`, f.total, f.paid, f.pending, f.status
-    ]);
-    const csvContent = [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", `Fee_Report_${new Date().toISOString().split('T')[0]}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    toast({ title: "Report Exported" });
-  };
-
   return (
     <div className="min-h-screen bg-muted/30 flex">
       <AdminSidebar />
@@ -168,14 +149,11 @@ export default function AdminFeesPage() {
         <header className="mb-8 flex justify-between items-center">
           <div>
             <h1 className="font-headline text-4xl text-slate-900 font-bold">Fee Management</h1>
-            <p className="text-muted-foreground">Manage student payments, installments, and receipts</p>
+            <p className="text-muted-foreground">Manage student payments and generate micro-receipts (7x3.5cm)</p>
           </div>
           <div className="flex gap-3">
              <Button onClick={() => setIsStructureOpen(true)} variant="outline" className="gap-2 border-primary text-primary">
                <Plus className="w-4 h-4"/> New Fee Structure
-             </Button>
-             <Button onClick={exportFeeReport} className="gap-2 bg-primary text-white">
-               <Download className="w-4 h-4"/> Detailed Report
              </Button>
           </div>
         </header>
@@ -221,7 +199,6 @@ export default function AdminFeesPage() {
                           <div>
                             <p className="font-bold text-slate-900">{f.name}</p>
                             <p className="text-[10px] text-muted-foreground font-bold uppercase">Roll: {f.rollNo}</p>
-                            <p className="text-[10px] text-muted-foreground font-medium">F/N: {f.fatherName}</p>
                           </div>
                         </TableCell>
                         <TableCell>
@@ -260,11 +237,7 @@ export default function AdminFeesPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                  <div className="flex justify-between items-center">
-                    <span className="text-sm opacity-70">Total Receivable</span>
-                    <span className="font-bold">₹10,80,000</span>
-                 </div>
-                 <div className="flex justify-between items-center text-green-400">
-                    <span className="text-sm">Collected</span>
+                    <span className="text-sm opacity-70">Collected</span>
                     <span className="font-bold">₹7,20,000</span>
                  </div>
                  <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden">
@@ -275,7 +248,6 @@ export default function AdminFeesPage() {
           </div>
         </div>
 
-        {/* Manage Fee Dialog */}
         <Dialog open={isUpdateOpen} onOpenChange={setIsUpdateOpen}>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
@@ -342,94 +314,71 @@ export default function AdminFeesPage() {
         </Dialog>
       </main>
 
-      {/* Vertical Receipt Dialog - 90mm x 200mm */}
+      {/* Tiny Receipt Dialog - 7cm x 3.5cm */}
       <Dialog open={isReceiptOpen} onOpenChange={setIsReceiptOpen}>
         <DialogContent className="max-w-[400px] p-0 border-none bg-transparent shadow-none">
           <div className="bg-white p-6 rounded-xl shadow-2xl print:shadow-none print:p-0 flex flex-col items-center">
              <div className="flex justify-between items-center w-full mb-4 print:hidden">
-               <DialogTitle className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Receipt Preview</DialogTitle>
+               <DialogTitle className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Tiny Slip Preview (7x3.5cm)</DialogTitle>
                <div className="flex gap-2">
                  <Button onClick={handlePrint} size="sm" className="gap-2 bg-primary h-8"><Printer className="w-3 h-3"/> Print</Button>
                  <Button onClick={() => setIsReceiptOpen(false)} variant="ghost" size="icon" className="h-8 w-8"><X className="w-4 h-4"/></Button>
                </div>
              </div>
              
-             {/* Printable Area - Vertical 90mm x 200mm */}
-             <div id="receipt-printable" className="bg-white border-2 border-slate-900 p-4 w-[90mm] h-[200mm] overflow-hidden flex flex-col relative print:border-2 print:m-0">
+             {/* Printable Area - 7cm x 3.5cm */}
+             <div id="receipt-printable" className="bg-white border-2 border-slate-900 p-2 w-[7cm] h-[3.5cm] overflow-hidden flex flex-col relative print:border-2 print:m-0">
                 {/* LOGO ONLY AS WATERMARK */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-[0.08] pointer-events-none grayscale">
-                   {logoUrl && <img src={logoUrl} alt="watermark" className="w-64 h-64 object-contain" />}
+                <div className="absolute inset-0 flex items-center justify-center opacity-[0.05] pointer-events-none grayscale">
+                   {logoUrl && <img src={logoUrl} alt="watermark" className="w-20 h-20 object-contain" />}
                 </div>
 
                 <div className="relative z-10 flex flex-col h-full">
-                  <header className="text-center border-b-2 border-slate-900 pb-3 mb-4">
-                    <h2 className="text-lg font-black text-slate-900 uppercase leading-none tracking-tighter">Maharana Pratap ITI</h2>
-                    <p className="text-[8px] font-bold text-slate-600 mt-1 uppercase">Saharanpur, Uttar Pradesh</p>
-                    <p className="text-[7px] text-slate-500 font-bold">DGT / NCVT GOVT. RECOGNIZED</p>
+                  <header className="text-center border-b border-slate-900 pb-0.5 mb-1">
+                    <h2 className="text-[10px] font-black text-slate-900 uppercase leading-none tracking-tighter">Maharana Pratap ITI</h2>
+                    <p className="text-[5px] font-bold text-slate-500 uppercase">FEE RECEIPT - {selectedReceipt?.receiptNo || selectedReceipt?.receipt}</p>
                   </header>
 
-                  <div className="bg-slate-900 text-white text-center py-1 rounded-sm text-[10px] font-bold uppercase tracking-widest mb-4">
-                    Fees Payment Receipt
-                  </div>
-
-                  <div className="space-y-4 flex-1">
-                    <div className="flex justify-between items-center text-[9px] font-bold pb-2 border-b border-dashed border-slate-300">
-                      <span>NO: {selectedReceipt?.receiptNo || selectedReceipt?.receipt}</span>
-                      <span>DATE: {selectedReceipt?.date}</span>
+                  <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 mt-0.5">
+                    <div className="flex flex-col">
+                      <span className="text-[4px] font-bold text-slate-400 uppercase">Student Name</span>
+                      <span className="text-[7px] font-black text-slate-900 uppercase truncate">{selectedStudent?.name}</span>
                     </div>
-
-                    <div className="space-y-3 pt-2">
-                      <div className="flex flex-col gap-0.5">
-                        <span className="text-[7px] font-bold text-slate-400 uppercase">Candidate Name</span>
-                        <span className="text-[11px] font-black text-slate-900 uppercase">{selectedStudent?.name}</span>
-                      </div>
-
-                      <div className="flex flex-col gap-0.5">
-                        <span className="text-[7px] font-bold text-slate-400 uppercase">Father's Name</span>
-                        <span className="text-[10px] font-black text-slate-900 uppercase">{selectedStudent?.fatherName}</span>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-2">
-                        <div className="flex flex-col gap-0.5">
-                          <span className="text-[7px] font-bold text-slate-400 uppercase">Roll No</span>
-                          <span className="text-[10px] font-black text-slate-900">{selectedStudent?.rollNo}</span>
-                        </div>
-                        <div className="flex flex-col gap-0.5">
-                          <span className="text-[7px] font-bold text-slate-400 uppercase">Trade</span>
-                          <span className="text-[10px] font-black text-slate-900 uppercase">{selectedStudent?.trade}</span>
-                        </div>
-                      </div>
-
-                      <div className="flex flex-col gap-0.5 pt-2 border-t border-slate-100">
-                        <span className="text-[7px] font-bold text-slate-400 uppercase">Particulars</span>
-                        <span className="text-[10px] font-bold text-slate-800 italic">{selectedReceipt?.particulars || selectedReceipt?.mode}</span>
-                      </div>
-
-                      <div className="mt-6 p-4 border-2 border-slate-900 rounded-md bg-slate-50 flex flex-col items-center">
-                        <span className="text-[8px] font-black uppercase text-slate-500 mb-1">Total Amount Received</span>
-                        <span className="text-2xl font-black text-slate-900">₹{selectedReceipt?.amount.toLocaleString()}</span>
-                      </div>
+                    <div className="flex flex-col">
+                      <span className="text-[4px] font-bold text-slate-400 uppercase">Father's Name</span>
+                      <span className="text-[6px] font-black text-slate-800 uppercase truncate">{selectedStudent?.fatherName}</span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-[4px] font-bold text-slate-400 uppercase">Roll No</span>
+                      <span className="text-[6px] font-bold text-slate-900">{selectedStudent?.rollNo}</span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-[4px] font-bold text-slate-400 uppercase">Date</span>
+                      <span className="text-[6px] font-bold text-slate-900">{selectedReceipt?.date}</span>
                     </div>
                   </div>
 
-                  <footer className="mt-auto pt-4 flex flex-col gap-6">
-                     <div className="flex justify-between items-end">
-                        <div className="text-center">
-                           <div className="w-20 h-[1px] bg-slate-300 mb-1"></div>
-                           <p className="text-[7px] font-bold uppercase text-slate-400">Payer</p>
-                        </div>
-                        
-                        <div className="relative flex flex-col items-center">
-                           {stampUrl && (
-                             <div className="absolute -top-12 -right-2 w-16 h-16 opacity-60 mix-blend-multiply rotate-[-10deg]">
-                                <img src={stampUrl} alt="stamp" className="w-full h-full object-contain" />
-                             </div>
-                           )}
-                           <div className="w-24 h-[1px] bg-slate-900 mb-1"></div>
-                           <p className="text-[8px] font-black uppercase text-slate-900">Accountant</p>
-                        </div>
+                  <div className="mt-1 flex justify-between items-center border-t border-dashed border-slate-300 pt-1">
+                    <div className="flex flex-col">
+                       <span className="text-[4px] font-bold text-slate-400 uppercase">Particulars</span>
+                       <span className="text-[6px] font-bold text-slate-700 italic">{selectedReceipt?.particulars || selectedReceipt?.mode}</span>
+                    </div>
+                    <div className="bg-slate-900 text-white px-2 py-0.5 rounded-sm">
+                       <span className="text-[9px] font-black">₹{selectedReceipt?.amount.toLocaleString()}</span>
+                    </div>
+                  </div>
+
+                  <footer className="mt-auto flex justify-between items-end">
+                     <p className="text-[4px] text-slate-400 italic">MPITI Saharanpur</p>
+                     <div className="relative">
+                        {stampUrl && (
+                           <div className="absolute -top-4 -right-1 w-6 h-6 opacity-40 mix-blend-multiply rotate-[-10deg]">
+                              <img src={stampUrl} alt="stamp" className="w-full h-full object-contain" />
+                           </div>
+                        )}
+                        <div className="w-12 h-[0.5px] bg-slate-900 mb-0.5"></div>
+                        <p className="text-[5px] font-black text-slate-900 text-center uppercase">Auth. Sign</p>
                      </div>
-                     <p className="text-center text-[6px] text-slate-400 font-medium">This is a computer generated receipt. Maharana Pratap ITI Saharanpur.</p>
                   </footer>
                 </div>
              </div>
@@ -450,16 +399,16 @@ export default function AdminFeesPage() {
             left: 0;
             top: 0;
             display: block !important;
-            width: 90mm !important;
-            height: 200mm !important;
-            border: 2px solid black !important;
-            padding: 5mm !important;
+            width: 7cm !important;
+            height: 3.5cm !important;
+            border: 1px solid black !important;
+            padding: 2mm !important;
             margin: 0 !important;
             box-shadow: none !important;
             page-break-inside: avoid;
           }
           @page {
-            size: 90mm 200mm;
+            size: A4;
             margin: 0;
           }
         }

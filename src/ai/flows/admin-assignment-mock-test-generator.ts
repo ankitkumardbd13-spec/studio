@@ -23,6 +23,9 @@ const AdminAssignmentAndMockTestGeneratorInputSchema = z.object({
     .describe('The name of the ITI trade (e.g., Electrician, Fitter, HSI).'),
   year:
     z.number().int().min(1).describe('The year of the course (e.g., 1 for first year, 2 for second year).'),
+  subject: z
+    .string()
+    .describe('The specific subject (e.g., Trade Theory, Workshop Calculation, Employability Skills).'),
   topic: z
     .string()
     .describe(
@@ -51,9 +54,15 @@ const generateQuestionsPrompt = ai.definePrompt({
   input: {schema: AdminAssignmentAndMockTestGeneratorInputSchema},
   output: {schema: AdminAssignmentAndMockTestGeneratorOutputSchema},
   prompt: `You are an expert educational content creator for Industrial Training Institute (ITI) courses in India.
-Your task is to generate relevant assignment questions based on the provided trade, year, and topic, adhering strictly to the **New DGT/NCVT Syllabus**.
+Your task is to generate relevant assignment questions based on the provided trade, year, subject, and topic, adhering strictly to the **New DGT/NCVT Syllabus**.
 
 Please generate exactly 20 Objective (MCQ) questions. 
+
+**CONTEXT:**
+- Trade: {{{trade}}}
+- Year: {{{year}}}
+- Subject: {{{subject}}}
+- Topic: {{{topic}}}
 
 **IMPORTANT BILINGUAL REQUIREMENT:**
 - Every question text MUST be provided in both English and Hindi, separated by a forward slash.
@@ -61,9 +70,7 @@ Please generate exactly 20 Objective (MCQ) questions.
 - Example Question: "What is the unit of resistance? / प्रतिरोध की इकाई क्या है?"
 - Example Option: "Ohm / ओम"
 
-Trade: {{{trade}}}
-Year: {{{year}}}
-Topic: {{{topic}}}`,
+Ensure technical terms are accurate in both languages according to NCVT standards.`,
 });
 
 const adminAssignmentAndMockTestGeneratorFlow = ai.defineFlow(

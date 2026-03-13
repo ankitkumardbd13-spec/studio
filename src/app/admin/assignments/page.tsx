@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Plus, Trash2, Calendar, Clock, Wand2, FileText, Loader2, Save, X, Timer, Languages } from 'lucide-react';
+import { Plus, Trash2, Calendar, Clock, Wand2, FileText, Loader2, Save, X, Timer, Languages, BookOpen } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { generateAssignmentAndMockTest } from '@/ai/flows/admin-assignment-mock-test-generator';
 
@@ -27,6 +27,7 @@ interface Assignment {
   title: string;
   trade: string;
   year: number;
+  subject: string;
   deadlineDate: string;
   deadlineTime: string;
   durationMinutes: number;
@@ -44,6 +45,7 @@ export default function AdminAssignmentsPage() {
   const [title, setTitle] = useState('');
   const [trade, setTrade] = useState('Electrician');
   const [year, setYear] = useState('1');
+  const [subject, setSubject] = useState('Trade Theory');
   const [deadlineDate, setDeadlineDate] = useState('');
   const [deadlineTime, setDeadlineTime] = useState('17:00');
   const [durationMinutes, setDurationMinutes] = useState(60);
@@ -65,6 +67,7 @@ export default function AdminAssignmentsPage() {
       title,
       trade,
       year: parseInt(year),
+      subject,
       deadlineDate,
       deadlineTime,
       durationMinutes,
@@ -97,6 +100,7 @@ export default function AdminAssignmentsPage() {
       const result = await generateAssignmentAndMockTest({
         trade,
         year: parseInt(year),
+        subject,
         topic: title
       });
 
@@ -108,32 +112,14 @@ export default function AdminAssignmentsPage() {
         correctAnswer: q.correctAnswer || ''
       }));
       
-      setQuestions([...questions, ...aiQuestions]);
-      toast({ title: 'AI Generation Complete', description: `Generated ${aiQuestions.length} Bilingual MCQ questions.` });
+      setQuestions(aiQuestions);
+      toast({ title: 'AI Generation Complete', description: `Generated ${aiQuestions.length} Bilingual MCQ questions for ${subject}.` });
     } catch (error) {
       console.error(error);
       toast({ variant: 'destructive', title: 'AI Error', description: 'Could not generate questions at this time.' });
     } finally {
       setLoadingAI(false);
     }
-  };
-
-  const addQuestion = () => {
-    const newQ: Question = {
-      id: Math.random().toString(),
-      text: '',
-      type: 'objective',
-      options: ['', '', '', ''],
-      correctAnswer: ''
-    };
-    setQuestions([...questions, newQ]);
-  };
-
-  const deleteAssignment = (id: string) => {
-    const updated = assignments.filter(a => a.id !== id);
-    setAssignments(updated);
-    localStorage.setItem('mpiti_assignments', JSON.stringify(updated));
-    toast({ title: 'Deleted', description: 'Assignment removed.' });
   };
 
   return (
@@ -143,7 +129,7 @@ export default function AdminAssignmentsPage() {
         <header className="mb-8 flex justify-between items-center">
           <div>
             <h1 className="font-headline text-4xl text-slate-900 font-bold">Assignment Manager</h1>
-            <p className="text-muted-foreground">Create 20-question Bilingual (Hindi/English) MCQ tests</p>
+            <p className="text-muted-foreground">Manage 20-question Bilingual MCQ tests per Trade, Year & Subject</p>
           </div>
           <Button onClick={() => setIsAdding(!isAdding)} className="gap-2">
             {isAdding ? <><X className="w-4 h-4"/> Cancel</> : <><Plus className="w-4 h-4"/> New Assignment</>}
@@ -159,8 +145,23 @@ export default function AdminAssignmentsPage() {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label>Assignment Title / Topic</Label>
-                  <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="e.g. Electrical Safety Quiz" />
+                  <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="e.g. Transformers & AC Circuits" />
                 </div>
+                
+                <div className="space-y-2">
+                  <Label>Subject</Label>
+                  <Select onValueChange={setSubject} defaultValue={subject}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Trade Theory">Trade Theory (व्यवसाय सिद्धांत)</SelectItem>
+                      <SelectItem value="Workshop Calculation">Workshop Calculation & Science</SelectItem>
+                      <SelectItem value="Employability Skills">Employability Skills (रोजगार कौशल)</SelectItem>
+                      <SelectItem value="Engineering Drawing">Engineering Drawing</SelectItem>
+                      <SelectItem value="Trade Practical">Trade Practical (Viva/MCQ)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>Trade</Label>
@@ -184,6 +185,7 @@ export default function AdminAssignmentsPage() {
                     </Select>
                   </div>
                 </div>
+
                 <div className="space-y-2">
                   <Label>Test Duration (Minutes)</Label>
                   <div className="relative">
@@ -191,6 +193,7 @@ export default function AdminAssignmentsPage() {
                     <Timer className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground" />
                   </div>
                 </div>
+
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>Deadline Date</Label>
@@ -207,6 +210,7 @@ export default function AdminAssignmentsPage() {
                     </div>
                   </div>
                 </div>
+
                 <Separator />
                 <Button onClick={handleAIInvite} disabled={loadingAI} variant="outline" className="w-full border-primary text-primary gap-2 h-12">
                   {loadingAI ? <Loader2 className="animate-spin w-4 h-4" /> : <Wand2 className="w-4 h-4" />}
@@ -230,11 +234,11 @@ export default function AdminAssignmentsPage() {
                 <Card key={q.id} className="border-none shadow-sm group">
                   <CardContent className="p-4">
                     <div className="flex justify-between gap-4 mb-4">
-                      <Badge variant="secondary" className="h-fit">Q{idx + 1}: Bilingual MCQ</Badge>
+                      <Badge variant="secondary" className="h-fit">Q{idx + 1}: MCQ</Badge>
                       <Button variant="ghost" size="sm" onClick={() => setQuestions(questions.filter(item => item.id !== q.id))} className="text-red-400 h-6 w-6 p-0"><Trash2 className="w-4 h-4" /></Button>
                     </div>
                     <Textarea 
-                      placeholder="Enter bilingual question (English / Hindi)..." 
+                      placeholder="English / Hindi Question..." 
                       value={q.text} 
                       onChange={e => {
                         const updated = [...questions];
@@ -298,10 +302,11 @@ export default function AdminAssignmentsPage() {
               <Card key={a.id} className="border-none shadow-sm hover:shadow-md transition-shadow">
                 <CardHeader className="pb-2">
                   <div className="flex justify-between items-start">
-                    <Badge variant="outline" className="bg-primary/5 text-primary">{a.trade} - Year {a.year}</Badge>
+                    <Badge variant="outline" className="bg-primary/5 text-primary">{a.trade} - Y{a.year}</Badge>
                     <Button variant="ghost" size="sm" onClick={() => deleteAssignment(a.id)} className="text-red-400 h-8 w-8 p-0"><Trash2 className="w-4 h-4" /></Button>
                   </div>
                   <CardTitle className="text-xl mt-2">{a.title}</CardTitle>
+                  <CardDescription className="text-secondary font-bold uppercase text-[10px] tracking-widest">{a.subject}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                    <div className="flex items-center gap-2 text-sm text-muted-foreground">

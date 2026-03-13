@@ -143,7 +143,7 @@ export default function AdminFeesPage() {
   };
 
   const ReceiptCard = ({ payment }: { payment: any }) => (
-    <div className="receipt-slip bg-white border border-slate-900 p-[1cm] w-[21cm] h-[9cm] overflow-hidden flex flex-col relative shrink-0 box-border">
+    <div className="receipt-slip bg-white border-b-2 border-dashed border-slate-400 p-[0.8cm] w-[21cm] h-[9cm] overflow-hidden flex flex-col relative shrink-0 box-border">
       {/* LOGO ONLY AS WATERMARK */}
       <div className="absolute inset-0 flex items-center justify-center opacity-[0.05] pointer-events-none grayscale">
         {logoUrl && <img src={logoUrl} alt="watermark" className="w-[12cm] h-[12cm] object-contain" />}
@@ -186,7 +186,7 @@ export default function AdminFeesPage() {
         </div>
 
         <footer className="mt-auto flex justify-between items-end pt-2">
-          <div className="text-[8px] text-slate-400 font-medium">
+          <div className="text-[8px] text-slate-400 font-medium text-left">
             <p>Maharana Pratap ITI, Near Delhi Road, Saharanpur, UP</p>
             <p>This is a computer-generated receipt.</p>
           </div>
@@ -389,7 +389,7 @@ export default function AdminFeesPage() {
              </div>
              
              {/* This wrapper is the only thing visible in print mode */}
-             <div id="receipts-wrapper">
+             <div id="receipts-wrapper" className="flex flex-col">
                 <ReceiptCard payment={selectedReceipt} />
                 <ReceiptCard payment={selectedReceipt} />
                 <ReceiptCard payment={selectedReceipt} />
@@ -408,6 +408,7 @@ export default function AdminFeesPage() {
             background: white !important;
             margin: 0 !important;
             padding: 0 !important;
+            -webkit-print-color-adjust: exact;
           }
           /* Hide everything by default */
           body * {
@@ -418,14 +419,14 @@ export default function AdminFeesPage() {
             visibility: visible;
           }
           #receipts-wrapper {
-            position: fixed !important;
+            position: absolute !important;
             left: 0 !important;
             top: 0 !important;
             width: 21cm !important;
-            height: 29.7cm !important;
+            height: 27cm !important;
             display: flex !important;
             flex-direction: column !important;
-            align-items: flex-start !important;
+            gap: 0 !important;
             margin: 0 !important;
             padding: 0 !important;
             background: white !important;
@@ -434,12 +435,14 @@ export default function AdminFeesPage() {
           .receipt-slip {
             width: 21cm !important;
             height: 9cm !important;
-            display: block !important;
+            display: flex !important;
+            flex-direction: column !important;
             page-break-inside: avoid !important;
             page-break-after: avoid !important;
-            border-bottom: 1px dashed #000 !important;
+            border-bottom: 2px dashed #999 !important;
             box-sizing: border-box !important;
             margin: 0 !important;
+            padding: 0.8cm !important;
           }
         }
       `}</style>

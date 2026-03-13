@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { UserPlus, Upload, Calendar, Info } from 'lucide-react';
+import { UserPlus, Upload, Calendar, Info, MapPin, Phone } from 'lucide-react';
 import Link from 'next/link';
 
 export default function SignupPage() {
@@ -21,7 +21,6 @@ export default function SignupPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulate API call
     setTimeout(() => {
       toast({
         title: "Portal Registration Submitted!",
@@ -40,7 +39,7 @@ export default function SignupPage() {
           <div className="mb-6 p-4 bg-primary/10 border-l-4 border-primary rounded-r-lg flex gap-4">
              <Info className="w-6 h-6 text-primary flex-shrink-0" />
              <p className="text-sm">
-               <strong>Important:</strong> This form is only for students <strong>already admitted</strong> to Maharana Pratap ITI. If you are a new applicant, please fill the <Link href="/admission" className="text-secondary underline font-bold">Admission Inquiry Form</Link> instead.
+               <strong>Important:</strong> This form is for <strong>already admitted</strong> students to register for portal access (DGT/NCVT Syllabus, ID Card, Results).
              </p>
           </div>
 
@@ -52,7 +51,7 @@ export default function SignupPage() {
                 </div>
                 <div>
                   <CardTitle className="font-headline text-3xl">Portal Registration</CardTitle>
-                  <CardDescription className="text-primary-foreground/80">Register your student account for portal access (Assignments, ID Card, Results).</CardDescription>
+                  <CardDescription className="text-primary-foreground/80">Submit your details for verification and portal activation.</CardDescription>
                 </div>
               </div>
             </CardHeader>
@@ -60,7 +59,7 @@ export default function SignupPage() {
               <form onSubmit={handleSubmit} className="space-y-8">
                 {/* Personal Information */}
                 <div className="space-y-6">
-                  <h3 className="text-lg font-bold border-b pb-2 text-primary">1. Personal Information</h3>
+                  <h3 className="text-lg font-bold border-b pb-2 text-primary flex items-center gap-2"><Phone className="w-5 h-5"/> 1. Personal & Contact Information</h3>
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <Label htmlFor="fullName">Student Full Name</Label>
@@ -71,8 +70,16 @@ export default function SignupPage() {
                       <Input id="fatherName" placeholder="As per Admission Record" required />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="motherName">Mother's Name</Label>
-                      <Input id="motherName" placeholder="As per Admission Record" required />
+                      <Label htmlFor="personalMobile">Personal Mobile Number</Label>
+                      <Input id="personalMobile" type="tel" placeholder="+91" required />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="whatsappNo">WhatsApp Number</Label>
+                      <Input id="whatsappNo" type="tel" placeholder="+91" required />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="fatherMobile">Father's Mobile Number</Label>
+                      <Input id="fatherMobile" type="tel" placeholder="+91" required />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="dob">Date of Birth</Label>
@@ -80,23 +87,17 @@ export default function SignupPage() {
                         <Input id="dob" type="date" required className="pl-10" />
                         <Calendar className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground" />
                       </div>
-                      <p className="text-xs text-muted-foreground">This will be your initial password (YYYY-MM-DD)</p>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="mobile">Mobile Number</Label>
-                      <Input id="mobile" type="tel" placeholder="+91" required />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email Address</Label>
+                      <Label htmlFor="email">Email Address (Login ID)</Label>
                       <Input id="email" type="email" placeholder="john@example.com" required />
-                      <p className="text-xs text-muted-foreground">This will be your login ID</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Academic Information */}
                 <div className="space-y-6">
-                  <h3 className="text-lg font-bold border-b pb-2 text-primary">2. Course Information</h3>
+                  <h3 className="text-lg font-bold border-b pb-2 text-primary">2. Course Information (DGT NCVT)</h3>
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <Label>Trade / Course</Label>
@@ -105,10 +106,9 @@ export default function SignupPage() {
                           <SelectValue placeholder="Select Trade" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="electrician">Electrician</SelectItem>
-                          <SelectItem value="fitter">Fitter</SelectItem>
-                          <SelectItem value="copa">COPA</SelectItem>
-                          <SelectItem value="welder">Welder</SelectItem>
+                          <SelectItem value="electrician">Electrician (2 Years)</SelectItem>
+                          <SelectItem value="fitter">Fitter (2 Years)</SelectItem>
+                          <SelectItem value="hsi">HSI (1 Year)</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -148,15 +148,23 @@ export default function SignupPage() {
 
                 {/* Address Details */}
                 <div className="space-y-6">
-                  <h3 className="text-lg font-bold border-b pb-2 text-primary">3. Contact Address</h3>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-2 md:col-span-2">
-                      <Label htmlFor="fullAddress">Full Address</Label>
-                      <Input id="fullAddress" placeholder="House No, Street, Village" required />
+                  <h3 className="text-lg font-bold border-b pb-2 text-primary flex items-center gap-2"><MapPin className="w-5 h-5"/> 3. Permanent Address</h3>
+                  <div className="grid md:grid-cols-3 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="stateName">State Name</Label>
+                      <Input id="stateName" placeholder="e.g. Uttar Pradesh" required />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="district">District</Label>
-                      <Input id="district" placeholder="Saharanpur" required />
+                      <Label htmlFor="tehsilName">Tehsil Name</Label>
+                      <Input id="tehsilName" placeholder="Enter Tehsil" required />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="postOffice">Post Office Name</Label>
+                      <Input id="postOffice" placeholder="Enter Post Office" required />
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
+                      <Label htmlFor="fullAddress">Full Address (Village/Street)</Label>
+                      <Input id="fullAddress" placeholder="House No, Village, etc." required />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="pincode">Pincode</Label>

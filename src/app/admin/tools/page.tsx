@@ -45,7 +45,7 @@ export default function AIToolsPage() {
         <div className="max-w-5xl mx-auto">
           <header className="text-center mb-12">
             <h1 className="font-headline text-4xl text-primary font-bold mb-4">AI Question Generator</h1>
-            <p className="text-muted-foreground text-lg">Generate high-quality assignments and mock tests for any trade in seconds.</p>
+            <p className="text-muted-foreground text-lg">Generate high-quality assignments based on New DGT Syllabus for any trade.</p>
           </header>
 
           <div className="grid lg:grid-cols-3 gap-8">
@@ -65,8 +65,7 @@ export default function AIToolsPage() {
                       <SelectContent>
                         <SelectItem value="Electrician">Electrician</SelectItem>
                         <SelectItem value="Fitter">Fitter</SelectItem>
-                        <SelectItem value="COPA">COPA</SelectItem>
-                        <SelectItem value="Welder">Welder</SelectItem>
+                        <SelectItem value="HSI">HSI (Health Sanitary Inspector)</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -85,7 +84,7 @@ export default function AIToolsPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Topic Name</Label>
+                    <Label>Topic Name (DGT Syllabus)</Label>
                     <Input 
                       placeholder="e.g. Electrical Safety, Hand Tools" 
                       value={topic}

@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview An AI-powered tool for administrators to generate assignment and mock test questions.
@@ -13,7 +14,7 @@ import {z} from 'genkit';
 const AdminAssignmentAndMockTestGeneratorInputSchema = z.object({
   trade: z
     .string()
-    .describe('The name of the ITI trade (e.g., Electrician, Fitter).'),
+    .describe('The name of the ITI trade (e.g., Electrician, Fitter, HSI).'),
   year:
     z.number().int().min(1).describe('The year of the course (e.g., 1 for first year, 2 for second year).'),
   topic: z
@@ -48,14 +49,14 @@ const generateQuestionsPrompt = ai.definePrompt({
   name: 'generateQuestionsPrompt',
   input: {schema: AdminAssignmentAndMockTestGeneratorInputSchema},
   output: {schema: AdminAssignmentAndMockTestGeneratorOutputSchema},
-  prompt: `You are an expert educational content creator for Industrial Training Institute (ITI) courses.
-Your task is to generate relevant assignment questions and mock test questions based on the provided trade, year, and topic.
+  prompt: `You are an expert educational content creator for Industrial Training Institute (ITI) courses in India.
+Your task is to generate relevant assignment questions and mock test questions based on the provided trade, year, and topic, adhering strictly to the **New DGT/NCVT Syllabus**.
 
 Please generate:
 - 5-7 comprehensive assignment questions that test understanding and application.
 - 5-7 multiple-choice or short-answer mock test questions suitable for assessing knowledge.
 
-Ensure the questions are appropriate for a student in the specified ITI trade and year, focusing on the given topic.
+Ensure the questions are appropriate for a student in the specified ITI trade and year, focusing on technical accuracy and current industry standards.
 
 Trade: {{{trade}}}
 Year: {{{year}}}

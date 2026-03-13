@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { MapPin, Phone, Mail, GraduationCap, Users, BookOpen, LayoutDashboard, UserPlus, ClipboardList } from 'lucide-react';
+import { MapPin, Phone, Mail, GraduationCap, BookOpen, LayoutDashboard, ClipboardList, ShieldCheck } from 'lucide-react';
 import { Navbar } from '@/components/layout/Navbar';
 
 export default function Home() {
@@ -16,13 +16,7 @@ export default function Home() {
   const courses = [
     { name: 'Electrician', duration: '2 Years', icon: <BookOpen className="w-6 h-6" /> },
     { name: 'Fitter', duration: '2 Years', icon: <GraduationCap className="w-6 h-6" /> },
-    { name: 'COPA', duration: '1 Year', icon: <LayoutDashboard className="w-6 h-6" /> },
-    { name: 'Welder', duration: '1 Year', icon: <Users className="w-6 h-6" /> },
-  ];
-
-  const testimonials = [
-    { name: 'Rahul Kumar', photo: 'student-1', feedback: 'Best ITI in Saharanpur with great practical labs.' },
-    { name: 'Priya Singh', photo: 'student-2', feedback: 'The instructors are very helpful and knowledgeable.' },
+    { name: 'HSI (Health Sanitary Inspector)', duration: '1 Year', icon: <ShieldCheck className="w-6 h-6" /> },
   ];
 
   return (
@@ -46,7 +40,7 @@ export default function Home() {
             Maharana Pratap ITI
           </h1>
           <p className="text-xl md:text-2xl text-white max-w-2xl drop-shadow-md">
-            Saharanpur, Uttar Pradesh - Shaping the Future of Skilled Professionals
+            Saharanpur, Uttar Pradesh - Following New DGT NCVT Syllabus for Skilled Excellence
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Button size="lg" asChild className="bg-secondary hover:bg-secondary/90 text-white border-none gap-2">
@@ -64,7 +58,7 @@ export default function Home() {
         <div>
           <h2 className="font-headline text-4xl text-primary mb-6">Our Location & Legacy</h2>
           <p className="text-lg text-muted-foreground mb-8">
-            Established with a vision to provide quality technical education, Maharana Pratap ITI Saharanpur is a leading institution in Uttar Pradesh. We focus on practical skills and industry-readiness.
+            Established with a vision to provide quality technical education, Maharana Pratap ITI Saharanpur is a leading institution in Uttar Pradesh. We adhere strictly to the latest DGT/NCVT guidelines to ensure industry-readiness.
           </p>
           <div className="space-y-4">
             <div className="flex items-start gap-4">
@@ -111,7 +105,7 @@ export default function Home() {
                 </div>
                 <h3 className="font-headline text-2xl mb-2">Chairman's Message</h3>
                 <p className="italic text-muted-foreground">
-                  "Our mission is to empower the youth with skills that lead to sustainable employment. At MPITI, we believe in excellence and hard work."
+                  "Our mission is to empower the youth with skills that lead to sustainable employment. At MPITI, we believe in excellence and hard work according to the latest industry standards."
                 </p>
                 <p className="mt-4 font-bold">- Shri Pratap Singh</p>
               </CardContent>
@@ -125,7 +119,7 @@ export default function Home() {
                 </div>
                 <h3 className="font-headline text-2xl mb-2">Principal's Message</h3>
                 <p className="italic text-muted-foreground">
-                  "Welcome to MPITI. We provide a disciplined environment for learning modern trades with state-of-the-art workshop facilities."
+                  "Welcome to MPITI. We provide a disciplined environment for learning modern trades with state-of-the-art workshop facilities and the updated NCVT syllabus."
                 </p>
                 <p className="mt-4 font-bold">- Dr. Ramesh Chandra</p>
               </CardContent>
@@ -136,8 +130,8 @@ export default function Home() {
 
       {/* Courses */}
       <section className="py-20 container mx-auto px-4">
-        <h2 className="font-headline text-4xl text-center text-primary mb-12">Offered Trades</h2>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <h2 className="font-headline text-4xl text-center text-primary mb-12">Offered Trades (NCVT Approved)</h2>
+        <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {courses.map((course, idx) => (
             <Card key={idx} className="hover:shadow-lg transition-shadow border-none shadow-sm">
               <CardHeader>
@@ -148,7 +142,7 @@ export default function Home() {
                 <CardDescription>Duration: {course.duration}</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">Comprehensive training with industry standards.</p>
+                <p className="text-sm text-muted-foreground">Comprehensive training following the new DGT syllabus and industry standards.</p>
               </CardContent>
             </Card>
           ))}
@@ -177,14 +171,14 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-12 mb-12">
             <div>
               <h2 className="font-headline text-2xl mb-4 text-primary">Maharana Pratap ITI</h2>
-              <p className="opacity-70 text-sm">Saharanpur's premier technical institute providing industry-standard training for the youth of Uttar Pradesh.</p>
+              <p className="opacity-70 text-sm">Saharanpur's premier technical institute providing industry-standard training following the New DGT Syllabus.</p>
             </div>
             <div>
               <h3 className="font-bold mb-4 uppercase text-xs tracking-widest text-secondary">Quick Links</h3>
               <ul className="space-y-2 text-sm opacity-80">
                 <li><Link href="/" className="hover:text-primary">Home</Link></li>
-                <li><Link href="/admission" className="hover:text-primary">New Admission</Link></li>
-                <li><Link href="/signup" className="hover:text-primary">Student Registration</Link></li>
+                <li><Link href="/admission" className="hover:text-primary">New Admission Inquiry</Link></li>
+                <li><Link href="/signup" className="hover:text-primary">Student Portal Registration</Link></li>
                 <li><Link href="/login" className="hover:text-primary">Portal Login</Link></li>
               </ul>
             </div>

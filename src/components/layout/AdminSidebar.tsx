@@ -1,9 +1,8 @@
 
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { 
   Layout, 
@@ -20,7 +19,18 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export function AdminSidebar() {
   const pathname = usePathname();
-  const logoUrl = PlaceHolderImages.find(img => img.id === 'iti-logo')?.imageUrl;
+  const [siteLogo, setSiteLogo] = useState<string | null>(null);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('mpiti_site_settings');
+    if (saved) {
+      const data = JSON.parse(saved);
+      if (data.logo) setSiteLogo(data.logo);
+    }
+  }, []);
+
+  const defaultLogo = PlaceHolderImages.find(img => img.id === 'iti-logo')?.imageUrl;
+  const logoUrl = siteLogo || defaultLogo;
 
   const menuItems = [
     { name: 'Overview', href: '/admin/dashboard', icon: Layout },
@@ -34,13 +44,12 @@ export function AdminSidebar() {
   return (
     <aside className="hidden lg:flex flex-col w-72 bg-slate-900 text-white min-h-screen sticky top-0">
       <div className="p-6 border-b border-white/5 flex items-center gap-3">
-        <div className="relative w-10 h-10 overflow-hidden rounded-lg bg-white p-1">
+        <div className="relative w-10 h-10 overflow-hidden rounded-lg bg-white p-1 flex items-center justify-center">
           {logoUrl && (
-            <Image 
+            <img 
               src={logoUrl} 
               alt="Logo" 
-              fill 
-              className="object-contain" 
+              className="w-full h-full object-contain" 
             />
           )}
         </div>

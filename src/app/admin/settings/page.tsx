@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Save, Image as ImageIcon, MapPin, Plus, Trash2, UserCheck, LayoutGrid, Upload, Loader2 } from 'lucide-react';
+import { Save, Image as ImageIcon, MapPin, Plus, Trash2, UserCheck, LayoutGrid, Upload, Loader2, ShieldCheck } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { compressImage } from '@/lib/image-utils';
@@ -20,6 +20,8 @@ export default function AdminSettings() {
   const [compressing, setCompressing] = useState<string | null>(null);
 
   const [siteData, setSiteData] = useState({
+    logo: PlaceHolderImages.find(i => i.id === 'iti-logo')?.imageUrl || '',
+    stamp: PlaceHolderImages.find(i => i.id === 'iti-stamp')?.imageUrl || '',
     address: 'Near Delhi Road, Saharanpur, Uttar Pradesh - 247001',
     phone1: '+91 98765 43210',
     phone2: '+91 12345 67890',
@@ -39,7 +41,7 @@ export default function AdminSettings() {
   useEffect(() => {
     const savedData = localStorage.getItem('mpiti_site_settings');
     if (savedData) {
-      setSiteData(JSON.parse(savedData));
+      setSiteData(prev => ({ ...prev, ...JSON.parse(savedData) }));
     }
     const savedGallery = localStorage.getItem('mpiti_gallery');
     if (savedGallery) {
@@ -121,13 +123,50 @@ export default function AdminSettings() {
         </header>
 
         <form onSubmit={handleSave}>
-          <Tabs defaultValue="leadership" className="space-y-6">
+          <Tabs defaultValue="branding" className="space-y-6">
             <TabsList className="bg-white p-1 rounded-lg border shadow-sm">
+              <TabsTrigger value="branding">Branding (Logo/Stamp)</TabsTrigger>
               <TabsTrigger value="leadership">Leadership & Photos</TabsTrigger>
               <TabsTrigger value="gallery">Photo Gallery</TabsTrigger>
               <TabsTrigger value="contact">Contact Details</TabsTrigger>
               <TabsTrigger value="homepage">Hero Text</TabsTrigger>
             </TabsList>
+
+            <TabsContent value="branding">
+              <div className="grid md:grid-cols-2 gap-6">
+                <Card className="border-none shadow-sm">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-lg"><ImageIcon className="w-5 h-5 text-primary"/> Official Logo</CardTitle>
+                    <CardDescription>Shown in Navbar, Footer and ID Card Header.</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex flex-col items-center gap-4 p-4 bg-muted/50 rounded-xl border">
+                      {siteData.logo && (
+                        <img src={siteData.logo} alt="Logo Preview" className="h-24 w-24 object-contain" />
+                      )}
+                      <Input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'logo')} />
+                      {compressing === 'logo' && <p className="text-xs text-primary animate-pulse">Processing logo...</p>}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-none shadow-sm">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-lg"><ShieldCheck className="w-5 h-5 text-secondary"/> Official Stamp</CardTitle>
+                    <CardDescription>Shown at the bottom of the Student ID Card.</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex flex-col items-center gap-4 p-4 bg-muted/50 rounded-xl border">
+                      {siteData.stamp && (
+                        <img src={siteData.stamp} alt="Stamp Preview" className="h-24 w-24 object-contain rounded-full bg-white border p-1" />
+                      )}
+                      <Input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'stamp')} />
+                      {compressing === 'stamp' && <p className="text-xs text-primary animate-pulse">Processing stamp...</p>}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
 
             <TabsContent value="leadership">
               <div className="grid md:grid-cols-3 gap-6">

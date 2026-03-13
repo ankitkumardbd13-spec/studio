@@ -1,7 +1,7 @@
 
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -24,22 +24,31 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Separator } from "@/components/Separator";
 
 export function Navbar() {
-  const logoUrl = PlaceHolderImages.find(img => img.id === 'iti-logo')?.imageUrl;
+  const [siteLogo, setSiteLogo] = useState<string | null>(null);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('mpiti_site_settings');
+    if (saved) {
+      const data = JSON.parse(saved);
+      if (data.logo) setSiteLogo(data.logo);
+    }
+  }, []);
+
+  const defaultLogo = PlaceHolderImages.find(img => img.id === 'iti-logo')?.imageUrl;
+  const logoUrl = siteLogo || defaultLogo;
 
   return (
     <nav className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3">
-          <div className="relative w-10 h-10 overflow-hidden rounded-lg">
+          <div className="relative w-10 h-10 overflow-hidden rounded-lg flex items-center justify-center bg-white">
             {logoUrl && (
-              <Image 
+              <img 
                 src={logoUrl} 
                 alt="MPITI Logo" 
-                fill 
-                className="object-contain" 
+                className="w-full h-full object-contain" 
               />
             )}
           </div>

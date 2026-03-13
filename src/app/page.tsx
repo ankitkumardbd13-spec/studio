@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { MapPin, Phone, Mail, GraduationCap, BookOpen, ClipboardList, ShieldCheck, LayoutGrid, Quote, Loader2 } from 'lucide-react';
+import { MapPin, Phone, Mail, GraduationCap, BookOpen, ClipboardList, ShieldCheck, LayoutGrid, Quote, Loader2, Info, CheckCircle } from 'lucide-react';
 import { Navbar } from '@/components/layout/Navbar';
 import { useFirestore, useDoc } from '@/firebase';
 import { doc } from 'firebase/firestore';
@@ -50,12 +50,6 @@ export default function Home() {
   const heroImage = PlaceHolderImages.find(img => img.id === 'iti-hero');
   const logoImage = PlaceHolderImages.find(img => img.id === 'iti-logo');
 
-  const courses = [
-    { name: 'Electrician', duration: '2 Years', icon: <BookOpen className="w-6 h-6" /> },
-    { name: 'Fitter', duration: '2 Years', icon: <GraduationCap className="w-6 h-6" /> },
-    { name: 'HSI (Health Sanitary Inspector)', duration: '1 Year', icon: <ShieldCheck className="w-6 h-6" /> },
-  ];
-
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -68,7 +62,8 @@ export default function Home() {
     <main className="min-h-screen bg-background text-foreground">
       <Navbar />
 
-      <section className="relative h-[650px] w-full">
+      {/* Hero Section */}
+      <section className="relative h-[750px] w-full">
         {heroImage && (
           <Image
             src={heroImage.imageUrl}
@@ -85,23 +80,62 @@ export default function Home() {
                <Image src={logoImage.imageUrl} alt="Logo" fill className="object-contain p-2" />
             </div>
           )}
-          <h1 className="font-headline text-5xl md:text-8xl text-white mb-6 drop-shadow-2xl font-bold tracking-tight">
-            {data.heroTitle}
-          </h1>
-          <p className="text-xl md:text-3xl text-white/90 max-w-4xl drop-shadow-lg font-medium">
-            {data.heroSub}
-          </p>
-          <div className="mt-12 flex flex-wrap justify-center gap-6">
-            <Button size="lg" asChild className="bg-secondary hover:bg-secondary/90 text-white border-none h-16 px-10 text-xl font-black gap-3 shadow-2xl transition-transform hover:scale-105 active:scale-95">
-              <Link href="/admission"><ClipboardList className="w-6 h-6"/> New Admission Inquiry</Link>
+          <div className="max-w-5xl">
+            <h1 className="font-headline text-5xl md:text-8xl text-white mb-6 drop-shadow-2xl font-bold tracking-tight">
+              {data.heroTitle}
+            </h1>
+            <p className="text-xl md:text-3xl text-white/90 mb-10 drop-shadow-lg font-medium leading-relaxed">
+              {data.heroSub}
+            </p>
+          </div>
+          <div className="flex flex-wrap justify-center gap-6">
+            <Button size="lg" asChild className="bg-secondary hover:bg-secondary/90 text-white border-none h-16 px-12 text-xl font-black gap-3 shadow-[0_20px_50px_rgba(193,69,38,0.4)] transition-all hover:scale-105 active:scale-95">
+              <Link href="/admission"><ClipboardList className="w-6 h-6"/> NEW ADMISSION INQUIRY</Link>
             </Button>
-            <Button size="lg" variant="outline" asChild className="bg-white text-primary border-white hover:bg-white/90 h-16 px-10 text-xl font-bold gap-3 transition-transform hover:scale-105 active:scale-95">
-              <Link href="/login"><GraduationCap className="w-6 h-6"/> Student Portal</Link>
+            <Button size="lg" variant="outline" asChild className="bg-white text-primary border-white hover:bg-white/90 h-16 px-12 text-xl font-bold gap-3 transition-transform hover:scale-105 active:scale-95 shadow-2xl">
+              <Link href="/login"><GraduationCap className="w-6 h-6"/> STUDENT PORTAL</Link>
             </Button>
           </div>
         </div>
       </section>
 
+      {/* Highlights Section */}
+      <section className="py-16 bg-white border-b">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-4 gap-8">
+            <div className="flex flex-col items-center text-center p-6 rounded-2xl bg-slate-50 border border-slate-100">
+              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary mb-4">
+                <CheckCircle className="w-6 h-6" />
+              </div>
+              <h3 className="font-bold text-slate-900 mb-1">Established 2015</h3>
+              <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest">Years of Excellence</p>
+            </div>
+            <div className="flex flex-col items-center text-center p-6 rounded-2xl bg-slate-50 border border-slate-100">
+              <div className="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center text-secondary mb-4">
+                <ShieldCheck className="w-6 h-6" />
+              </div>
+              <h3 className="font-bold text-slate-900 mb-1">DGT/NCVT Approved</h3>
+              <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest">Government Certified</p>
+            </div>
+            <div className="flex flex-col items-center text-center p-6 rounded-2xl bg-slate-50 border border-slate-100">
+              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mb-4">
+                <BookOpen className="w-6 h-6" />
+              </div>
+              <h3 className="font-bold text-slate-900 mb-1">Advanced Workshops</h3>
+              <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest">Practical Training</p>
+            </div>
+            <div className="flex flex-col items-center text-center p-6 rounded-2xl bg-slate-50 border border-slate-100">
+              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600 mb-4">
+                <GraduationCap className="w-6 h-6" />
+              </div>
+              <h3 className="font-bold text-slate-900 mb-1">Job Placement</h3>
+              <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest">Industrial Network</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Leadership Messages */}
       <section className="bg-slate-50 py-24">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
@@ -160,6 +194,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Campus Gallery */}
       <section className="py-24 container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
           <div>
@@ -184,21 +219,23 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-24 bg-white text-center">
+      {/* Call to Action */}
+      <section className="py-24 bg-primary text-white text-center">
         <div className="container mx-auto px-4">
-           <h2 className="font-headline text-5xl font-bold text-primary mb-8">Empowering Youth with Skills</h2>
-           <p className="text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto">Join Maharana Pratap ITI and prepare for a career in India's growing industrial sector.</p>
+           <h2 className="font-headline text-5xl font-bold mb-8">Empowering Youth with Technical Skills</h2>
+           <p className="text-2xl text-white/80 mb-12 max-w-3xl mx-auto">Join Maharana Pratap ITI Rankhandi and prepare for a career in India's growing industrial sector.</p>
            <div className="flex flex-wrap justify-center gap-6">
-             <Button size="lg" asChild className="bg-secondary hover:bg-secondary/90 text-white font-black px-12 h-16 text-xl shadow-2xl transition-transform hover:scale-105 active:scale-95">
-               <Link href="/admission">Apply for Admission</Link>
+             <Button size="lg" asChild className="bg-secondary hover:bg-secondary/90 text-white font-black px-16 h-16 text-xl shadow-2xl transition-transform hover:scale-105 active:scale-95">
+               <Link href="/admission">APPLY FOR ADMISSION</Link>
              </Button>
-             <Button size="lg" asChild className="bg-secondary hover:bg-secondary/90 text-white font-black px-12 h-16 text-xl shadow-2xl transition-transform hover:scale-105 active:scale-95">
-               <Link href="/contact">Enquire Now</Link>
+             <Button size="lg" variant="outline" asChild className="bg-white text-primary border-white hover:bg-white/90 font-black px-16 h-16 text-xl shadow-2xl transition-transform hover:scale-105 active:scale-95">
+               <Link href="/contact">ENQUIRE NOW</Link>
              </Button>
            </div>
         </div>
       </section>
 
+      {/* Footer */}
       <footer className="bg-slate-900 text-white py-16">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-3 gap-16 mb-16">
@@ -229,7 +266,7 @@ export default function Home() {
                </div>
             </div>
           </div>
-          <div className="pt-10 border-t border-white/10 text-center text-sm opacity-50">
+          <div className="pt-10 border-t border-white/10 text-center text-sm opacity-50 font-bold uppercase tracking-widest">
             © 2024 Maharana Pratap ITI Rankhandi. Established 2015.
           </div>
         </div>

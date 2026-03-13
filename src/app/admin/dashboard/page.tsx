@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { 
   Users, 
   FileText, 
@@ -16,13 +16,19 @@ import {
   User,
   Calendar,
   MapPin,
-  Phone
+  Phone,
+  Search,
+  Filter,
+  CreditCard,
+  Layers
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { AdminSidebar } from '@/components/layout/AdminSidebar';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   Dialog, 
   DialogContent, 
@@ -34,15 +40,75 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
+const ALL_PENDING_REGISTRATIONS = [
+  { 
+    id: '1',
+    name: 'Amit Tyagi', 
+    email: 'amit@example.com', 
+    trade: 'Electrician', 
+    session: '2024-26', 
+    father: 'Shri Ram Tyagi',
+    dob: '2004-08-12',
+    mobile: '+91 99887 76655',
+    address: 'Village Pilkhani, Saharanpur, UP',
+    aadhaar: '1234 5678 9012',
+    category: 'OBC',
+    photo: PlaceHolderImages.find(i => i.id === 'student-1')?.imageUrl
+  },
+  { 
+    id: '2',
+    name: 'Sonia Verma', 
+    email: 'sonia@example.com', 
+    trade: 'HSI', 
+    session: '2024-25', 
+    father: 'Shri KL Verma',
+    dob: '2005-02-20',
+    mobile: '+91 88776 65544',
+    address: 'Chilkana Road, Saharanpur, UP',
+    aadhaar: '9876 5432 1098',
+    category: 'SC',
+    photo: PlaceHolderImages.find(i => i.id === 'student-rep')?.imageUrl
+  },
+  { 
+    id: '3',
+    name: 'Vikas Sharma', 
+    email: 'vikas@example.com', 
+    trade: 'Fitter', 
+    session: '2023-25', 
+    father: 'Shri OP Sharma',
+    dob: '2003-11-05',
+    mobile: '+91 77665 54433',
+    address: 'Nanauta, Saharanpur, UP',
+    aadhaar: '5566 7788 9900',
+    category: 'General',
+    photo: PlaceHolderImages.find(i => i.id === 'chairman')?.imageUrl
+  },
+];
+
 export default function AdminDashboard() {
   const { toast } = useToast();
   const [selectedStudent, setSelectedStudent] = useState<any>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   
+  // Search & Filter State
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterTrade, setFilterTrade] = useState('All');
+  const [filterSession, setFilterSession] = useState('All');
+
+  const filteredRegistrations = useMemo(() => {
+    return ALL_PENDING_REGISTRATIONS.filter(reg => {
+      const matchesSearch = reg.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                            reg.aadhaar?.includes(searchQuery);
+      const matchesTrade = filterTrade === 'All' || reg.trade === filterTrade;
+      const matchesSession = filterSession === 'All' || reg.session === filterSession;
+      return matchesSearch && matchesTrade && matchesSession;
+    });
+  }, [searchQuery, filterTrade, filterSession]);
+
   const handleExport = () => {
     toast({
       title: "Export Started",
-      description: "Compiling student database into Excel format...",
+      description: "Compiling filtered database into Excel format...",
     });
   };
 
@@ -53,48 +119,9 @@ export default function AdminDashboard() {
     });
   };
 
-  const pendingApprovals = [
-    { 
-      id: '1',
-      name: 'Amit Tyagi', 
-      email: 'amit@example.com', 
-      trade: 'Electrician', 
-      session: '2024-26', 
-      father: 'Shri Ram Tyagi',
-      dob: '2004-08-12',
-      mobile: '+91 99887 76655',
-      address: 'Village Pilkhani, Saharanpur, UP',
-      photo: PlaceHolderImages.find(i => i.id === 'student-1')?.imageUrl
-    },
-    { 
-      id: '2',
-      name: 'Sonia Verma', 
-      email: 'sonia@example.com', 
-      trade: 'HSI', 
-      session: '2024-25', 
-      father: 'Shri KL Verma',
-      dob: '2005-02-20',
-      mobile: '+91 88776 65544',
-      address: 'Chilkana Road, Saharanpur, UP',
-      photo: PlaceHolderImages.find(i => i.id === 'student-rep')?.imageUrl
-    },
-    { 
-      id: '3',
-      name: 'Vikas Sharma', 
-      email: 'vikas@example.com', 
-      trade: 'Fitter', 
-      session: '2023-25', 
-      father: 'Shri OP Sharma',
-      dob: '2003-11-05',
-      mobile: '+91 77665 54433',
-      address: 'Nanauta, Saharanpur, UP',
-      photo: PlaceHolderImages.find(i => i.id === 'chairman')?.imageUrl
-    },
-  ];
-
   const adminStats = [
     { label: 'Total Students', value: '450', icon: <Users className="w-5 h-5" />, color: 'text-blue-600', bg: 'bg-blue-50' },
-    { label: 'Pending Signups', value: '12', icon: <FileText className="w-5 h-5" />, color: 'text-amber-600', bg: 'bg-amber-50' },
+    { label: 'Pending Signups', value: filteredRegistrations.length.toString(), icon: <FileText className="w-5 h-5" />, color: 'text-amber-600', bg: 'bg-amber-50' },
     { label: 'Today Admissions', value: '5', icon: <CheckCircle className="w-5 h-5" />, color: 'text-green-600', bg: 'bg-green-50' },
   ];
 
@@ -111,7 +138,6 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-muted/30 flex">
       <AdminSidebar />
 
-      {/* Main Panel */}
       <main className="flex-1 p-8 overflow-y-auto print:p-0">
         <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 print:hidden">
           <div>
@@ -124,7 +150,7 @@ export default function AdminDashboard() {
           </div>
         </header>
 
-        <div className="grid md:grid-cols-3 gap-6 mb-12 print:hidden">
+        <div className="grid md:grid-cols-3 gap-6 mb-8 print:hidden">
           {adminStats.map((stat, idx) => (
             <Card key={idx} className="border-none shadow-sm overflow-hidden">
               <CardContent className="pt-6 flex items-center gap-4">
@@ -140,13 +166,63 @@ export default function AdminDashboard() {
           ))}
         </div>
 
+        {/* Search & Filters */}
+        <Card className="mb-8 border-none shadow-sm print:hidden">
+          <CardContent className="p-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+              <div className="space-y-2">
+                <Label className="text-xs font-bold uppercase">Search Student</Label>
+                <div className="relative">
+                  <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input 
+                    placeholder="Name or Aadhaar..." 
+                    className="pl-9" 
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs font-bold uppercase">Filter Trade</Label>
+                <Select value={filterTrade} onValueChange={setFilterTrade}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="All Trades" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="All">All Trades</SelectItem>
+                    <SelectItem value="Electrician">Electrician</SelectItem>
+                    <SelectItem value="Fitter">Fitter</SelectItem>
+                    <SelectItem value="HSI">HSI</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs font-bold uppercase">Filter Session</Label>
+                <Select value={filterSession} onValueChange={setFilterSession}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="All Sessions" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="All">All Sessions</SelectItem>
+                    <SelectItem value="2023-25">2023-25</SelectItem>
+                    <SelectItem value="2024-26">2024-26</SelectItem>
+                    <SelectItem value="2024-25">2024-25</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button variant="ghost" onClick={() => {setSearchQuery(''); setFilterTrade('All'); setFilterSession('All');}} className="text-primary font-bold">
+                Reset Filters
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
         <div className="grid lg:grid-cols-3 gap-8 print:hidden">
-          {/* Pending Signups */}
           <div className="lg:col-span-2">
             <Card className="border-none shadow-sm h-full">
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>
-                  <CardTitle>Portal Registrations</CardTitle>
+                  <CardTitle>Portal Registrations ({filteredRegistrations.length})</CardTitle>
                   <CardDescription>Verify admitted students for portal access</CardDescription>
                 </div>
                 <Badge variant="outline" className="bg-amber-50 text-amber-600 border-amber-200">Action Required</Badge>
@@ -162,12 +238,12 @@ export default function AdminDashboard() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {pendingApprovals.map((req, idx) => (
+                    {filteredRegistrations.map((req, idx) => (
                       <TableRow key={idx} className="cursor-pointer hover:bg-muted/50" onClick={() => viewStudentDetails(req)}>
                         <TableCell>
                           <div>
                             <p className="font-bold text-slate-800">{req.name}</p>
-                            <p className="text-xs text-muted-foreground">{req.email}</p>
+                            <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-tighter">Aadhaar: {req.aadhaar}</p>
                           </div>
                         </TableCell>
                         <TableCell>
@@ -187,11 +263,15 @@ export default function AdminDashboard() {
                         </TableCell>
                       </TableRow>
                     ))}
+                    {filteredRegistrations.length === 0 && (
+                      <TableRow>
+                        <TableCell colSpan={4} className="h-32 text-center text-muted-foreground">
+                          No students found matching your search.
+                        </TableCell>
+                      </TableRow>
+                    )}
                   </TableBody>
                 </Table>
-                <div className="mt-6 text-center">
-                   <Button variant="ghost" className="text-primary text-xs font-bold uppercase tracking-widest">View All Applications <ArrowRight className="w-3 h-3 ml-2"/></Button>
-                </div>
               </CardContent>
             </Card>
           </div>
@@ -280,6 +360,14 @@ export default function AdminDashboard() {
                     <div className="space-y-1">
                       <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Session</p>
                       <p className="font-bold text-slate-800">{selectedStudent.session}</p>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Aadhaar Number</p>
+                      <p className="font-bold text-slate-800">{selectedStudent.aadhaar}</p>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Category</p>
+                      <Badge variant="outline" className="border-primary text-primary">{selectedStudent.category}</Badge>
                     </div>
                   </div>
                 </div>

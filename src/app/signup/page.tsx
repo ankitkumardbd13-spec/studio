@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { UserPlus, Upload, Calendar, Info, MapPin, Phone, GraduationCap } from 'lucide-react';
+import { UserPlus, Upload, Calendar, Info, MapPin, Phone, GraduationCap, CreditCard, Layers } from 'lucide-react';
 import Link from 'next/link';
 
 export default function SignupPage() {
@@ -70,6 +70,28 @@ export default function SignupPage() {
                     <div className="space-y-2">
                       <Label htmlFor="fatherName" className="text-slate-700 font-bold">Father's Name</Label>
                       <Input id="fatherName" placeholder="Full name of Father" required className="h-12 border-slate-300" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="aadhaar" className="text-slate-700 font-bold">Aadhaar Card Number</Label>
+                      <div className="relative">
+                        <Input id="aadhaar" placeholder="12 Digit Number" required maxLength={14} className="h-12 pl-12 border-slate-300" />
+                        <CreditCard className="absolute left-4 top-3.5 w-5 h-5 text-muted-foreground" />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-slate-700 font-bold">Category</Label>
+                      <Select required>
+                        <SelectTrigger className="h-12 border-slate-300">
+                          <SelectValue placeholder="Select Category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="General">General</SelectItem>
+                          <SelectItem value="OBC">OBC</SelectItem>
+                          <SelectItem value="SC">SC</SelectItem>
+                          <SelectItem value="ST">ST</SelectItem>
+                          <SelectItem value="EWS">EWS</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="personalMobile" className="text-slate-700 font-bold">Mobile Number</Label>

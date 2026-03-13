@@ -8,9 +8,9 @@
     },
     {
       "id": "iti-hero",
-      "description": "Maharana Pratap ITI Campus",
-      "imageUrl": "https://picsum.photos/seed/iti1/1200/600",
-      "imageHint": "college campus building"
+      "description": "AI Generated High-Tech Campus of Maharana Pratap ITI",
+      "imageUrl": "https://picsum.photos/seed/itiaihero/1200/600",
+      "imageHint": "modern futuristic college campus"
     },
     {
       "id": "iti-stamp",
@@ -44,33 +44,33 @@
     },
     {
       "id": "workshop-electrician",
-      "description": "Electrician Workshop",
-      "imageUrl": "https://picsum.photos/seed/elec/800/400",
-      "imageHint": "electrical workshop"
+      "description": "AI Enhanced Electrician Workshop",
+      "imageUrl": "https://picsum.photos/seed/aielec/800/400",
+      "imageHint": "high-tech electrical laboratory"
     },
     {
       "id": "workshop-fitter",
-      "description": "Fitter Workshop",
-      "imageUrl": "https://picsum.photos/seed/fitter/800/400",
-      "imageHint": "industrial workshop"
+      "description": "AI Enhanced Fitter Workshop",
+      "imageUrl": "https://picsum.photos/seed/aifitter/800/400",
+      "imageHint": "modern industrial machinery workshop"
     },
     {
       "id": "gallery-1",
-      "description": "Practical Lab",
-      "imageUrl": "https://picsum.photos/seed/lab1/800/600",
-      "imageHint": "science lab"
+      "description": "AI Generated Practical Lab",
+      "imageUrl": "https://picsum.photos/seed/ailab1/800/600",
+      "imageHint": "advanced science lab"
     },
     {
       "id": "gallery-2",
-      "description": "Classroom Session",
-      "imageUrl": "https://picsum.photos/seed/class1/800/600",
-      "imageHint": "classroom learning"
+      "description": "AI Generated Smart Classroom",
+      "imageUrl": "https://picsum.photos/seed/aiclass1/800/600",
+      "imageHint": "smart classroom learning"
     },
     {
       "id": "gallery-3",
-      "description": "Workshop Equipment",
-      "imageUrl": "https://picsum.photos/seed/equip1/800/600",
-      "imageHint": "industrial tools"
+      "description": "AI Generated Precision Tools",
+      "imageUrl": "https://picsum.photos/seed/aiequip1/800/600",
+      "imageHint": "precision industrial instruments"
     }
   ]
 }

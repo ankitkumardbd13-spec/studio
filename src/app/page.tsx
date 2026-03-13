@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -40,12 +39,12 @@ export default function Home() {
       setGalleryItems(JSON.parse(savedGallery));
     } else {
       setGalleryItems([
-        { id: 'g1', url: 'https://picsum.photos/seed/lab1/800/600', hint: 'practical lab', title: 'Electrical Lab' },
-        { id: 'g2', url: 'https://picsum.photos/seed/class1/800/600', hint: 'classroom learning', title: 'Theory Class' },
-        { id: 'g3', url: 'https://picsum.photos/seed/equip1/800/600', hint: 'industrial tools', title: 'Workshop Equipment' },
-        { id: 'g4', url: 'https://picsum.photos/seed/iti1/800/600', hint: 'college campus', title: 'Campus View' },
-        { id: 'g5', url: 'https://picsum.photos/seed/elec/800/600', hint: 'electrical workshop', title: 'Electrician Workshop' },
-        { id: 'g6', url: 'https://picsum.photos/seed/fitter/800/600', hint: 'industrial workshop', title: 'Fitter Workshop' },
+        { id: 'g1', url: 'https://picsum.photos/seed/ailab1/800/600', hint: 'practical lab', title: 'Electrical Lab' },
+        { id: 'g2', url: 'https://picsum.photos/seed/aiclass1/800/600', hint: 'smart classroom', title: 'Theory Class' },
+        { id: 'g3', url: 'https://picsum.photos/seed/aiequip1/800/600', hint: 'industrial tools', title: 'Workshop Equipment' },
+        { id: 'g4', url: 'https://picsum.photos/seed/itiaihero/800/600', hint: 'college campus', title: 'Campus View' },
+        { id: 'g5', url: 'https://picsum.photos/seed/aielec/800/600', hint: 'electrical workshop', title: 'Electrician Workshop' },
+        { id: 'g6', url: 'https://picsum.photos/seed/aifitter/800/600', hint: 'industrial workshop', title: 'Fitter Workshop' },
       ]);
     }
   }, []);
@@ -64,34 +63,34 @@ export default function Home() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative h-[600px] w-full">
+      <section className="relative h-[650px] w-full">
         {heroImage && (
           <Image
             src={heroImage.imageUrl}
             alt={heroImage.description}
             fill
-            className="object-cover brightness-[0.4]"
+            className="object-cover brightness-[0.35]"
             priority
             data-ai-hint={heroImage.imageHint}
           />
         )}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
           {logoImage && (
-            <div className="mb-6 relative w-24 h-24 bg-white/20 backdrop-blur-md rounded-2xl p-2 animate-in zoom-in-50 duration-700">
+            <div className="mb-8 relative w-28 h-28 bg-white rounded-3xl p-3 animate-in zoom-in-50 duration-700 shadow-2xl">
                <Image src={logoImage.imageUrl} alt="Logo" fill className="object-contain p-2" />
             </div>
           )}
-          <h1 className="font-headline text-5xl md:text-8xl text-white mb-6 drop-shadow-lg font-bold">
+          <h1 className="font-headline text-5xl md:text-8xl text-white mb-6 drop-shadow-2xl font-bold tracking-tight">
             {siteData.heroTitle}
           </h1>
-          <p className="text-xl md:text-3xl text-white max-w-3xl drop-shadow-md font-medium">
+          <p className="text-xl md:text-3xl text-white/90 max-w-4xl drop-shadow-lg font-medium">
             {siteData.heroSub}
           </p>
-          <div className="mt-10 flex flex-wrap justify-center gap-6">
-            <Button size="lg" asChild className="bg-secondary hover:bg-secondary/90 text-white border-none h-14 px-8 text-lg font-bold gap-2">
+          <div className="mt-12 flex flex-wrap justify-center gap-6">
+            <Button size="lg" asChild className="bg-secondary hover:bg-secondary/90 text-white border-none h-16 px-10 text-xl font-bold gap-3 shadow-xl transition-transform hover:scale-105 active:scale-95">
               <Link href="/admission"><ClipboardList className="w-6 h-6"/> New Admission Inquiry</Link>
             </Button>
-            <Button size="lg" variant="outline" asChild className="bg-white/10 text-white border-white hover:bg-white/20 h-14 px-8 text-lg font-bold gap-2 backdrop-blur-sm">
+            <Button size="lg" variant="outline" asChild className="bg-white/20 text-white border-white/50 hover:bg-white/30 h-16 px-10 text-xl font-bold gap-3 backdrop-blur-md transition-transform hover:scale-105 active:scale-95">
               <Link href="/login"><GraduationCap className="w-6 h-6"/> Student Portal</Link>
             </Button>
           </div>
@@ -103,21 +102,21 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="font-headline text-5xl text-primary font-bold mb-4">Leadership Messages</h2>
-            <p className="text-muted-foreground text-lg">Guiding MPITI Saharanpur towards excellence</p>
+            <p className="text-muted-foreground text-lg">Guiding MPITI Saharanpur towards skill excellence</p>
           </div>
           <div className="grid md:grid-cols-3 gap-10">
             {/* Chairman */}
             <Card className="border-none shadow-xl bg-white overflow-hidden group">
-              <div className="h-64 relative overflow-hidden">
+              <div className="h-72 relative overflow-hidden">
                 <img src={siteData.chairmanPhoto} alt="Chairman" className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" />
                 <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
                    <p className="text-white font-bold text-xl">Chairman</p>
                    <p className="text-white/80 text-sm">MPITI Saharanpur</p>
                 </div>
               </div>
-              <CardContent className="pt-8 relative min-h-[160px]">
+              <CardContent className="pt-8 relative min-h-[180px]">
                 <Quote className="absolute top-4 right-6 w-12 h-12 text-primary/10" />
-                <p className="italic text-muted-foreground text-center leading-relaxed">
+                <p className="italic text-muted-foreground text-center leading-relaxed font-medium">
                   "{siteData.chairmanMsg}"
                 </p>
               </CardContent>
@@ -125,16 +124,16 @@ export default function Home() {
 
             {/* Principal */}
             <Card className="border-none shadow-xl bg-white overflow-hidden group">
-              <div className="h-64 relative overflow-hidden">
+              <div className="h-72 relative overflow-hidden">
                 <img src={siteData.principalPhoto} alt="Principal" className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" />
                 <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
                    <p className="text-white font-bold text-xl">Principal</p>
                    <p className="text-white/80 text-sm">Official Message</p>
                 </div>
               </div>
-              <CardContent className="pt-8 relative min-h-[160px]">
+              <CardContent className="pt-8 relative min-h-[180px]">
                 <Quote className="absolute top-4 right-6 w-12 h-12 text-secondary/10" />
-                <p className="italic text-muted-foreground text-center leading-relaxed">
+                <p className="italic text-muted-foreground text-center leading-relaxed font-medium">
                   "{siteData.principalMsg}"
                 </p>
               </CardContent>
@@ -142,16 +141,16 @@ export default function Home() {
 
             {/* Student Success */}
             <Card className="border-none shadow-xl bg-white overflow-hidden group">
-              <div className="h-64 relative overflow-hidden">
+              <div className="h-72 relative overflow-hidden">
                 <img src={siteData.studentPhoto} alt="Student" className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" />
                 <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
                    <p className="text-white font-bold text-xl">Success Story</p>
                    <p className="text-white/80 text-sm">Our Alumni Network</p>
                 </div>
               </div>
-              <CardContent className="pt-8 relative min-h-[160px]">
+              <CardContent className="pt-8 relative min-h-[180px]">
                 <Quote className="absolute top-4 right-6 w-12 h-12 text-blue-500/10" />
-                <p className="italic text-muted-foreground text-center leading-relaxed">
+                <p className="italic text-muted-foreground text-center leading-relaxed font-medium">
                   "{siteData.studentMsg}"
                 </p>
               </CardContent>
@@ -165,9 +164,9 @@ export default function Home() {
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
           <div>
             <h2 className="font-headline text-5xl text-primary font-bold mb-2">Campus Gallery</h2>
-            <p className="text-muted-foreground text-lg">Workshops, labs, and student life at MPITI</p>
+            <p className="text-muted-foreground text-lg">AI Generated Visualization of Modern Workshops</p>
           </div>
-          <Button variant="outline" className="gap-2"><LayoutGrid className="w-4 h-4"/> View All Photos</Button>
+          <Button variant="outline" className="gap-2 border-primary text-primary hover:bg-primary/5"><LayoutGrid className="w-4 h-4"/> View All Photos</Button>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
           {galleryItems.map((item, idx) => (
@@ -177,8 +176,8 @@ export default function Home() {
                 alt={item.title || "Gallery Item"} 
                 className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700 aspect-video md:aspect-auto"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-                <p className="text-white font-bold text-lg">{item.title || 'Campus Life'}</p>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+                <p className="text-white font-bold text-xl">{item.title || 'Campus Life'}</p>
               </div>
             </div>
           ))}
@@ -193,11 +192,11 @@ export default function Home() {
             {courses.map((course, idx) => (
               <Card key={idx} className="hover:shadow-2xl transition-all border-none shadow-lg bg-slate-50/50 hover:-translate-y-2 duration-300">
                 <CardHeader>
-                  <div className="p-4 bg-secondary/10 rounded-2xl w-fit mb-4 text-secondary">
+                  <div className="p-5 bg-secondary/10 rounded-2xl w-fit mb-4 text-secondary">
                     {course.icon}
                   </div>
-                  <CardTitle className="text-2xl">{course.name}</CardTitle>
-                  <CardDescription className="text-lg font-medium text-primary">Duration: {course.duration}</CardDescription>
+                  <CardTitle className="text-2xl font-bold">{course.name}</CardTitle>
+                  <CardDescription className="text-lg font-bold text-primary">Duration: {course.duration}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground leading-relaxed">Technical training focused on industrial proficiency and safety according to the latest NCVT DGT guidelines.</p>
@@ -214,10 +213,10 @@ export default function Home() {
            <h2 className="font-headline text-5xl font-bold mb-8">Empowering Youth with Skills</h2>
            <p className="text-2xl opacity-90 mb-12 max-w-3xl mx-auto">Join Maharana Pratap ITI and prepare for a career in India's growing industrial sector.</p>
            <div className="flex flex-wrap justify-center gap-6">
-             <Button size="lg" variant="secondary" asChild className="font-bold px-12 h-14 text-lg">
+             <Button size="lg" variant="secondary" asChild className="font-bold px-12 h-14 text-xl shadow-lg">
                <Link href="/admission">Apply for Admission</Link>
              </Button>
-             <Button size="lg" variant="outline" asChild className="border-white text-white hover:bg-white/10 font-bold px-12 h-14 text-lg">
+             <Button size="lg" variant="outline" asChild className="border-white text-white hover:bg-white/10 font-bold px-12 h-14 text-xl backdrop-blur-sm">
                <Link href="/contact">Enquire Now</Link>
              </Button>
            </div>
@@ -230,16 +229,16 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-16 mb-16">
             <div>
               <div className="flex items-center gap-3 mb-6">
-                <div className="relative w-12 h-12 bg-white rounded-lg p-1">
+                <div className="relative w-14 h-14 bg-white rounded-xl p-1.5 shadow-lg">
                    {logoImage && <Image src={logoImage.imageUrl} alt="Logo" fill className="object-contain" />}
                 </div>
                 <h2 className="font-headline text-3xl text-primary font-bold">MPITI Saharanpur</h2>
               </div>
-              <p className="opacity-70 text-lg leading-relaxed">{siteData.heroSub}</p>
+              <p className="opacity-70 text-lg leading-relaxed font-medium">{siteData.heroSub}</p>
             </div>
             <div>
               <h3 className="font-bold mb-6 uppercase text-sm tracking-[0.2em] text-secondary">Quick Links</h3>
-              <ul className="space-y-3 text-lg opacity-80">
+              <ul className="space-y-3 text-lg opacity-80 font-medium">
                 <li><Link href="/" className="hover:text-primary transition-colors">Home</Link></li>
                 <li><Link href="/admission" className="hover:text-primary transition-colors">Admission Inquiry</Link></li>
                 <li><Link href="/login?type=admin" className="hover:text-primary transition-colors">Admin Login</Link></li>
@@ -248,7 +247,7 @@ export default function Home() {
             </div>
             <div>
                <h3 className="font-bold mb-6 uppercase text-sm tracking-[0.2em] text-secondary">Contact</h3>
-               <div className="space-y-4 text-lg opacity-80">
+               <div className="space-y-4 text-lg opacity-80 font-medium">
                  <p className="flex items-start gap-3"><MapPin className="w-6 h-6 text-primary flex-shrink-0" /> {siteData.address}</p>
                  <p className="flex items-center gap-3"><Phone className="w-6 h-6 text-primary flex-shrink-0" /> {siteData.phone1}</p>
                  <p className="flex items-center gap-3"><Mail className="w-6 h-6 text-primary flex-shrink-0" /> {siteData.email}</p>

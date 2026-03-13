@@ -2,7 +2,7 @@
 "use client";
 
 import React from 'react';
-import Link from 'next/link';
+import Link from 'next/navigation';
 import { usePathname } from 'next/navigation';
 import { 
   Layout, 
@@ -11,7 +11,7 @@ import {
   Bell, 
   Settings, 
   LogOut,
-  BookMarked
+  FileText
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -21,7 +21,8 @@ export function AdminSidebar() {
 
   const menuItems = [
     { name: 'Overview', href: '/admin/dashboard', icon: Layout },
-    { name: 'AI Tool Generator', href: '/admin/tools', icon: Wand2 },
+    { name: 'Assignments', href: '/admin/assignments', icon: FileText },
+    { name: 'AI Question Gen', href: '/admin/tools', icon: Wand2 },
     { name: 'Drafting Assistant', href: '/admin/messages', icon: MessageSquare },
     { name: 'Notifications', href: '/admin/notifications', icon: Bell },
     { name: 'Site Settings', href: '/admin/settings', icon: Settings },

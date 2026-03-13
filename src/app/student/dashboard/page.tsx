@@ -1,7 +1,7 @@
 
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { 
@@ -16,7 +16,8 @@ import {
   LogOut,
   ChevronRight,
   BookMarked,
-  ShieldCheck
+  ShieldCheck,
+  AlertCircle
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -25,9 +26,20 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function StudentDashboard() {
   const studentPhoto = PlaceHolderImages.find(img => img.id === 'student-1')?.imageUrl;
+  const [assignmentCount, setAssignmentCount] = useState(0);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('mpiti_assignments');
+    if (saved) {
+      const all = JSON.parse(saved);
+      // Mocked user trade filter
+      const filtered = all.filter((a: any) => a.trade === 'Electrician' && a.year === 1);
+      setAssignmentCount(filtered.length);
+    }
+  }, []);
 
   const quickLinks = [
-    { title: 'My Assignments', icon: <FileText className="w-5 h-5" />, href: '/student/assignments', color: 'bg-blue-500' },
+    { title: 'My Assignments', icon: <FileText className="w-5 h-5" />, href: '/student/assignments', color: 'bg-blue-500', count: assignmentCount },
     { title: 'Fee Payment', icon: <CreditCard className="w-5 h-5" />, href: '/student/fees', color: 'bg-green-500' },
     { title: 'View Syllabus', icon: <BookOpen className="w-5 h-5" />, href: '/student/syllabus', color: 'bg-amber-500' },
     { title: 'Exam Results', icon: <Award className="w-5 h-5" />, href: '/student/results', color: 'bg-purple-500' },
@@ -62,9 +74,6 @@ export default function StudentDashboard() {
           </Link>
           <Link href="/student/id-card" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 transition-colors">
             <IdCard className="w-5 h-5" /> Digital ID Card
-          </Link>
-          <Link href="/mock-tests" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 transition-colors">
-            <Award className="w-5 h-5" /> Mock Tests
           </Link>
         </nav>
         <div className="p-4 border-t border-white/10 space-y-2">
@@ -101,7 +110,12 @@ export default function StudentDashboard() {
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
               {quickLinks.map((link, idx) => (
                 <Link key={idx} href={link.href}>
-                  <Card className="hover:shadow-md transition-shadow h-full cursor-pointer">
+                  <Card className="hover:shadow-md transition-shadow h-full cursor-pointer relative overflow-hidden">
+                    {link.count !== undefined && link.count > 0 && (
+                      <div className="absolute top-2 right-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] text-white font-bold">
+                        {link.count}
+                      </div>
+                    )}
                     <CardContent className="pt-6 flex flex-col items-center text-center">
                       <div className={`p-3 rounded-xl mb-3 text-white ${link.color}`}>
                         {link.icon}
@@ -168,15 +182,21 @@ export default function StudentDashboard() {
 
             <Card className="border-none shadow-sm bg-primary text-primary-foreground">
               <CardHeader>
-                <CardTitle>Upcoming Mock Test</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                   <AlertCircle className="w-5 h-5" /> Upcoming Deadlines
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="bg-white/10 p-4 rounded-lg mb-4">
-                  <p className="font-bold">Trade Theory Unit 4</p>
-                  <p className="text-sm opacity-80">May 25th, 2024 | 10:00 AM</p>
-                </div>
-                <Button className="w-full bg-secondary hover:bg-secondary/90 text-white border-none">
-                  Set Reminder
+                {assignmentCount > 0 ? (
+                  <div className="bg-white/10 p-4 rounded-lg mb-4">
+                    <p className="font-bold">You have {assignmentCount} pending assignments.</p>
+                    <p className="text-sm opacity-80 mt-1">Check the Assignments tab to submit before the last date.</p>
+                  </div>
+                ) : (
+                  <p className="text-sm opacity-80">No immediate deadlines. Keep up the good work!</p>
+                )}
+                <Button variant="secondary" className="w-full font-bold" asChild>
+                  <Link href="/student/assignments">View Assignments</Link>
                 </Button>
               </CardContent>
             </Card>

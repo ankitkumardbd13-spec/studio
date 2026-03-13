@@ -11,7 +11,8 @@ import {
   Bell, 
   Settings, 
   LogOut,
-  FileText
+  FileText,
+  CreditCard
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -35,6 +36,7 @@ export function AdminSidebar() {
   const menuItems = [
     { name: 'Overview', href: '/admin/dashboard', icon: Layout },
     { name: 'Assignments', href: '/admin/assignments', icon: FileText },
+    { name: 'Fee Management', href: '/admin/fees', icon: CreditCard },
     { name: 'AI Question Gen', href: '/admin/tools', icon: Wand2 },
     { name: 'Drafting Assistant', href: '/admin/messages', icon: MessageSquare },
     { name: 'Notifications', href: '/admin/notifications', icon: Bell },

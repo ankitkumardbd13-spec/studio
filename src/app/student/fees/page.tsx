@@ -77,61 +77,61 @@ export default function StudentFeesPage() {
   const stampUrl = siteSettings?.stamp || PlaceHolderImages.find(img => img.id === 'iti-stamp')?.imageUrl;
 
   const ReceiptCard = ({ payment }: { payment: any }) => (
-    <div className="receipt-slip bg-white border border-slate-900 p-8 w-[21cm] h-[9cm] overflow-hidden flex flex-col relative shrink-0 box-border">
+    <div className="receipt-slip bg-white border border-slate-900 p-[1cm] w-[21cm] h-[9cm] overflow-hidden flex flex-col relative shrink-0 box-border">
       {/* LOGO ONLY AS WATERMARK */}
       <div className="absolute inset-0 flex items-center justify-center opacity-[0.05] pointer-events-none grayscale">
         {logoUrl && <img src={logoUrl} alt="watermark" className="w-[12cm] h-[12cm] object-contain" />}
       </div>
 
       <div className="relative z-10 flex flex-col h-full">
-        <header className="text-center border-b-2 border-slate-900 pb-4 mb-6">
-          <h2 className="text-3xl font-black text-slate-900 uppercase leading-none tracking-tight mb-1">Maharana Pratap ITI Saharanpur</h2>
-          <p className="text-sm font-bold text-slate-600 uppercase tracking-widest">OFFICIAL FEE RECEIPT - {payment?.receipt}</p>
+        <header className="text-center border-b-2 border-slate-900 pb-2 mb-4">
+          <h2 className="text-2xl font-black text-slate-900 uppercase leading-none tracking-tight mb-1">Maharana Pratap ITI Saharanpur</h2>
+          <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">OFFICIAL FEE RECEIPT - {payment?.receipt}</p>
         </header>
 
-        <div className="grid grid-cols-2 gap-x-12 gap-y-6 mt-2">
-          <div className="flex flex-col border-b border-slate-200 pb-2">
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Candidate Name</span>
-            <span className="text-xl font-bold text-slate-900 uppercase">{profile.name}</span>
+        <div className="grid grid-cols-2 gap-x-12 gap-y-4 mt-2">
+          <div className="flex flex-col border-b border-slate-200 pb-1">
+            <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Candidate Name</span>
+            <span className="text-lg font-bold text-slate-900 uppercase">{profile.name}</span>
           </div>
-          <div className="flex flex-col border-b border-slate-200 pb-2">
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Father's Name</span>
-            <span className="text-xl font-bold text-slate-800 uppercase">{profile.father}</span>
+          <div className="flex flex-col border-b border-slate-200 pb-1">
+            <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Father's Name</span>
+            <span className="text-lg font-bold text-slate-800 uppercase">{profile.father}</span>
           </div>
-          <div className="flex flex-col border-b border-slate-200 pb-2">
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Roll / Registration No.</span>
-            <span className="text-lg font-bold text-slate-900">{profile.rollNo}</span>
+          <div className="flex flex-col border-b border-slate-200 pb-1">
+            <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Roll / Registration No.</span>
+            <span className="text-md font-bold text-slate-900">{profile.rollNo}</span>
           </div>
-          <div className="flex flex-col border-b border-slate-200 pb-2">
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Payment Date</span>
-            <span className="text-lg font-bold text-slate-900">{payment?.date}</span>
+          <div className="flex flex-col border-b border-slate-200 pb-1">
+            <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Payment Date</span>
+            <span className="text-md font-bold text-slate-900">{payment?.date}</span>
           </div>
         </div>
 
-        <div className="mt-8 flex justify-between items-center bg-slate-50 p-6 rounded-xl border border-slate-200">
+        <div className="mt-4 flex justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-200">
           <div className="flex flex-col">
-            <span className="text-[10px] font-black text-slate-400 uppercase mb-1">Payment Details</span>
-            <span className="text-lg font-bold text-slate-700 italic">{payment?.mode}</span>
+            <span className="text-[8px] font-black text-slate-400 uppercase mb-0.5">Payment Details</span>
+            <span className="text-md font-bold text-slate-700 italic">{payment?.mode}</span>
           </div>
-          <div className="bg-slate-900 text-white px-8 py-4 rounded-lg flex flex-col items-end">
-            <span className="text-[10px] uppercase font-bold opacity-60 mb-1">Amount Paid</span>
-            <span className="text-4xl font-black">₹{payment?.amount.toLocaleString()}</span>
+          <div className="bg-slate-900 text-white px-6 py-2 rounded-lg flex flex-col items-end">
+            <span className="text-[8px] uppercase font-bold opacity-60 mb-0.5">Amount Paid</span>
+            <span className="text-3xl font-black">₹{payment?.amount.toLocaleString()}</span>
           </div>
         </div>
 
-        <footer className="mt-auto flex justify-between items-end pt-4">
-          <div className="text-[10px] text-slate-400 font-medium">
+        <footer className="mt-auto flex justify-between items-end pt-2">
+          <div className="text-[8px] text-slate-400 font-medium">
             <p>Maharana Pratap ITI Saharanpur</p>
             <p>Digital Portal generated receipt.</p>
           </div>
           <div className="relative flex flex-col items-center">
             {stampUrl && (
-              <div className="absolute -top-16 -right-4 w-28 h-28 opacity-40 mix-blend-multiply rotate-[-12deg] pointer-events-none">
+              <div className="absolute -top-12 -right-4 w-24 h-24 opacity-40 mix-blend-multiply rotate-[-12deg] pointer-events-none">
                 <img src={stampUrl} alt="stamp" className="w-full h-full object-contain" />
               </div>
             )}
-            <div className="w-48 h-[1px] bg-slate-900 mb-2"></div>
-            <p className="text-xs font-black text-slate-900 uppercase tracking-widest">Authorized Signatory</p>
+            <div className="w-32 h-[1px] bg-slate-900 mb-1"></div>
+            <p className="text-[9px] font-black text-slate-900 uppercase tracking-widest">Authorized Signatory</p>
           </div>
         </footer>
       </div>
@@ -251,22 +251,34 @@ export default function StudentFeesPage() {
         @media print {
           @page {
             size: A4 portrait;
-            margin: 0;
+            margin: 0 !important;
           }
+          body {
+            background: white !important;
+            margin: 0 !important;
+            padding: 0 !important;
+          }
+          /* Hide everything by default */
           body * {
             visibility: hidden;
           }
+          /* Show the receipts wrapper and its content */
           #receipts-wrapper, #receipts-wrapper * {
             visibility: visible;
           }
           #receipts-wrapper {
-            position: absolute !important;
+            position: fixed !important;
             left: 0 !important;
             top: 0 !important;
-            display: block !important;
             width: 21cm !important;
+            height: 29.7cm !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: flex-start !important;
             margin: 0 !important;
             padding: 0 !important;
+            background: white !important;
+            z-index: 999999 !important;
           }
           .receipt-slip {
             width: 21cm !important;
@@ -276,6 +288,7 @@ export default function StudentFeesPage() {
             page-break-after: avoid !important;
             border-bottom: 1px dashed #000 !important;
             box-sizing: border-box !important;
+            margin: 0 !important;
           }
         }
       `}</style>

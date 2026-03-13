@@ -1,3 +1,46 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "iti-hero",
+      "description": "Maharana Pratap ITI Campus",
+      "imageUrl": "https://picsum.photos/seed/iti1/1200/600",
+      "imageHint": "college campus building"
+    },
+    {
+      "id": "chairman",
+      "description": "Chairman of Maharana Pratap ITI",
+      "imageUrl": "https://picsum.photos/seed/chairman/400/500",
+      "imageHint": "professional man portrait"
+    },
+    {
+      "id": "principal",
+      "description": "Principal of Maharana Pratap ITI",
+      "imageUrl": "https://picsum.photos/seed/principal/400/500",
+      "imageHint": "educator man portrait"
+    },
+    {
+      "id": "student-1",
+      "description": "Student Feedback 1",
+      "imageUrl": "https://picsum.photos/seed/s1/200/200",
+      "imageHint": "student portrait"
+    },
+    {
+      "id": "student-2",
+      "description": "Student Feedback 2",
+      "imageUrl": "https://picsum.photos/seed/s2/200/200",
+      "imageHint": "student girl portrait"
+    },
+    {
+      "id": "workshop-electrician",
+      "description": "Electrician Workshop",
+      "imageUrl": "https://picsum.photos/seed/elec/800/400",
+      "imageHint": "electrical workshop"
+    },
+    {
+      "id": "workshop-fitter",
+      "description": "Fitter Workshop",
+      "imageUrl": "https://picsum.photos/seed/fitter/800/400",
+      "imageHint": "industrial workshop"
+    }
+  ]
 }

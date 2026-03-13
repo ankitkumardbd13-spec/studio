@@ -32,8 +32,8 @@ export default function Home() {
     principalPhoto: PlaceHolderImages.find(i => i.id === 'principal')?.imageUrl || '',
     studentMsg: 'MPITI transformed my life. The practical sessions in the Electrician lab gave me the confidence to secure a job in a leading industry.',
     studentPhoto: PlaceHolderImages.find(i => i.id === 'student-rep')?.imageUrl || '',
-    heroTitle: 'Maharana Pratap ITI',
-    heroSub: 'Rankhandi, Deoband, Saharanpur - Providing Excellence in Technical Skills Since 2015'
+    heroTitle: 'Maharana Pratap ITI Saharanpur',
+    heroSub: 'Village Post Rankhandi, Deoband - Providing Excellence in Technical Skills Since 2015'
   };
 
   const data = siteSettings ? { ...defaultData, ...siteSettings } : defaultData;
@@ -67,7 +67,7 @@ export default function Home() {
         {heroImage && (
           <Image
             src={heroImage.imageUrl}
-            alt={heroImage.description}
+            alt="Maharana Pratap ITI Campus"
             fill
             className="object-cover brightness-[0.35]"
             priority
@@ -77,7 +77,7 @@ export default function Home() {
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
           {logoImage && (
             <div className="mb-8 relative w-28 h-28 bg-white rounded-3xl p-3 animate-in zoom-in-50 duration-700 shadow-2xl">
-               <Image src={logoImage.imageUrl} alt="Logo" fill className="object-contain p-2" />
+               <Image src={logoImage.imageUrl} alt="MPITI Logo" fill className="object-contain p-2" />
             </div>
           )}
           <div className="max-w-5xl">
@@ -89,7 +89,7 @@ export default function Home() {
             </p>
           </div>
           <div className="flex flex-wrap justify-center gap-6">
-            <Button size="lg" asChild className="bg-secondary hover:bg-secondary/90 text-white border-none h-16 px-12 text-xl font-black gap-3 shadow-[0_20px_50px_rgba(193,69,38,0.4)] transition-all hover:scale-105 active:scale-95">
+            <Button size="lg" asChild className="bg-secondary hover:bg-secondary/90 text-white border-none h-16 px-12 text-xl font-black gap-3 shadow-[0_20px_50px_rgba(193,69,38,0.5)] transition-all hover:scale-105 active:scale-95">
               <Link href="/admission"><ClipboardList className="w-6 h-6"/> NEW ADMISSION INQUIRY</Link>
             </Button>
             <Button size="lg" variant="outline" asChild className="bg-white text-primary border-white hover:bg-white/90 h-16 px-12 text-xl font-bold gap-3 transition-transform hover:scale-105 active:scale-95 shadow-2xl">
@@ -145,7 +145,7 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-10">
             <Card className="border-none shadow-xl bg-white overflow-hidden group flex flex-col items-center pt-10 text-center">
               <div className="w-48 h-48 rounded-full overflow-hidden border-4 border-primary/20 shadow-lg relative shrink-0">
-                <img src={data.chairmanPhoto} alt="Chairman" className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500" />
+                <img src={data.chairmanPhoto} alt="Chairman of MPITI" className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500" />
               </div>
               <div className="mt-6 px-4">
                  <p className="text-primary font-bold text-xl uppercase tracking-tight">Chairman</p>
@@ -161,7 +161,7 @@ export default function Home() {
 
             <Card className="border-none shadow-xl bg-white overflow-hidden group flex flex-col items-center pt-10 text-center">
               <div className="w-48 h-48 rounded-full overflow-hidden border-4 border-secondary/20 shadow-lg relative shrink-0">
-                <img src={data.principalPhoto} alt="Principal" className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500" />
+                <img src={data.principalPhoto} alt="Principal of MPITI" className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500" />
               </div>
               <div className="mt-6 px-4">
                  <p className="text-secondary font-bold text-xl uppercase tracking-tight">Principal</p>
@@ -177,7 +177,7 @@ export default function Home() {
 
             <Card className="border-none shadow-xl bg-white overflow-hidden group flex flex-col items-center pt-10 text-center">
               <div className="w-48 h-48 rounded-full overflow-hidden border-4 border-blue-200 shadow-lg relative shrink-0">
-                <img src={data.studentPhoto} alt="Student" className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500" />
+                <img src={data.studentPhoto} alt="Successful Student Alumni" className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500" />
               </div>
               <div className="mt-6 px-4">
                  <p className="text-blue-600 font-bold text-xl uppercase tracking-tight">Success Story</p>
@@ -199,7 +199,7 @@ export default function Home() {
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
           <div>
             <h2 className="font-headline text-5xl text-primary font-bold mb-2">Campus Gallery</h2>
-            <p className="text-muted-foreground text-lg">AI Generated Visualization of Modern Workshops</p>
+            <p className="text-muted-foreground text-lg">Modern Workshops for Practical Technical Training</p>
           </div>
           <Button variant="outline" className="gap-2 border-primary text-primary hover:bg-primary/5"><LayoutGrid className="w-4 h-4"/> View All Photos</Button>
         </div>
@@ -208,7 +208,7 @@ export default function Home() {
             <div key={idx} className={`relative rounded-2xl overflow-hidden shadow-lg border-2 border-primary/5 hover:border-primary/20 transition-all duration-300 group ${idx === 0 ? 'md:col-span-2 md:row-span-2' : ''}`}>
               <img 
                 src={item.url} 
-                alt={item.title || "Gallery Item"} 
+                alt={item.title || "MPITI Workshop Gallery"} 
                 className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700 aspect-video md:aspect-auto"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
@@ -225,7 +225,7 @@ export default function Home() {
            <h2 className="font-headline text-5xl font-bold mb-8">Empowering Youth with Technical Skills</h2>
            <p className="text-2xl text-white/80 mb-12 max-w-3xl mx-auto">Join Maharana Pratap ITI Rankhandi and prepare for a career in India's growing industrial sector.</p>
            <div className="flex flex-wrap justify-center gap-6">
-             <Button size="lg" asChild className="bg-secondary hover:bg-secondary/90 text-white font-black px-16 h-16 text-xl shadow-2xl transition-transform hover:scale-105 active:scale-95">
+             <Button size="lg" asChild className="bg-secondary hover:bg-secondary/90 text-white font-black px-16 h-16 text-xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-transform hover:scale-105 active:scale-95">
                <Link href="/admission">APPLY FOR ADMISSION</Link>
              </Button>
              <Button size="lg" variant="outline" asChild className="bg-white text-primary border-white hover:bg-white/90 font-black px-16 h-16 text-xl shadow-2xl transition-transform hover:scale-105 active:scale-95">
@@ -242,7 +242,7 @@ export default function Home() {
             <div>
               <div className="flex items-center gap-3 mb-6">
                 <div className="relative w-14 h-14 bg-white rounded-xl p-1.5 shadow-lg flex items-center justify-center">
-                   {logoImage && <Image src={logoImage.imageUrl} alt="Logo" fill className="object-contain" />}
+                   {logoImage && <Image src={logoImage.imageUrl} alt="MPITI Logo" fill className="object-contain" />}
                 </div>
                 <h2 className="font-headline text-3xl text-primary font-bold">MPITI Rankhandi</h2>
               </div>
@@ -258,7 +258,7 @@ export default function Home() {
               </ul>
             </div>
             <div>
-               <h3 className="font-bold mb-6 uppercase text-sm tracking-[0.2em] text-secondary">Contact</h3>
+               <h3 className="font-bold mb-6 uppercase text-sm tracking-[0.2em] text-secondary">Official Contact</h3>
                <div className="space-y-4 text-lg opacity-80 font-medium">
                  <p className="flex items-start gap-3"><MapPin className="w-6 h-6 text-primary flex-shrink-0" /> {data.address}</p>
                  <p className="flex items-center gap-3"><Phone className="w-6 h-6 text-primary flex-shrink-0" /> {data.phone1}</p>
@@ -267,7 +267,7 @@ export default function Home() {
             </div>
           </div>
           <div className="pt-10 border-t border-white/10 text-center text-sm opacity-50 font-bold uppercase tracking-widest">
-            © 2024 Maharana Pratap ITI Rankhandi. Established 2015.
+            © 2024 Maharana Pratap ITI Rankhandi. Established 2015. NCVT/DGT Approved.
           </div>
         </div>
       </footer>

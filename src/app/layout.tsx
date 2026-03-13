@@ -1,14 +1,33 @@
-import type {Metadata} from 'next';
+import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { FirebaseClientProvider } from "@/firebase";
 
 export const metadata: Metadata = {
-  title: 'Maharana Pratap ITI Rankhandi | Official Student & Admin Portal',
-  description: 'Maharana Pratap ITI, Village Post Rankhandi, Deoband, Saharanpur, UP - Established 2015. Top technical education center for Electrician, Fitter, and HSI trades.',
-  keywords: 'ITI Saharanpur, Maharana Pratap ITI, Rankhandi ITI, ITI Admission 2024, Electrician ITI, Fitter ITI, HSI ITI, ITI Deoband',
+  title: 'Maharana Pratap ITI Rankhandi, Saharanpur | Best ITI in UP (Est. 2015)',
+  description: 'Official portal for Maharana Pratap ITI, Village Post Rankhandi, Deoband, Saharanpur, UP. NCVT/DGT approved technical training in Electrician, Fitter, and HSI trades. Providing excellence since 2015.',
+  keywords: 'Maharana Pratap ITI, ITI Saharanpur, ITI Rankhandi, ITI Deoband, NCVT ITI UP, Best ITI Saharanpur, Electrician Course Saharanpur, Fitter Course Deoband, ITI Admission 2024, Technical Education UP',
+  authors: [{ name: 'Maharana Pratap ITI' }],
   viewport: 'width=device-width, initial-scale=1',
-  robots: 'index, follow',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  openGraph: {
+    title: 'Maharana Pratap ITI Rankhandi, Saharanpur',
+    description: 'Providing Excellence in Technical Skills Since 2015. NCVT Approved ITI in Saharanpur, UP.',
+    url: 'https://mpitisre.edu.in',
+    siteName: 'Maharana Pratap ITI',
+    locale: 'en_IN',
+    type: 'website',
+  },
 };
 
 export default function RootLayout({

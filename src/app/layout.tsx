@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { FirebaseClientProvider } from "@/firebase";
+import { AppProviders } from "@/components/providers/AppProviders";
 
 export const metadata: Metadata = {
   title: 'Maharana Pratap ITI Rankhandi, Saharanpur | Best ITI in UP (Est. 2015)',
@@ -12,21 +13,6 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  openGraph: {
-    title: 'Maharana Pratap ITI Rankhandi, Saharanpur',
-    description: 'Providing Excellence in Technical Skills Since 2015. NCVT Approved ITI in Saharanpur, UP.',
-    url: 'https://mpitisre.edu.in',
-    siteName: 'Maharana Pratap ITI',
-    locale: 'en_IN',
-    type: 'website',
   },
 };
 
@@ -36,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -44,8 +30,10 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased">
         <FirebaseClientProvider>
-          {children}
-          <Toaster />
+          <AppProviders>
+            {children}
+            <Toaster />
+          </AppProviders>
         </FirebaseClientProvider>
       </body>
     </html>

@@ -10,9 +10,9 @@
     --card-foreground: 20 20% 10%;
     --popover: 0 0% 100%;
     --popover-foreground: 20 20% 10%;
-    --primary: 39 60% 28%; /* Darkened Gold for high visibility #6B5120 */
+    --primary: 39 60% 28%; /* #6B5120 */
     --primary-foreground: 0 0% 100%;
-    --secondary: 12 82% 45%; /* Darkened Orange for high visibility #C14526 */
+    --secondary: 12 82% 45%; /* #C14526 */
     --secondary-foreground: 0 0% 100%;
     --muted: 39 20% 90%;
     --muted-foreground: 39 10% 30%;
@@ -24,14 +24,26 @@
     --input: 39 20% 75%;
     --ring: 39 60% 28%;
     --radius: 0.75rem;
-    --sidebar-background: 39 30% 98%;
-    --sidebar-foreground: 39 10% 20%;
-    --sidebar-primary: 39 60% 28%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 39 30% 92%;
-    --sidebar-accent-foreground: 39 60% 28%;
-    --sidebar-border: 39 20% 90%;
-    --sidebar-ring: 39 60% 28%;
+  }
+
+  .dark {
+    --background: 20 20% 10%;
+    --foreground: 60 43% 96%;
+    --card: 20 20% 12%;
+    --card-foreground: 60 43% 96%;
+    --popover: 20 20% 12%;
+    --popover-foreground: 60 43% 96%;
+    --primary: 39 60% 50%;
+    --primary-foreground: 0 0% 10%;
+    --secondary: 12 82% 55%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 20 20% 18%;
+    --muted-foreground: 39 10% 70%;
+    --accent: 20 20% 15%;
+    --accent-foreground: 60 43% 96%;
+    --border: 20 20% 20%;
+    --input: 20 20% 20%;
+    --ring: 39 60% 50%;
   }
 }
 
@@ -40,6 +52,6 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground transition-colors duration-300;
   }
 }

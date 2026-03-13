@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -178,9 +177,11 @@ export default function AdminSettings() {
                   <CardContent className="space-y-4">
                     <div className="space-y-2">
                       <Label>Photo (Upload from PC)</Label>
-                      <div className="flex flex-col gap-2">
+                      <div className="flex flex-col items-center gap-4 p-4 bg-muted/20 rounded-xl border border-dashed border-primary/30">
                         {siteData.chairmanPhoto && (
-                          <img src={siteData.chairmanPhoto} alt="Preview" className="w-full h-32 object-cover rounded-lg border" />
+                          <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-md">
+                            <img src={siteData.chairmanPhoto} alt="Preview" className="w-full h-full object-cover" />
+                          </div>
                         )}
                         <Input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'chairmanPhoto')} />
                         {compressing === 'chairmanPhoto' && <p className="text-xs text-primary animate-pulse">Compressing...</p>}
@@ -201,9 +202,11 @@ export default function AdminSettings() {
                   <CardContent className="space-y-4">
                     <div className="space-y-2">
                       <Label>Photo (Upload from PC)</Label>
-                      <div className="flex flex-col gap-2">
+                      <div className="flex flex-col items-center gap-4 p-4 bg-muted/20 rounded-xl border border-dashed border-secondary/30">
                         {siteData.principalPhoto && (
-                          <img src={siteData.principalPhoto} alt="Preview" className="w-full h-32 object-cover rounded-lg border" />
+                          <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-md">
+                            <img src={siteData.principalPhoto} alt="Preview" className="w-full h-full object-cover" />
+                          </div>
                         )}
                         <Input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'principalPhoto')} />
                         {compressing === 'principalPhoto' && <p className="text-xs text-primary animate-pulse">Compressing...</p>}
@@ -224,9 +227,11 @@ export default function AdminSettings() {
                   <CardContent className="space-y-4">
                     <div className="space-y-2">
                       <Label>Photo (Upload from PC)</Label>
-                      <div className="flex flex-col gap-2">
+                      <div className="flex flex-col items-center gap-4 p-4 bg-muted/20 rounded-xl border border-dashed border-blue-300">
                         {siteData.studentPhoto && (
-                          <img src={siteData.studentPhoto} alt="Preview" className="w-full h-32 object-cover rounded-lg border" />
+                          <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-md">
+                            <img src={siteData.studentPhoto} alt="Preview" className="w-full h-full object-cover" />
+                          </div>
                         )}
                         <Input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'studentPhoto')} />
                         {compressing === 'studentPhoto' && <p className="text-xs text-primary animate-pulse">Compressing...</p>}

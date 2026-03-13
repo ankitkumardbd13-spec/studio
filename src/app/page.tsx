@@ -106,51 +106,51 @@ export default function Home() {
           </div>
           <div className="grid md:grid-cols-3 gap-10">
             {/* Chairman */}
-            <Card className="border-none shadow-xl bg-white overflow-hidden group">
-              <div className="h-72 relative overflow-hidden">
-                <img src={siteData.chairmanPhoto} alt="Chairman" className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" />
-                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
-                   <p className="text-white font-bold text-xl">Chairman</p>
-                   <p className="text-white/80 text-sm">MPITI Saharanpur</p>
-                </div>
+            <Card className="border-none shadow-xl bg-white overflow-hidden group flex flex-col items-center pt-10">
+              <div className="w-48 h-48 rounded-full overflow-hidden border-4 border-primary/20 shadow-lg relative shrink-0">
+                <img src={siteData.chairmanPhoto} alt="Chairman" className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500" />
               </div>
-              <CardContent className="pt-8 relative min-h-[180px]">
-                <Quote className="absolute top-4 right-6 w-12 h-12 text-primary/10" />
-                <p className="italic text-muted-foreground text-center leading-relaxed font-medium">
+              <div className="mt-6 text-center px-4">
+                 <p className="text-primary font-bold text-xl uppercase tracking-tight">Chairman</p>
+                 <p className="text-muted-foreground text-xs font-black uppercase tracking-[0.2em] mb-4">MPITI Saharanpur</p>
+              </div>
+              <CardContent className="pt-4 relative min-h-[160px] text-center">
+                <Quote className="absolute -top-2 right-4 w-10 h-10 text-primary/5" />
+                <p className="italic text-muted-foreground leading-relaxed font-medium px-4">
                   "{siteData.chairmanMsg}"
                 </p>
               </CardContent>
             </Card>
 
             {/* Principal */}
-            <Card className="border-none shadow-xl bg-white overflow-hidden group">
-              <div className="h-72 relative overflow-hidden">
-                <img src={siteData.principalPhoto} alt="Principal" className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" />
-                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
-                   <p className="text-white font-bold text-xl">Principal</p>
-                   <p className="text-white/80 text-sm">Official Message</p>
-                </div>
+            <Card className="border-none shadow-xl bg-white overflow-hidden group flex flex-col items-center pt-10">
+              <div className="w-48 h-48 rounded-full overflow-hidden border-4 border-secondary/20 shadow-lg relative shrink-0">
+                <img src={siteData.principalPhoto} alt="Principal" className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500" />
               </div>
-              <CardContent className="pt-8 relative min-h-[180px]">
-                <Quote className="absolute top-4 right-6 w-12 h-12 text-secondary/10" />
-                <p className="italic text-muted-foreground text-center leading-relaxed font-medium">
+              <div className="mt-6 text-center px-4">
+                 <p className="text-secondary font-bold text-xl uppercase tracking-tight">Principal</p>
+                 <p className="text-muted-foreground text-xs font-black uppercase tracking-[0.2em] mb-4">Academic Head</p>
+              </div>
+              <CardContent className="pt-4 relative min-h-[160px] text-center">
+                <Quote className="absolute -top-2 right-4 w-10 h-10 text-secondary/5" />
+                <p className="italic text-muted-foreground leading-relaxed font-medium px-4">
                   "{siteData.principalMsg}"
                 </p>
               </CardContent>
             </Card>
 
             {/* Student Success */}
-            <Card className="border-none shadow-xl bg-white overflow-hidden group">
-              <div className="h-72 relative overflow-hidden">
-                <img src={siteData.studentPhoto} alt="Student" className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" />
-                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
-                   <p className="text-white font-bold text-xl">Success Story</p>
-                   <p className="text-white/80 text-sm">Our Alumni Network</p>
-                </div>
+            <Card className="border-none shadow-xl bg-white overflow-hidden group flex flex-col items-center pt-10">
+              <div className="w-48 h-48 rounded-full overflow-hidden border-4 border-blue-200 shadow-lg relative shrink-0">
+                <img src={siteData.studentPhoto} alt="Student" className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500" />
               </div>
-              <CardContent className="pt-8 relative min-h-[180px]">
-                <Quote className="absolute top-4 right-6 w-12 h-12 text-blue-500/10" />
-                <p className="italic text-muted-foreground text-center leading-relaxed font-medium">
+              <div className="mt-6 text-center px-4">
+                 <p className="text-blue-600 font-bold text-xl uppercase tracking-tight">Success Story</p>
+                 <p className="text-muted-foreground text-xs font-black uppercase tracking-[0.2em] mb-4">Our Alumni Network</p>
+              </div>
+              <CardContent className="pt-4 relative min-h-[160px] text-center">
+                <Quote className="absolute -top-2 right-4 w-10 h-10 text-blue-500/5" />
+                <p className="italic text-muted-foreground leading-relaxed font-medium px-4">
                   "{siteData.studentMsg}"
                 </p>
               </CardContent>

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { MapPin, Phone, Mail, GraduationCap, BookOpen, ClipboardList, ShieldCheck, LayoutGrid, Quote, Loader2, Info, CheckCircle } from 'lucide-react';
+import { MapPin, Phone, Mail, GraduationCap, BookOpen, ClipboardList, ShieldCheck, LayoutGrid, Quote, Info, CheckCircle } from 'lucide-react';
 import { Navbar } from '@/components/layout/Navbar';
 import { useFirestore, useDoc } from '@/firebase';
 import { doc } from 'firebase/firestore';
@@ -49,14 +49,6 @@ export default function Home() {
 
   const heroImage = PlaceHolderImages.find(img => img.id === 'iti-hero');
   const logoImage = PlaceHolderImages.find(img => img.id === 'iti-logo');
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="w-10 h-10 animate-spin text-primary" />
-      </div>
-    );
-  }
 
   return (
     <main className="min-h-screen bg-background text-foreground">

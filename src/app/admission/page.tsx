@@ -13,8 +13,6 @@ import { ClipboardList, Send, GraduationCap, MapPin, Phone, Loader2 } from 'luci
 import Link from 'next/link';
 import { useFirestore } from '@/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { errorEmitter } from '@/firebase/error-emitter';
-import { FirestorePermissionError } from '@/firebase/errors';
 
 export default function AdmissionPage() {
   const { toast } = useToast();
@@ -66,12 +64,11 @@ export default function AdmissionPage() {
       });
     })
     .catch(async (error) => {
-      const permissionError = new FirestorePermissionError({
-        path: 'inquiries',
-        operation: 'create',
-        requestResourceData: formData
+      toast({
+        title: "Submission Failed",
+        description: "Could not submit your inquiry. Please try again or contact us directly.",
+        variant: "destructive",
       });
-      errorEmitter.emit('permission-error', permissionError);
     })
     .finally(() => {
       setIsSubmitting(false);

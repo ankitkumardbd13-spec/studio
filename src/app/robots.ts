@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/admin/', '/student/'],
     },
-    sitemap: 'https://mpitisre.edu.in/sitemap.xml',
+    sitemap: 'https://mpitisre.netlify.app/sitemap.xml',
   }
 }

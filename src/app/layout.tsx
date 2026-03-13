@@ -20,10 +20,13 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  alternates: {
+    canonical: 'https://mpitisre.netlify.app',
+  },
   openGraph: {
     title: 'Maharana Pratap ITI Rankhandi, Saharanpur',
     description: 'Providing Excellence in Technical Skills Since 2015. NCVT Approved ITI in Saharanpur, UP.',
-    url: 'https://mpitisre.edu.in',
+    url: 'https://mpitisre.netlify.app',
     siteName: 'Maharana Pratap ITI',
     locale: 'en_IN',
     type: 'website',

@@ -1,8 +1,8 @@
 'use server';
 /**
- * @fileOverview An AI-powered tool for administrators to generate assignment and mock test questions.
+ * @fileOverview An AI-powered tool for administrators to generate objective MCQ assignment questions.
  *
- * - generateAssignmentAndMockTest - A function that handles the generation of assignment and mock test questions.
+ * - generateAssignmentAndMockTest - A function that handles the generation of 20 MCQ questions.
  * - AdminAssignmentAndMockTestGeneratorInput - The input type for the generateAssignmentAndMockTest function.
  * - AdminAssignmentAndMockTestGeneratorOutput - The return type for the generateAssignmentAndMockTest function.
  */
@@ -12,9 +12,9 @@ import {z} from 'genkit';
 
 const QuestionSchema = z.object({
   text: z.string().describe('The text of the question.'),
-  type: z.enum(['subjective', 'objective']).describe('The type of the question (subjective for theory, objective for MCQ).'),
-  options: z.array(z.string()).optional().describe('For objective (MCQ) questions, provide exactly 4 distinct options.'),
-  correctAnswer: z.string().optional().describe('For objective questions, specify which option is correct.'),
+  type: z.literal('objective').describe('The type of the question (always objective for MCQ).'),
+  options: z.array(z.string()).describe('Provide exactly 4 distinct options (A, B, C, D).'),
+  correctAnswer: z.string().describe('Specify which of the 4 options is the correct one.'),
 });
 
 const AdminAssignmentAndMockTestGeneratorInputSchema = z.object({
@@ -34,7 +34,7 @@ export type AdminAssignmentAndMockTestGeneratorInput = z.infer<
 >;
 
 const AdminAssignmentAndMockTestGeneratorOutputSchema = z.object({
-  questions: z.array(QuestionSchema).describe('A mixed list of subjective and objective questions generated for the topic.'),
+  questions: z.array(QuestionSchema).describe('Exactly 20 objective (MCQ) questions generated for the topic.'),
 });
 export type AdminAssignmentAndMockTestGeneratorOutput = z.infer<
   typeof AdminAssignmentAndMockTestGeneratorOutputSchema
@@ -53,9 +53,8 @@ const generateQuestionsPrompt = ai.definePrompt({
   prompt: `You are an expert educational content creator for Industrial Training Institute (ITI) courses in India.
 Your task is to generate relevant assignment questions based on the provided trade, year, and topic, adhering strictly to the **New DGT/NCVT Syllabus**.
 
-Please generate exactly 20 questions in total:
-- 10 Subjective questions that test deep understanding and application of the topic.
-- 10 Objective (MCQ) questions with 4 logical options and a clear correct answer.
+Please generate exactly 20 Objective (MCQ) questions. 
+Each question MUST have exactly 4 options and one clearly marked correct answer.
 
 Ensure the questions are technically accurate for a student in the specified ITI trade and year.
 

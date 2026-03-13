@@ -5,7 +5,6 @@ import { useParams, useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Timer, Send, AlertCircle, Loader2, CheckCircle } from 'lucide-react';
@@ -15,8 +14,8 @@ import { Navbar } from '@/components/layout/Navbar';
 interface Question {
   id: string;
   text: string;
-  type: 'subjective' | 'objective';
-  options?: string[];
+  type: 'objective';
+  options: string[];
 }
 
 interface Assignment {
@@ -143,9 +142,9 @@ export default function AssignmentTestPage() {
 
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto space-y-6">
-          <header className="mb-8">
+          <header className="mb-8 text-center">
             <h1 className="font-headline text-3xl font-bold text-primary">{assignment.title}</h1>
-            <p className="text-muted-foreground">Complete all 20 questions. Test will auto-submit when timer hits 0:00.</p>
+            <p className="text-muted-foreground">Complete all {assignment.questions.length} Objective questions. One-time submission only.</p>
           </header>
 
           {assignment.questions.map((q, idx) => (
@@ -153,30 +152,22 @@ export default function AssignmentTestPage() {
               <CardHeader className="bg-slate-50/50 pb-4">
                 <div className="flex justify-between items-start">
                   <Badge variant="secondary">Question {idx + 1}</Badge>
-                  <span className="text-[10px] uppercase font-bold text-muted-foreground">{q.type}</span>
+                  <span className="text-[10px] uppercase font-bold text-muted-foreground">Objective (MCQ)</span>
                 </div>
                 <CardTitle className="text-lg mt-2 leading-relaxed">{q.text}</CardTitle>
               </CardHeader>
               <CardContent className="pt-6">
-                {q.type === 'objective' ? (
-                  <RadioGroup 
-                    onValueChange={(val) => setAnswers(prev => ({ ...prev, [q.id]: val }))}
-                    className="grid gap-3"
-                  >
-                    {q.options?.map((opt, oIdx) => (
-                      <div key={oIdx} className="flex items-center space-x-3 p-3 rounded-lg border hover:bg-slate-50 transition-colors cursor-pointer">
-                        <RadioGroupItem value={opt} id={`q-${q.id}-o-${oIdx}`} />
-                        <Label htmlFor={`q-${q.id}-o-${oIdx}`} className="flex-1 cursor-pointer font-medium">{opt}</Label>
-                      </div>
-                    ))}
-                  </RadioGroup>
-                ) : (
-                  <Textarea 
-                    placeholder="Type your answer here in detail..."
-                    className="min-h-[120px]"
-                    onChange={(e) => setAnswers(prev => ({ ...prev, [q.id]: e.target.value }))}
-                  />
-                )}
+                <RadioGroup 
+                  onValueChange={(val) => setAnswers(prev => ({ ...prev, [q.id]: val }))}
+                  className="grid gap-3"
+                >
+                  {q.options.map((opt, oIdx) => (
+                    <div key={oIdx} className="flex items-center space-x-3 p-3 rounded-lg border hover:bg-slate-50 transition-colors cursor-pointer">
+                      <RadioGroupItem value={opt} id={`q-${q.id}-o-${oIdx}`} />
+                      <Label htmlFor={`q-${q.id}-o-${oIdx}`} className="flex-1 cursor-pointer font-medium">{opt}</Label>
+                    </div>
+                  ))}
+                </RadioGroup>
               </CardContent>
             </Card>
           ))}
@@ -184,7 +175,7 @@ export default function AssignmentTestPage() {
           <div className="pt-8 flex flex-col items-center gap-4">
             <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg flex gap-3 text-sm text-amber-800">
                <AlertCircle className="w-5 h-5 flex-shrink-0" />
-               <p>Warning: Once you click Final Submission, you cannot edit your answers. This is a one-time process.</p>
+               <p>Warning: Final auto-submit on time up. Once submitted, answers cannot be edited.</p>
             </div>
             <Button 
               size="lg" 
@@ -193,7 +184,7 @@ export default function AssignmentTestPage() {
               disabled={isSubmitting}
             >
               {isSubmitting ? <Loader2 className="animate-spin" /> : <Send className="w-5 h-5" />}
-              Final Submission
+              Submit My Test
             </Button>
           </div>
         </div>

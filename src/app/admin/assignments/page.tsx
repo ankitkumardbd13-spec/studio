@@ -10,16 +10,16 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Plus, Trash2, Calendar, Clock, Wand2, FileText, CheckCircle2, Loader2, Save, X, Timer } from 'lucide-react';
+import { Plus, Trash2, Calendar, Clock, Wand2, FileText, Loader2, Save, X, Timer } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { generateAssignmentAndMockTest } from '@/ai/flows/admin-assignment-mock-test-generator';
 
 interface Question {
   id: string;
   text: string;
-  type: 'subjective' | 'objective';
-  options?: string[];
-  correctAnswer?: string;
+  type: 'objective';
+  options: string[];
+  correctAnswer: string;
 }
 
 interface Assignment {
@@ -103,13 +103,13 @@ export default function AdminAssignmentsPage() {
       const aiQuestions: Question[] = result.questions.map(q => ({
         id: Math.random().toString(),
         text: q.text,
-        type: q.type,
-        options: q.options,
-        correctAnswer: q.correctAnswer
+        type: 'objective',
+        options: q.options || ['', '', '', ''],
+        correctAnswer: q.correctAnswer || ''
       }));
       
       setQuestions([...questions, ...aiQuestions]);
-      toast({ title: 'AI Generation Complete', description: `Generated ${aiQuestions.length} technical questions (Minimum 20 requested).` });
+      toast({ title: 'AI Generation Complete', description: `Generated ${aiQuestions.length} Objective (MCQ) questions.` });
     } catch (error) {
       console.error(error);
       toast({ variant: 'destructive', title: 'AI Error', description: 'Could not generate questions at this time.' });
@@ -118,12 +118,13 @@ export default function AdminAssignmentsPage() {
     }
   };
 
-  const addQuestion = (type: 'subjective' | 'objective') => {
+  const addQuestion = () => {
     const newQ: Question = {
       id: Math.random().toString(),
       text: '',
-      type,
-      options: type === 'objective' ? ['', '', '', ''] : undefined
+      type: 'objective',
+      options: ['', '', '', ''],
+      correctAnswer: ''
     };
     setQuestions([...questions, newQ]);
   };
@@ -142,7 +143,7 @@ export default function AdminAssignmentsPage() {
         <header className="mb-8 flex justify-between items-center">
           <div>
             <h1 className="font-headline text-4xl text-slate-900 font-bold">Assignment Manager</h1>
-            <p className="text-muted-foreground">Create 20+ question tests with AI and time limits</p>
+            <p className="text-muted-foreground">Create 20-question MCQ tests with AI and time limits</p>
           </div>
           <Button onClick={() => setIsAdding(!isAdding)} className="gap-2">
             {isAdding ? <><X className="w-4 h-4"/> Cancel</> : <><Plus className="w-4 h-4"/> New Assignment</>}
@@ -209,7 +210,7 @@ export default function AdminAssignmentsPage() {
                 <Separator />
                 <Button onClick={handleAIInvite} disabled={loadingAI} variant="outline" className="w-full border-primary text-primary gap-2 h-12">
                   {loadingAI ? <Loader2 className="animate-spin w-4 h-4" /> : <Wand2 className="w-4 h-4" />}
-                  Generate 20 AI Questions
+                  Generate 20 MCQ (AI)
                 </Button>
                 <Button onClick={handleSaveAssignment} className="w-full bg-primary text-white gap-2 h-12">
                    <Save className="w-4 h-4" /> Save & Publish
@@ -219,10 +220,9 @@ export default function AdminAssignmentsPage() {
 
             <div className="lg:col-span-2 space-y-4">
               <div className="flex justify-between items-center px-2">
-                <h3 className="font-bold text-lg">Question List ({questions.length}/20+)</h3>
+                <h3 className="font-bold text-lg">Question List ({questions.length}/20)</h3>
                 <div className="flex gap-2">
-                  <Button size="sm" variant="outline" onClick={() => addQuestion('subjective')}>+ Subjective</Button>
-                  <Button size="sm" variant="outline" onClick={() => addQuestion('objective')}>+ MCQ</Button>
+                  <Button size="sm" variant="outline" onClick={addQuestion}>+ Add MCQ Manual</Button>
                 </div>
               </div>
 
@@ -230,7 +230,7 @@ export default function AdminAssignmentsPage() {
                 <Card key={q.id} className="border-none shadow-sm group">
                   <CardContent className="p-4">
                     <div className="flex justify-between gap-4 mb-4">
-                      <Badge variant="secondary" className="h-fit">Q{idx + 1}: {q.type === 'objective' ? 'Objective (MCQ)' : 'Subjective'}</Badge>
+                      <Badge variant="secondary" className="h-fit">Q{idx + 1}: MCQ</Badge>
                       <Button variant="ghost" size="sm" onClick={() => setQuestions(questions.filter(item => item.id !== q.id))} className="text-red-400 h-6 w-6 p-0"><Trash2 className="w-4 h-4" /></Button>
                     </div>
                     <Textarea 
@@ -243,25 +243,43 @@ export default function AdminAssignmentsPage() {
                       }}
                       className="mb-4 min-h-[60px]"
                     />
-                    {q.type === 'objective' && (
-                      <div className="grid grid-cols-2 gap-3">
-                        {q.options?.map((opt, oIdx) => (
-                          <div key={oIdx} className="flex items-center gap-2">
-                            <span className="text-xs font-bold text-muted-foreground">{String.fromCharCode(65 + oIdx)}.</span>
-                            <Input 
-                              placeholder={`Option ${oIdx + 1}`} 
-                              value={opt} 
-                              onChange={e => {
-                                const updated = [...questions];
-                                if (updated[idx].options) updated[idx].options![oIdx] = e.target.value;
-                                setQuestions(updated);
-                              }}
-                              className="h-8 text-sm"
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                    <div className="grid grid-cols-2 gap-3">
+                      {q.options.map((opt, oIdx) => (
+                        <div key={oIdx} className="flex items-center gap-2">
+                          <span className="text-xs font-bold text-muted-foreground">{String.fromCharCode(65 + oIdx)}.</span>
+                          <Input 
+                            placeholder={`Option ${oIdx + 1}`} 
+                            value={opt} 
+                            onChange={e => {
+                              const updated = [...questions];
+                              updated[idx].options[oIdx] = e.target.value;
+                              setQuestions(updated);
+                            }}
+                            className="h-8 text-sm"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-4 flex items-center gap-2">
+                      <Label className="text-xs">Correct Answer:</Label>
+                      <Select 
+                        value={q.correctAnswer} 
+                        onValueChange={(v) => {
+                          const updated = [...questions];
+                          updated[idx].correctAnswer = v;
+                          setQuestions(updated);
+                        }}
+                      >
+                        <SelectTrigger className="w-32 h-8 text-xs">
+                          <SelectValue placeholder="Correct Opt" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {q.options.map((opt, oIdx) => (
+                             opt && <SelectItem key={oIdx} value={opt}>Option {String.fromCharCode(65 + oIdx)}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </CardContent>
                 </Card>
               ))}
@@ -269,7 +287,7 @@ export default function AdminAssignmentsPage() {
               {questions.length === 0 && (
                 <div className="bg-white border-2 border-dashed rounded-xl p-12 text-center opacity-40">
                   <Wand2 className="w-10 h-10 mx-auto mb-2 text-primary" />
-                  <p>No questions added yet. AI will generate 10 MCQs and 10 Theory questions.</p>
+                  <p>No questions added. AI will generate 20 technical MCQs for this topic.</p>
                 </div>
               )}
             </div>
@@ -287,7 +305,7 @@ export default function AdminAssignmentsPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <FileText className="w-4 h-4" /> {a.questions.length} Questions
+                      <FileText className="w-4 h-4" /> {a.questions.length} MCQs
                    </div>
                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <Timer className="w-4 h-4" /> Duration: {a.durationMinutes} Minutes

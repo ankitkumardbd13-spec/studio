@@ -11,7 +11,9 @@ import {
   Phone, 
   FileText, 
   UserPlus,
-  GraduationCap
+  GraduationCap,
+  ShieldCheck,
+  BookMarked
 } from 'lucide-react';
 import {
   Sheet,
@@ -77,7 +79,25 @@ export function Navbar() {
                         Portal Registration
                       </Link>
                     </Button>
+                    <Button asChild variant="ghost" className="justify-start gap-3">
+                      <Link href="/student/syllabus">
+                        <BookMarked className="w-4 h-4 text-secondary" />
+                        View Syllabus
+                      </Link>
+                    </Button>
                   </div>
+                </div>
+
+                <Separator />
+
+                <div>
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Administration</h3>
+                  <Button asChild variant="outline" className="justify-start gap-3 w-full border-primary/20 hover:bg-primary/5">
+                    <Link href="/login?type=admin">
+                      <ShieldCheck className="w-4 h-4 text-primary" />
+                      Admin Login
+                    </Link>
+                  </Button>
                 </div>
 
                 <Separator />

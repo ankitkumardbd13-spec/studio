@@ -14,7 +14,9 @@ import {
   User, 
   IdCard,
   LogOut,
-  ChevronRight
+  ChevronRight,
+  BookMarked,
+  ShieldCheck
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -55,6 +57,9 @@ export default function StudentDashboard() {
           <Link href="/student/assignments" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 transition-colors">
             <FileText className="w-5 h-5" /> Assignments
           </Link>
+          <Link href="/student/syllabus" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 transition-colors">
+            <BookMarked className="w-5 h-5" /> View Syllabus
+          </Link>
           <Link href="/student/id-card" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 transition-colors">
             <IdCard className="w-5 h-5" /> Digital ID Card
           </Link>
@@ -62,7 +67,10 @@ export default function StudentDashboard() {
             <Award className="w-5 h-5" /> Mock Tests
           </Link>
         </nav>
-        <div className="p-4 border-t border-white/10">
+        <div className="p-4 border-t border-white/10 space-y-2">
+          <Button variant="ghost" className="w-full justify-start gap-3 text-white hover:bg-white/5" asChild>
+            <Link href="/login?type=admin"><ShieldCheck className="w-5 h-5" /> Admin Login</Link>
+          </Button>
           <Button variant="ghost" className="w-full justify-start gap-3 text-white hover:bg-white/5" asChild>
             <Link href="/login"><LogOut className="w-5 h-5" /> Logout</Link>
           </Button>

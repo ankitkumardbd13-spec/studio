@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -29,7 +28,7 @@ export default function ContactPage() {
         <div className="max-w-6xl mx-auto">
           <header className="text-center mb-16">
             <h1 className="font-headline text-5xl text-primary font-bold mb-4">Contact Us</h1>
-            <p className="text-muted-foreground text-xl">Get in touch with Maharana Pratap ITI Saharanpur for any queries.</p>
+            <p className="text-muted-foreground text-xl">Get in touch with Maharana Pratap ITI Rankhandi for any queries.</p>
           </header>
 
           <div className="grid lg:grid-cols-3 gap-12">
@@ -43,7 +42,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <h3 className="font-bold text-lg">Visit Us</h3>
-                      <p className="text-muted-foreground text-sm">Near Delhi Road, Saharanpur, Uttar Pradesh - 247001</p>
+                      <p className="text-muted-foreground text-sm">Village Post Rankhandi, Deoband, Dist Saharanpur, UP, PIN 247554</p>
                     </div>
                   </div>
 

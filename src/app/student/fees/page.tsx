@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -85,7 +84,7 @@ export default function StudentFeesPage() {
 
       <div className="relative z-10 flex flex-col h-full">
         <header className="text-center border-b-2 border-slate-900 pb-2 mb-4">
-          <h2 className="text-2xl font-black text-slate-900 uppercase leading-none tracking-tight mb-1">Maharana Pratap ITI Saharanpur</h2>
+          <h2 className="text-2xl font-black text-slate-900 uppercase leading-none tracking-tight mb-1">Maharana Pratap ITI Rankhandi</h2>
           <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">OFFICIAL FEE RECEIPT - {payment?.receipt}</p>
         </header>
 
@@ -121,7 +120,7 @@ export default function StudentFeesPage() {
 
         <footer className="mt-auto flex justify-between items-end pt-2">
           <div className="text-[8px] text-slate-400 font-medium text-left">
-            <p>Maharana Pratap ITI Saharanpur</p>
+            <p>Maharana Pratap ITI Rankhandi</p>
             <p>Digital Portal generated receipt.</p>
           </div>
           <div className="relative flex flex-col items-center">

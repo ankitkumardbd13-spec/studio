@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -12,7 +11,7 @@ import { Navbar } from '@/components/layout/Navbar';
 
 export default function Home() {
   const [siteData, setSiteData] = useState({
-    address: 'Near Delhi Road, Saharanpur, Uttar Pradesh - 247001',
+    address: 'Village Post Rankhandi, Deoband, Dist Saharanpur, UP, PIN 247554',
     phone1: '+91 98765 43210',
     phone2: '+91 12345 67890',
     email: 'info@mpitisre.edu.in',
@@ -23,7 +22,7 @@ export default function Home() {
     studentMsg: 'MPITI transformed my life. The practical sessions in the Electrician lab gave me the confidence to secure a job in a leading industry.',
     studentPhoto: PlaceHolderImages.find(i => i.id === 'student-rep')?.imageUrl || '',
     heroTitle: 'Maharana Pratap ITI',
-    heroSub: 'Saharanpur, Uttar Pradesh - Providing Excellence in Technical Skills Since 2012'
+    heroSub: 'Rankhandi, Deoband, Saharanpur - Providing Excellence in Technical Skills Since 2015'
   });
 
   const [galleryItems, setGalleryItems] = useState<any[]>([]);
@@ -31,7 +30,7 @@ export default function Home() {
   useEffect(() => {
     const savedData = localStorage.getItem('mpiti_site_settings');
     if (savedData) {
-      setSiteData(JSON.parse(savedData));
+      setSiteData(prev => ({ ...prev, ...JSON.parse(savedData) }));
     }
 
     const savedGallery = localStorage.getItem('mpiti_gallery');
@@ -102,7 +101,7 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="font-headline text-5xl text-primary font-bold mb-4">Leadership Messages</h2>
-            <p className="text-muted-foreground text-lg">Guiding MPITI Saharanpur towards skill excellence</p>
+            <p className="text-muted-foreground text-lg">Guiding MPITI Rankhandi towards skill excellence</p>
           </div>
           <div className="grid md:grid-cols-3 gap-10">
             {/* Chairman */}
@@ -112,7 +111,7 @@ export default function Home() {
               </div>
               <div className="mt-6 text-center px-4">
                  <p className="text-primary font-bold text-xl uppercase tracking-tight">Chairman</p>
-                 <p className="text-muted-foreground text-xs font-black uppercase tracking-[0.2em] mb-4">MPITI Saharanpur</p>
+                 <p className="text-muted-foreground text-xs font-black uppercase tracking-[0.2em] mb-4">MPITI Rankhandi</p>
               </div>
               <CardContent className="pt-4 relative min-h-[160px] text-center">
                 <Quote className="absolute -top-2 right-4 w-10 h-10 text-primary/5" />
@@ -232,7 +231,7 @@ export default function Home() {
                 <div className="relative w-14 h-14 bg-white rounded-xl p-1.5 shadow-lg">
                    {logoImage && <Image src={logoImage.imageUrl} alt="Logo" fill className="object-contain" />}
                 </div>
-                <h2 className="font-headline text-3xl text-primary font-bold">MPITI Saharanpur</h2>
+                <h2 className="font-headline text-3xl text-primary font-bold">MPITI Rankhandi</h2>
               </div>
               <p className="opacity-70 text-lg leading-relaxed font-medium">{siteData.heroSub}</p>
             </div>
@@ -255,7 +254,7 @@ export default function Home() {
             </div>
           </div>
           <div className="pt-10 border-t border-white/10 text-center text-sm opacity-50">
-            © 2024 Maharana Pratap ITI Saharanpur. Managed via Admin Portal.
+            © 2024 Maharana Pratap ITI Rankhandi. Managed via Admin Portal.
           </div>
         </div>
       </footer>

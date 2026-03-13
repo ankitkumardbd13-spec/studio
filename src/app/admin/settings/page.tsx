@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -22,7 +21,7 @@ export default function AdminSettings() {
   const [siteData, setSiteData] = useState({
     logo: PlaceHolderImages.find(i => i.id === 'iti-logo')?.imageUrl || '',
     stamp: PlaceHolderImages.find(i => i.id === 'iti-stamp')?.imageUrl || '',
-    address: 'Near Delhi Road, Saharanpur, Uttar Pradesh - 247001',
+    address: 'Village Post Rankhandi, Deoband, Dist Saharanpur, UP, PIN 247554',
     phone1: '+91 98765 43210',
     phone2: '+91 12345 67890',
     email: 'info@mpitisre.edu.in',
@@ -33,7 +32,7 @@ export default function AdminSettings() {
     studentMsg: 'MPITI transformed my career. The practical workshops are world-class.',
     studentPhoto: PlaceHolderImages.find(i => i.id === 'student-rep')?.imageUrl || '',
     heroTitle: 'Maharana Pratap ITI',
-    heroSub: 'Saharanpur, Uttar Pradesh - Following New DGT NCVT Syllabus for Skilled Excellence'
+    heroSub: 'Rankhandi, Deoband, Saharanpur - Providing Excellence in Technical Skills Since 2015'
   });
 
   const [galleryImages, setGalleryImages] = useState<any[]>([]);

@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useMemo, useEffect } from 'react';
@@ -151,7 +150,7 @@ export default function AdminFeesPage() {
 
       <div className="relative z-10 flex flex-col h-full">
         <header className="text-center border-b-2 border-slate-900 pb-2 mb-4">
-          <h2 className="text-2xl font-black text-slate-900 uppercase leading-none tracking-tight mb-1">Maharana Pratap ITI Saharanpur</h2>
+          <h2 className="text-2xl font-black text-slate-900 uppercase leading-none tracking-tight mb-1">Maharana Pratap ITI Rankhandi</h2>
           <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">OFFICIAL FEE RECEIPT - {payment?.receiptNo || payment?.receipt}</p>
         </header>
 
@@ -187,7 +186,7 @@ export default function AdminFeesPage() {
 
         <footer className="mt-auto flex justify-between items-end pt-2">
           <div className="text-[8px] text-slate-400 font-medium text-left">
-            <p>Maharana Pratap ITI, Near Delhi Road, Saharanpur, UP</p>
+            <p>Maharana Pratap ITI, Rankhandi, Deoband, Saharanpur, UP</p>
             <p>This is a computer-generated receipt.</p>
           </div>
           <div className="relative flex flex-col items-center">
@@ -316,7 +315,7 @@ export default function AdminFeesPage() {
               <DialogTitle>Student Payment Management</DialogTitle>
             </DialogHeader>
             {selectedStudent && (
-              <Tabs defaultValue="record" className="w-full">
+              <Tabs defaultValue="record" className="space-y-4">
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="record" className="gap-2"><CreditCard className="w-4 h-4"/> Record Payment</TabsTrigger>
                   <TabsTrigger value="history" className="gap-2"><History className="w-4 h-4"/> History</TabsTrigger>

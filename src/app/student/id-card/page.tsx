@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -12,6 +13,7 @@ import Link from 'next/link';
 export default function IDCardPage() {
   const studentPhoto = PlaceHolderImages.find(img => img.id === 'student-1')?.imageUrl;
   const itiStamp = PlaceHolderImages.find(img => img.id === 'iti-stamp')?.imageUrl;
+  const logoUrl = PlaceHolderImages.find(img => img.id === 'iti-logo')?.imageUrl;
 
   return (
     <main className="min-h-screen bg-muted/30">
@@ -31,8 +33,12 @@ export default function IDCardPage() {
         <div className="relative w-full max-w-sm aspect-[5.5/8.5] md:aspect-[8.5/5.5] bg-white rounded-2xl shadow-2xl border-2 border-primary/20 overflow-hidden flex flex-col md:flex-row">
            {/* Top/Left Section: Header */}
            <div className="bg-primary p-6 md:w-1/3 flex flex-col items-center justify-center text-center text-white">
-              <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mb-4 p-2 shadow-lg">
-                 <div className="text-primary font-black text-2xl">MPITI</div>
+              <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mb-4 p-2 shadow-lg relative overflow-hidden">
+                 {logoUrl ? (
+                   <Image src={logoUrl} alt="Logo" fill className="object-contain p-2" />
+                 ) : (
+                   <div className="text-primary font-black text-2xl">MPITI</div>
+                 )}
               </div>
               <h2 className="font-headline text-lg leading-tight mb-2">Maharana Pratap ITI</h2>
               <p className="text-[10px] opacity-80 uppercase tracking-widest">Saharanpur, UP</p>
@@ -41,7 +47,7 @@ export default function IDCardPage() {
                 <div className="w-24 h-24 border-2 border-white rounded-lg overflow-hidden bg-muted relative">
                   {studentPhoto && <Image src={studentPhoto} alt="Student" fill className="object-cover" />}
                 </div>
-                <div className="text-xs font-bold mt-2">STUDENT</div>
+                <div className="text-xs font-bold mt-2 text-white">STUDENT</div>
               </div>
            </div>
 
@@ -67,19 +73,19 @@ export default function IDCardPage() {
                 <div className="grid grid-cols-2 gap-y-4 gap-x-2 text-sm">
                    <div>
                      <p className="text-[10px] text-muted-foreground uppercase">Father's Name</p>
-                     <p className="font-bold">Shri Suresh Kumar</p>
+                     <p className="font-bold text-slate-900">Shri Suresh Kumar</p>
                    </div>
                    <div>
                      <p className="text-[10px] text-muted-foreground uppercase">Date of Birth</p>
-                     <p className="font-bold">15/05/2002</p>
+                     <p className="font-bold text-slate-900">15/05/2002</p>
                    </div>
                    <div>
                      <p className="text-[10px] text-muted-foreground uppercase">Trade</p>
-                     <p className="font-bold">Electrician</p>
+                     <p className="font-bold text-slate-900">Electrician</p>
                    </div>
                    <div>
                      <p className="text-[10px] text-muted-foreground uppercase">Year</p>
-                     <p className="font-bold">First Year</p>
+                     <p className="font-bold text-slate-900">First Year</p>
                    </div>
                 </div>
               </div>
@@ -100,7 +106,7 @@ export default function IDCardPage() {
         </div>
 
         <p className="mt-8 text-sm text-muted-foreground max-w-md text-center">
-          This is a digitally generated ID card. For physical use, please print on a 300gsm card. The official blue stamp of Maharana Pratap ITI Saharanpur is included digitally.
+          This is a digitally generated ID card. For physical use, please print on a 300gsm card. The official logo and blue stamp of Maharana Pratap ITI Saharanpur are included digitally.
         </p>
       </div>
     </main>

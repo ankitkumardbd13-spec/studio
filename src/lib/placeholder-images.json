@@ -1,6 +1,12 @@
 {
   "placeholderImages": [
     {
+      "id": "iti-logo",
+      "description": "Official Logo of Maharana Pratap ITI",
+      "imageUrl": "https://picsum.photos/seed/mpitilogo/200/200",
+      "imageHint": "colorful industrial education logo"
+    },
+    {
       "id": "iti-hero",
       "description": "Maharana Pratap ITI Campus",
       "imageUrl": "https://picsum.photos/seed/iti1/1200/600",

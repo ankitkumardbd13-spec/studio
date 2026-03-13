@@ -3,6 +3,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { 
   Layout, 
@@ -15,9 +16,11 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export function AdminSidebar() {
   const pathname = usePathname();
+  const logoUrl = PlaceHolderImages.find(img => img.id === 'iti-logo')?.imageUrl;
 
   const menuItems = [
     { name: 'Overview', href: '/admin/dashboard', icon: Layout },
@@ -30,9 +33,21 @@ export function AdminSidebar() {
 
   return (
     <aside className="hidden lg:flex flex-col w-72 bg-slate-900 text-white min-h-screen sticky top-0">
-      <div className="p-6 border-b border-white/5">
-        <h2 className="font-headline text-2xl font-bold text-primary">MPITI Admin</h2>
-        <p className="text-[10px] text-white/40 uppercase tracking-widest mt-1">Management Portal</p>
+      <div className="p-6 border-b border-white/5 flex items-center gap-3">
+        <div className="relative w-10 h-10 overflow-hidden rounded-lg bg-white p-1">
+          {logoUrl && (
+            <Image 
+              src={logoUrl} 
+              alt="Logo" 
+              fill 
+              className="object-contain" 
+            />
+          )}
+        </div>
+        <div>
+          <h2 className="font-headline text-xl font-bold text-primary leading-tight">MPITI Admin</h2>
+          <p className="text-[10px] text-white/40 uppercase tracking-widest">Management Portal</p>
+        </div>
       </div>
       <nav className="flex-1 px-4 py-6 space-y-1">
         {menuItems.map((item) => {

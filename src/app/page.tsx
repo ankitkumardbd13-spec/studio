@@ -51,6 +51,7 @@ export default function Home() {
   }, []);
 
   const heroImage = PlaceHolderImages.find(img => img.id === 'iti-hero');
+  const logoImage = PlaceHolderImages.find(img => img.id === 'iti-logo');
 
   const courses = [
     { name: 'Electrician', duration: '2 Years', icon: <BookOpen className="w-6 h-6" /> },
@@ -75,6 +76,11 @@ export default function Home() {
           />
         )}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+          {logoImage && (
+            <div className="mb-6 relative w-24 h-24 bg-white/20 backdrop-blur-md rounded-2xl p-2 animate-in zoom-in-50 duration-700">
+               <Image src={logoImage.imageUrl} alt="Logo" fill className="object-contain p-2" />
+            </div>
+          )}
           <h1 className="font-headline text-5xl md:text-8xl text-white mb-6 drop-shadow-lg font-bold">
             {siteData.heroTitle}
           </h1>
@@ -223,7 +229,12 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-3 gap-16 mb-16">
             <div>
-              <h2 className="font-headline text-3xl mb-6 text-primary font-bold">MPITI Saharanpur</h2>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="relative w-12 h-12 bg-white rounded-lg p-1">
+                   {logoImage && <Image src={logoImage.imageUrl} alt="Logo" fill className="object-contain" />}
+                </div>
+                <h2 className="font-headline text-3xl text-primary font-bold">MPITI Saharanpur</h2>
+              </div>
               <p className="opacity-70 text-lg leading-relaxed">{siteData.heroSub}</p>
             </div>
             <div>

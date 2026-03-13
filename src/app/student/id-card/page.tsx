@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -25,7 +24,7 @@ export default function IDCardPage() {
            </Button>
            <div className="flex gap-2">
              <Button variant="outline" className="gap-2"><Printer className="w-4 h-4"/> Print Card</Button>
-             <Button className="bg-primary text-white gap-2"><Download className="w-4 h-4"/> Download PDF</Button>
+             <Button className="bg-primary text-white gap-2 shadow-lg"><Download className="w-4 h-4"/> Download PDF</Button>
            </div>
         </div>
 
@@ -44,47 +43,38 @@ export default function IDCardPage() {
               <p className="text-[10px] opacity-80 uppercase tracking-widest">Saharanpur, UP</p>
               
               <div className="mt-8 flex flex-col items-center gap-2">
-                <div className="w-24 h-24 border-2 border-white rounded-lg overflow-hidden bg-muted relative">
+                <div className="w-24 h-24 border-2 border-white rounded-lg overflow-hidden bg-muted relative shadow-inner">
                   {studentPhoto && <Image src={studentPhoto} alt="Student" fill className="object-cover" />}
                 </div>
-                <div className="text-xs font-bold mt-2 text-white">STUDENT</div>
+                <div className="text-xs font-bold mt-2 text-white bg-white/20 px-3 py-1 rounded-full">STUDENT</div>
               </div>
            </div>
 
            {/* Content Section */}
-           <div className="flex-1 p-8 bg-cream flex flex-col justify-between relative">
+           <div className="flex-1 p-8 bg-[#FAFAF0] flex flex-col justify-between relative">
               <div>
                 <div className="flex justify-between items-start mb-6">
                   <div>
                     <h3 className="text-2xl font-headline font-bold text-primary">Rahul Kumar</h3>
-                    <p className="text-xs text-muted-foreground">Roll No: 2023/MP/ELEC/042</p>
-                  </div>
-                  <div className="w-16 h-16 relative opacity-80">
-                    {itiStamp ? (
-                      <Image src={itiStamp} alt="Official Stamp" fill className="object-contain" />
-                    ) : (
-                      <div className="w-12 h-12 flex items-center justify-center text-[8px] border-2 border-primary/40 rounded-full text-center p-1 text-primary italic font-bold">
-                        Official Seal
-                      </div>
-                    )}
+                    <p className="text-xs text-muted-foreground font-medium">Roll No: 2023/MP/ELEC/042</p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-y-4 gap-x-2 text-sm">
                    <div>
-                     <p className="text-[10px] text-muted-foreground uppercase">Father's Name</p>
+                     <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Father's Name</p>
                      <p className="font-bold text-slate-900">Shri Suresh Kumar</p>
                    </div>
                    <div>
-                     <p className="text-[10px] text-muted-foreground uppercase">Date of Birth</p>
+                     <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Date of Birth</p>
                      <p className="font-bold text-slate-900">15/05/2002</p>
                    </div>
                    <div>
-                     <p className="text-[10px] text-muted-foreground uppercase">Trade</p>
+                     <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Trade</p>
                      <p className="font-bold text-slate-900">Electrician</p>
                    </div>
                    <div>
-                     <p className="text-[10px] text-muted-foreground uppercase">Year</p>
+                     <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Year</p>
                      <p className="font-bold text-slate-900">First Year</p>
                    </div>
                 </div>
@@ -93,20 +83,33 @@ export default function IDCardPage() {
               <div className="mt-6 pt-4 border-t border-dashed border-primary/20">
                 <div className="flex justify-between items-end">
                   <div>
-                    <p className="text-[10px] text-muted-foreground uppercase">Validity Session</p>
+                    <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Validity Session</p>
                     <p className="font-bold text-secondary">2023 - 2025</p>
                   </div>
-                  <div className="text-center">
-                    <div className="h-8 border-b border-primary w-24 mx-auto mb-1"></div>
-                    <p className="text-[10px] text-muted-foreground uppercase">Principal Signature</p>
+                  
+                  {/* STAMP PLACED HERE AT THE LOWER SIDE */}
+                  <div className="relative">
+                    <div className="absolute -top-12 -right-4 w-16 h-16 opacity-70 -rotate-12 pointer-events-none">
+                      {itiStamp ? (
+                        <Image src={itiStamp} alt="Official Stamp" fill className="object-contain" />
+                      ) : (
+                        <div className="w-14 h-14 flex items-center justify-center text-[8px] border-2 border-primary/40 rounded-full text-center p-1 text-primary italic font-bold bg-white/10 backdrop-blur-sm">
+                          Official Seal
+                        </div>
+                      )}
+                    </div>
+                    <div className="text-center">
+                      <div className="h-8 border-b border-primary w-24 mx-auto mb-1"></div>
+                      <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Principal Signature</p>
+                    </div>
                   </div>
                 </div>
               </div>
            </div>
         </div>
 
-        <p className="mt-8 text-sm text-muted-foreground max-w-md text-center">
-          This is a digitally generated ID card. For physical use, please print on a 300gsm card. The official logo and blue stamp of Maharana Pratap ITI Saharanpur are included digitally.
+        <p className="mt-8 text-sm text-muted-foreground max-w-md text-center bg-white p-4 rounded-xl border shadow-sm">
+          This is a digitally generated ID card. For physical use, please print on a 300gsm card. The official logo and blue stamp of Maharana Pratap ITI Saharanpur are included digitally in the lower signature section.
         </p>
       </div>
     </main>

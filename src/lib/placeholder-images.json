@@ -19,16 +19,16 @@
       "imageHint": "educator man portrait"
     },
     {
+      "id": "student-rep",
+      "description": "Student Representative Message",
+      "imageUrl": "https://picsum.photos/seed/studentrep/400/500",
+      "imageHint": "successful student portrait"
+    },
+    {
       "id": "student-1",
       "description": "Student Feedback 1",
       "imageUrl": "https://picsum.photos/seed/s1/200/200",
       "imageHint": "student portrait"
-    },
-    {
-      "id": "student-2",
-      "description": "Student Feedback 2",
-      "imageUrl": "https://picsum.photos/seed/s2/200/200",
-      "imageHint": "student girl portrait"
     },
     {
       "id": "workshop-electrician",
@@ -41,6 +41,24 @@
       "description": "Fitter Workshop",
       "imageUrl": "https://picsum.photos/seed/fitter/800/400",
       "imageHint": "industrial workshop"
+    },
+    {
+      "id": "gallery-1",
+      "description": "Practical Lab",
+      "imageUrl": "https://picsum.photos/seed/lab1/800/600",
+      "imageHint": "science lab"
+    },
+    {
+      "id": "gallery-2",
+      "description": "Classroom Session",
+      "imageUrl": "https://picsum.photos/seed/class1/800/600",
+      "imageHint": "classroom learning"
+    },
+    {
+      "id": "gallery-3",
+      "description": "Workshop Equipment",
+      "imageUrl": "https://picsum.photos/seed/equip1/800/600",
+      "imageHint": "industrial tools"
     }
   ]
 }

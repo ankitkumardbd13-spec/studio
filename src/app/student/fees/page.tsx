@@ -77,7 +77,7 @@ export default function StudentFeesPage() {
   const stampUrl = siteSettings?.stamp || PlaceHolderImages.find(img => img.id === 'iti-stamp')?.imageUrl;
 
   const ReceiptCard = ({ payment }: { payment: any }) => (
-    <div className="receipt-slip bg-white border border-slate-900 p-8 w-[21cm] h-[9cm] overflow-hidden flex flex-col relative shrink-0">
+    <div className="receipt-slip bg-white border border-slate-900 p-8 w-[21cm] h-[9cm] overflow-hidden flex flex-col relative shrink-0 box-border">
       {/* LOGO ONLY AS WATERMARK */}
       <div className="absolute inset-0 flex items-center justify-center opacity-[0.05] pointer-events-none grayscale">
         {logoUrl && <img src={logoUrl} alt="watermark" className="w-[12cm] h-[12cm] object-contain" />}
@@ -146,7 +146,7 @@ export default function StudentFeesPage() {
           <header className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
               <h1 className="font-headline text-4xl text-primary font-bold">Fee Ledger</h1>
-              <p className="text-muted-foreground">View your payments and download professional DL slips (21x9cm)</p>
+              <p className="text-muted-foreground">View your payments and download standard 21cm x 9cm slips</p>
             </div>
             <Button variant="outline" asChild>
               <Link href="/student/dashboard" className="gap-2"><ArrowLeft className="w-4 h-4"/> Dashboard</Link>
@@ -231,14 +231,14 @@ export default function StudentFeesPage() {
         <DialogContent className="max-w-[22cm] p-0 border-none bg-transparent shadow-none">
           <div className="bg-white p-6 rounded-xl shadow-2xl print:shadow-none print:p-0 flex flex-col items-center">
              <div className="flex justify-between items-center w-full mb-4 print:hidden">
-               <DialogTitle className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Receipt Stack (3 Slips / Full A4 Width)</DialogTitle>
+               <DialogTitle className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Print Preview (3 Slips on A4)</DialogTitle>
                <div className="flex gap-2">
                  <Button onClick={handlePrint} size="sm" className="gap-2 bg-primary h-8"><Printer className="w-3 h-3"/> Print All</Button>
                  <Button onClick={() => setIsReceiptOpen(false)} variant="ghost" size="icon" className="h-8 w-8"><X className="w-4 h-4"/></Button>
                </div>
              </div>
              
-             <div id="receipts-wrapper" className="flex flex-col items-center">
+             <div id="receipts-wrapper">
                 <ReceiptCard payment={selectedReceipt} />
                 <ReceiptCard payment={selectedReceipt} />
                 <ReceiptCard payment={selectedReceipt} />
@@ -263,21 +263,19 @@ export default function StudentFeesPage() {
             position: absolute !important;
             left: 0 !important;
             top: 0 !important;
-            display: flex !important;
-            flex-direction: column !important;
+            display: block !important;
             width: 21cm !important;
             margin: 0 !important;
             padding: 0 !important;
-            box-shadow: none !important;
           }
           .receipt-slip {
             width: 21cm !important;
             height: 9cm !important;
-            border-bottom: 1px dashed #ccc !important;
-            margin: 0 !important;
+            display: block !important;
             page-break-inside: avoid !important;
             page-break-after: avoid !important;
-            display: flex !important;
+            border-bottom: 1px dashed #000 !important;
+            box-sizing: border-box !important;
           }
         }
       `}</style>

@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -16,11 +17,13 @@ interface Question {
   text: string;
   type: 'objective';
   options: string[];
+  correctAnswer: string;
 }
 
 interface Assignment {
   id: string;
   title: string;
+  subject: string;
   durationMinutes: number;
   questions: Question[];
 }
@@ -37,10 +40,12 @@ export default function AssignmentTestPage() {
 
   useEffect(() => {
     const saved = localStorage.getItem('mpiti_assignments');
-    const submissions = JSON.parse(localStorage.getItem('mpiti_submissions') || '[]');
+    const results = JSON.parse(localStorage.getItem('mpiti_results') || '[]');
     
-    if (submissions.includes(params.id)) {
-      toast({ variant: 'destructive', title: 'Already Submitted', description: 'You have already completed this test.' });
+    // Check if already attempted
+    const alreadyDone = results.some((r: any) => r.assignmentId === params.id);
+    if (alreadyDone) {
+      toast({ variant: 'destructive', title: 'Already Attempted', description: 'You have already completed this test. Results are in the Results section.' });
       router.push('/student/assignments');
       return;
     }
@@ -56,28 +61,47 @@ export default function AssignmentTestPage() {
   }, [params.id, router, toast]);
 
   const handleSubmit = useCallback(async (isAuto = false) => {
-    if (isSubmitting || isSubmitted) return;
+    if (isSubmitting || isSubmitted || !assignment) return;
     setIsSubmitting(true);
 
     try {
-      const submissions = JSON.parse(localStorage.getItem('mpiti_submissions') || '[]');
-      localStorage.setItem('mpiti_submissions', JSON.stringify([...submissions, params.id]));
+      // Calculate Score
+      let score = 0;
+      assignment.questions.forEach(q => {
+        if (answers[q.id] === q.correctAnswer) {
+          score++;
+        }
+      });
+
+      const resultRecord = {
+        id: Date.now().toString(),
+        assignmentId: assignment.id,
+        title: assignment.title,
+        subject: assignment.subject,
+        score,
+        total: assignment.questions.length,
+        percentage: (score / assignment.questions.length) * 100,
+        date: new Date().toISOString()
+      };
+
+      const results = JSON.parse(localStorage.getItem('mpiti_results') || '[]');
+      localStorage.setItem('mpiti_results', JSON.stringify([resultRecord, ...results]));
       
       setIsSubmitted(true);
       toast({
-        title: isAuto ? "Time Up! Auto-Submitted" : "Final Submission Complete",
-        description: "Your responses have been saved and sent to your instructor.",
+        title: isAuto ? "Time Up! Auto-Submitted" : "Test Complete",
+        description: `Your score: ${score}/${assignment.questions.length}. Results saved.`,
       });
       
       setTimeout(() => {
-        router.push('/student/assignments');
+        router.push('/student/results');
       }, 3000);
     } catch (error) {
       toast({ variant: 'destructive', title: 'Submission Failed', description: 'Please check your connection and try again.' });
     } finally {
       setIsSubmitting(false);
     }
-  }, [isSubmitting, isSubmitted, params.id, router, toast]);
+  }, [isSubmitting, isSubmitted, assignment, answers, router, toast]);
 
   useEffect(() => {
     if (timeLeft === null || isSubmitted) return;
@@ -113,9 +137,9 @@ export default function AssignmentTestPage() {
       <div className="min-h-screen bg-muted/30 flex flex-col items-center justify-center p-4">
         <Card className="max-w-md w-full text-center p-8 border-none shadow-2xl">
           <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold mb-2">Test Submitted Successfully!</h2>
-          <p className="text-muted-foreground mb-6">Great job! Redirecting you back to your dashboard in a few seconds...</p>
-          <Button onClick={() => router.push('/student/assignments')}>Return to Assignments</Button>
+          <h2 className="text-2xl font-bold mb-2">Test Submitted!</h2>
+          <p className="text-muted-foreground mb-6">Great job! You can view your detailed marksheet in the Exam Results section.</p>
+          <Button onClick={() => router.push('/student/results')}>View My Results</Button>
         </Card>
       </div>
     );

@@ -9,18 +9,14 @@ import {
   XCircle,
   Download,
   PieChart,
-  ArrowRight,
   Eye,
   Printer,
   ShieldCheck,
-  User,
   Calendar,
   MapPin,
   Phone,
   Search,
-  Filter,
-  CreditCard,
-  Layers
+  Filter
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -28,6 +24,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { AdminSidebar } from '@/components/layout/AdminSidebar';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   Dialog, 

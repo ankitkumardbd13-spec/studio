@@ -8,21 +8,22 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Search, Filter, CreditCard, Download, Plus, Save, User, CheckCircle2, Clock } from 'lucide-react';
+import { Search, Filter, CreditCard, Download, Plus, Save, User, CheckCircle2, Clock, Receipt, Calculator } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { 
   Dialog, 
   DialogContent, 
   DialogHeader, 
   DialogTitle, 
-  DialogFooter 
+  DialogFooter,
+  DialogDescription
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 
 const MOCK_FEE_DATA = [
-  { id: '1', name: 'Amit Tyagi', trade: 'Electrician', total: 24000, paid: 24000, pending: 0, status: 'Full Paid' },
-  { id: '2', name: 'Sonia Verma', trade: 'HSI', total: 18000, paid: 9000, pending: 9000, status: 'Partial' },
-  { id: '3', name: 'Vikas Sharma', trade: 'Fitter', total: 24000, paid: 5000, pending: 19000, status: 'Pending' },
+  { id: '1', name: 'Amit Tyagi', fatherName: 'Shri Ram Tyagi', rollNo: '2024/ELEC/001', trade: 'Electrician', total: 24000, paid: 24000, pending: 0, status: 'Full Paid' },
+  { id: '2', name: 'Sonia Verma', fatherName: 'Shri KL Verma', rollNo: '2024/HSI/012', trade: 'HSI', total: 18000, paid: 9000, pending: 9000, status: 'Partial' },
+  { id: '3', name: 'Vikas Sharma', fatherName: 'Shri OP Sharma', rollNo: '2023/FIT/045', trade: 'Fitter', total: 24000, paid: 5000, pending: 19000, status: 'Pending' },
 ];
 
 export default function AdminFeesPage() {
@@ -30,9 +31,13 @@ export default function AdminFeesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStudent, setSelectedStudent] = useState<any>(null);
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
+  const [isStructureOpen, setIsStructureOpen] = useState(false);
 
   const filteredData = useMemo(() => {
-    return MOCK_FEE_DATA.filter(f => f.name.toLowerCase().includes(searchQuery.toLowerCase()));
+    return MOCK_FEE_DATA.filter(f => 
+      f.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      f.rollNo.toLowerCase().includes(searchQuery.toLowerCase())
+    );
   }, [searchQuery]);
 
   const handleUpdateFee = (student: any) => {
@@ -48,6 +53,15 @@ export default function AdminFeesPage() {
     });
   };
 
+  const handleSaveStructure = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsStructureOpen(false);
+    toast({
+      title: "Fee Structure Saved",
+      description: "New academic fee structure has been applied to the trade.",
+    });
+  };
+
   return (
     <div className="min-h-screen bg-muted/30 flex">
       <AdminSidebar />
@@ -57,7 +71,9 @@ export default function AdminFeesPage() {
             <h1 className="font-headline text-4xl text-slate-900 font-bold">Fee Management</h1>
             <p className="text-muted-foreground">Manage student payments, installments, and receipts</p>
           </div>
-          <Button className="gap-2"><Plus className="w-4 h-4"/> Add New Structure</Button>
+          <Button onClick={() => setIsStructureOpen(true)} className="gap-2 bg-secondary hover:bg-secondary/90 text-white">
+            <Plus className="w-4 h-4"/> Create New Fee Structure
+          </Button>
         </header>
 
         <Card className="mb-8 border-none shadow-sm">
@@ -65,7 +81,7 @@ export default function AdminFeesPage() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input 
-                placeholder="Search student by name..." 
+                placeholder="Search by Name or Roll Number..." 
                 className="pl-9" 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -75,28 +91,38 @@ export default function AdminFeesPage() {
           </CardContent>
         </Card>
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
+        <div className="grid lg:grid-cols-4 gap-8">
+          <div className="lg:col-span-3">
             <Card className="border-none shadow-sm">
               <CardHeader>
-                <CardTitle>Recent Records</CardTitle>
+                <CardTitle>Academic Fee Ledger</CardTitle>
               </CardHeader>
               <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Student</TableHead>
+                      <TableHead>Student Details</TableHead>
                       <TableHead>Trade</TableHead>
                       <TableHead>Status</TableHead>
+                      <TableHead>Total</TableHead>
                       <TableHead>Paid</TableHead>
+                      <TableHead>Pending</TableHead>
                       <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {filteredData.map((f) => (
                       <TableRow key={f.id}>
-                        <TableCell className="font-bold">{f.name}</TableCell>
-                        <TableCell>{f.trade}</TableCell>
+                        <TableCell>
+                          <div>
+                            <p className="font-bold text-slate-900">{f.name}</p>
+                            <p className="text-[10px] text-muted-foreground font-bold">Roll: {f.rollNo}</p>
+                            <p className="text-[10px] text-muted-foreground">F/N: {f.fatherName}</p>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline" className="text-[10px] border-primary text-primary">{f.trade}</Badge>
+                        </TableCell>
                         <TableCell>
                           <Badge 
                             variant="outline" 
@@ -109,7 +135,9 @@ export default function AdminFeesPage() {
                             {f.status}
                           </Badge>
                         </TableCell>
-                        <TableCell className="font-bold">₹{f.paid}</TableCell>
+                        <TableCell className="font-medium">₹{f.total}</TableCell>
+                        <TableCell className="font-bold text-green-600">₹{f.paid}</TableCell>
+                        <TableCell className="font-bold text-red-600">₹{f.pending}</TableCell>
                         <TableCell className="text-right">
                           <Button size="sm" variant="ghost" className="text-primary font-bold" onClick={() => handleUpdateFee(f)}>Manage</Button>
                         </TableCell>
@@ -141,44 +169,90 @@ export default function AdminFeesPage() {
                  <Button variant="outline" className="w-full text-white border-white/20 hover:bg-white/10 mt-4"><Download className="w-4 h-4 mr-2"/> Detailed Report</Button>
               </CardContent>
             </Card>
+
+            <Card className="border-none shadow-sm bg-white">
+               <CardContent className="pt-6">
+                  <h4 className="font-bold text-sm mb-4">Quick Actions</h4>
+                  <div className="space-y-2">
+                    <Button variant="outline" className="w-full justify-start text-xs"><Receipt className="w-3 h-3 mr-2" /> Bulk Receipt Print</Button>
+                    <Button variant="outline" className="w-full justify-start text-xs"><Calculator className="w-3 h-3 mr-2" /> Late Fee Waiver</Button>
+                  </div>
+               </CardContent>
+            </Card>
           </div>
         </div>
+
+        {/* Create Structure Dialog */}
+        <Dialog open={isStructureOpen} onOpenChange={setIsStructureOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>New Fee Structure</DialogTitle>
+              <DialogDescription>Define base fees for a specific trade and session.</DialogDescription>
+            </DialogHeader>
+            <form onSubmit={handleSaveStructure} className="space-y-4 py-4">
+               <div className="space-y-2">
+                 <Label>Trade / Course</Label>
+                 <Input placeholder="e.g. Electrician 2024-26" required />
+               </div>
+               <div className="grid grid-cols-2 gap-4">
+                 <div className="space-y-2">
+                   <Label>Admission Fee</Label>
+                   <Input type="number" placeholder="₹" required />
+                 </div>
+                 <div className="space-y-2">
+                   <Label>Tuition Fee (Annual)</Label>
+                   <Input type="number" placeholder="₹" required />
+                 </div>
+               </div>
+               <div className="space-y-2">
+                 <Label>Examination Fee</Label>
+                 <Input type="number" placeholder="₹" />
+               </div>
+               <DialogFooter>
+                 <Button type="submit" className="w-full">Create Academic Structure</Button>
+               </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
 
         {/* Update Fee Dialog */}
         <Dialog open={isUpdateOpen} onOpenChange={setIsUpdateOpen}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Update Fee Record</DialogTitle>
+              <DialogTitle>Record Payment</DialogTitle>
             </DialogHeader>
             {selectedStudent && (
               <div className="space-y-6 py-4">
                 <div className="flex items-center gap-4 p-4 bg-muted rounded-lg">
                   <div className="p-2 bg-primary rounded-full text-white"><User className="w-6 h-6"/></div>
                   <div>
-                    <p className="font-bold">{selectedStudent.name}</p>
-                    <p className="text-xs text-muted-foreground">{selectedStudent.trade}</p>
+                    <p className="font-bold text-slate-900">{selectedStudent.name}</p>
+                    <p className="text-[10px] text-muted-foreground font-bold">Roll No: {selectedStudent.rollNo}</p>
+                    <p className="text-[10px] text-muted-foreground">F/N: {selectedStudent.fatherName}</p>
                   </div>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>New Payment Amount</Label>
+                    <Label>Amount Received</Label>
                     <Input type="number" placeholder="Enter Amount" />
                   </div>
                   <div className="space-y-2">
                     <Label>Payment Mode</Label>
-                    <Input placeholder="Cash / Online / Check" />
+                    <Input placeholder="Cash / UPI / Check" />
                   </div>
                 </div>
 
-                <div className="p-4 border-2 border-dashed rounded-lg text-center">
-                  <p className="text-xs text-muted-foreground">Current Balance Due</p>
-                  <p className="text-2xl font-black text-red-600">₹{selectedStudent.pending}</p>
+                <div className="p-4 bg-red-50 border-2 border-dashed border-red-200 rounded-lg text-center">
+                  <p className="text-xs text-red-600 font-bold uppercase tracking-wider">Balance Amount Due</p>
+                  <p className="text-3xl font-black text-red-700">₹{selectedStudent.pending}</p>
                 </div>
               </div>
             )}
             <DialogFooter>
-              <Button onClick={handleSaveFee} className="w-full gap-2"><Save className="w-4 h-4"/> Record Payment</Button>
+              <Button onClick={handleSaveFee} className="w-full gap-2 bg-green-600 hover:bg-green-700 text-white">
+                <Save className="w-4 h-4"/> Confirm & Generate Receipt
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

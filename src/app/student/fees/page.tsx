@@ -1,13 +1,12 @@
-
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { CreditCard, ArrowLeft, Download, CheckCircle2, Clock, AlertCircle, Phone, User, FileText, Printer, Receipt, ShieldCheck } from 'lucide-react';
+import { CreditCard, ArrowLeft, Download, AlertCircle, Phone, User, FileText, Printer, Receipt, X } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -87,7 +86,6 @@ export default function StudentFeesPage() {
             </Button>
           </header>
 
-          {/* Student Banner */}
           <Card className="mb-8 border-none shadow-sm bg-primary text-primary-foreground overflow-hidden">
              <CardContent className="p-6 flex flex-col md:flex-row justify-between items-center gap-6">
                 <div className="flex items-center gap-4">
@@ -207,105 +205,90 @@ export default function StudentFeesPage() {
                   <Button onClick={handlePay} className="w-full bg-white text-secondary hover:bg-white/90 font-black h-12 shadow-xl">Pay Via UPI / Cards</Button>
                 </CardContent>
               </Card>
-
-              <Card className="border-none shadow-sm">
-                <CardContent className="pt-6 space-y-4">
-                  <h4 className="font-bold text-sm">Official Account Office</h4>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3 text-xs font-medium text-slate-600">
-                      <Phone className="w-4 h-4 text-primary" /> +91 98765 43210
-                    </div>
-                    <div className="p-3 bg-primary/5 rounded-lg border border-dashed border-primary/20">
-                      <p className="text-[11px] text-primary font-bold italic">"Visit the Account Section for any fee disputes or to apply for government scholarship scholarship schemes."</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Modern Receipt Dialog */}
+      {/* Landscape Receipt Dialog - A6 Size (1/4 A4) */}
       <Dialog open={isReceiptOpen} onOpenChange={setIsReceiptOpen}>
-        <DialogContent className="max-w-[420px] p-0 border-none bg-transparent shadow-none">
-          <div className="bg-white p-6 rounded-xl shadow-2xl print:shadow-none print:p-0">
+        <DialogContent className="max-w-[600px] p-0 border-none bg-transparent shadow-none">
+          <div className="bg-white p-6 rounded-xl shadow-2xl print:shadow-none print:p-0 relative overflow-hidden">
              <div className="flex justify-between items-center mb-4 print:hidden">
-               <DialogTitle className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Digital Receipt Preview</DialogTitle>
-               <Button onClick={handlePrint} size="sm" className="gap-2 bg-primary"><Printer className="w-3 h-3"/> Download / Print</Button>
+               <DialogTitle className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Fees Slip Preview</DialogTitle>
+               <div className="flex gap-2">
+                 <Button onClick={handlePrint} size="sm" className="gap-2 bg-primary"><Printer className="w-3 h-3"/> Print Slip</Button>
+                 <Button onClick={() => setIsReceiptOpen(false)} variant="ghost" size="icon" className="h-8 w-8"><X className="w-4 h-4"/></Button>
+               </div>
              </div>
              
-             {/* Printable Area - Formatted for 1/4 A4 (A6 size approx) */}
-             <div id="receipt-printable" className="bg-white border-2 border-slate-900 p-4 w-full aspect-[1/1.4] overflow-hidden flex flex-col relative print:border-none">
-                {/* Watermark */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none grayscale rotate-[-15deg]">
-                   {logoUrl && <img src={logoUrl} alt="logo" className="w-64 h-64 object-contain" />}
+             {/* Printable Area - Landscape A6 (Approx 148mm x 105mm) */}
+             <div id="receipt-printable" className="bg-white border-2 border-slate-900 p-6 w-full h-[380px] overflow-hidden flex flex-col relative print:border-2 print:m-0">
+                {/* Center Watermark Logo ONLY */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-[0.05] pointer-events-none grayscale">
+                   {logoUrl && <img src={logoUrl} alt="logo" className="w-[300px] h-[300px] object-contain" />}
                 </div>
 
                 <div className="relative z-10 flex flex-col h-full">
-                  <header className="flex items-center gap-2 border-b-2 border-slate-900 pb-3 mb-3">
-                     <div className="w-12 h-12 flex-shrink-0">
-                        {logoUrl && <img src={logoUrl} alt="Logo" className="w-full h-full object-contain" />}
-                     </div>
-                     <div className="flex-1">
-                        <h2 className="text-sm font-black text-slate-900 uppercase leading-none">Maharana Pratap ITI</h2>
-                        <p className="text-[8px] font-bold text-slate-600 mt-0.5">Saharanpur, Uttar Pradesh - 247001</p>
-                        <p className="text-[7px] text-slate-400">DGT / NCVT Govt. Recognized Institute</p>
-                     </div>
+                  <header className="text-center border-b-2 border-slate-900 pb-2 mb-4">
+                    <h2 className="text-xl font-black text-slate-900 uppercase leading-none tracking-tighter">Maharana Pratap ITI Saharanpur</h2>
+                    <p className="text-[10px] font-bold text-slate-600 mt-1 uppercase">DGT / NCVT Govt. Recognized Institute | Uttar Pradesh</p>
                   </header>
 
-                  <div className="flex justify-between text-[10px] font-bold mb-4">
-                     <div className="bg-slate-900 text-white px-2 py-0.5 rounded">FEES RECEIPT</div>
-                     <div className="text-right">
-                        <p>No: {selectedReceipt?.receipt}</p>
-                        <p>Date: {selectedReceipt?.date}</p>
+                  <div className="flex justify-between text-[11px] font-bold mb-4">
+                     <div className="bg-slate-900 text-white px-3 py-1 rounded-sm uppercase tracking-widest">Fee Payment Slip</div>
+                     <div className="text-right leading-tight">
+                        <p>Slip No: <span className="font-black">{selectedReceipt?.receipt}</span></p>
+                        <p>Date: <span className="font-black">{selectedReceipt?.date}</span></p>
                      </div>
                   </div>
 
-                  <div className="space-y-2 flex-1">
-                     <div className="grid grid-cols-[80px_1fr] gap-x-2 text-[11px]">
-                        <span className="text-slate-500 font-medium">Student Name:</span>
-                        <span className="font-bold text-slate-900 uppercase border-b border-slate-200">{profile.name}</span>
-                        
-                        <span className="text-slate-500 font-medium">Father's Name:</span>
-                        <span className="font-bold text-slate-900 uppercase border-b border-slate-200">{profile.father}</span>
-                        
-                        <span className="text-slate-500 font-medium">Roll Number:</span>
-                        <span className="font-bold text-slate-900 border-b border-slate-200">{profile.rollNo}</span>
-                        
-                        <span className="text-slate-500 font-medium">Trade:</span>
-                        <span className="font-bold text-slate-900 border-b border-slate-200">{profile.trade}</span>
-                        
-                        <span className="text-slate-500 font-medium">Particulars:</span>
-                        <span className="font-bold text-slate-900 border-b border-slate-200 italic">{selectedReceipt?.mode}</span>
+                  <div className="grid grid-cols-2 gap-x-8 gap-y-3 flex-1">
+                     <div className="space-y-2">
+                        <div className="grid grid-cols-[80px_1fr] gap-x-2 text-[11px]">
+                           <span className="text-slate-500 font-medium">Student:</span>
+                           <span className="font-black text-slate-900 uppercase border-b border-slate-200">{profile.name}</span>
+                           
+                           <span className="text-slate-500 font-medium">Father:</span>
+                           <span className="font-black text-slate-900 uppercase border-b border-slate-200">{profile.father}</span>
+                           
+                           <span className="text-slate-500 font-medium">Roll No:</span>
+                           <span className="font-black text-slate-900 border-b border-slate-200">{profile.rollNo}</span>
+                        </div>
                      </div>
-
-                     <div className="mt-6 p-3 bg-slate-50 border-2 border-slate-900 rounded flex justify-between items-center">
-                        <span className="text-xs font-black uppercase tracking-widest">Amount Paid:</span>
-                        <span className="text-xl font-black text-slate-900">₹{selectedReceipt?.amount.toLocaleString()}</span>
+                     <div className="space-y-2">
+                        <div className="grid grid-cols-[80px_1fr] gap-x-2 text-[11px]">
+                           <span className="text-slate-500 font-medium">Trade:</span>
+                           <span className="font-black text-slate-900 border-b border-slate-200 uppercase">{profile.trade}</span>
+                           
+                           <span className="text-slate-500 font-medium">Particulars:</span>
+                           <span className="font-black text-slate-900 border-b border-slate-200 italic">{selectedReceipt?.mode}</span>
+                        </div>
+                        <div className="mt-4 p-3 bg-slate-50 border-2 border-slate-900 rounded-md flex justify-between items-center">
+                           <span className="text-[10px] font-black uppercase">Amount:</span>
+                           <span className="text-2xl font-black text-slate-900">₹{selectedReceipt?.amount.toLocaleString()}</span>
+                        </div>
                      </div>
                   </div>
 
                   <footer className="mt-auto pt-4 flex justify-between items-end">
                      <div className="text-center">
-                        <div className="w-24 h-[1px] bg-slate-400 mb-1"></div>
-                        <p className="text-[8px] font-bold uppercase text-slate-400">Payer's Signature</p>
+                        <div className="w-28 h-[1px] bg-slate-400 mb-1"></div>
+                        <p className="text-[9px] font-bold uppercase text-slate-400">Payer Signature</p>
                      </div>
                      
                      <div className="relative flex flex-col items-center">
                         {stampUrl && (
-                          <div className="absolute -top-12 -right-2 w-20 h-20 opacity-80 mix-blend-multiply rotate-[-10deg]">
+                          <div className="absolute -top-16 -right-2 w-24 h-24 opacity-70 mix-blend-multiply rotate-[-12deg]">
                              <img src={stampUrl} alt="stamp" className="w-full h-full object-contain" />
                           </div>
                         )}
-                        <div className="w-24 h-[1px] bg-slate-900 mb-1"></div>
-                        <p className="text-[8px] font-black uppercase text-slate-900">Accountant / Seal</p>
+                        <div className="w-28 h-[1px] bg-slate-900 mb-1"></div>
+                        <p className="text-[10px] font-black uppercase text-slate-900">Accountant / Principal</p>
                      </div>
                   </footer>
                 </div>
              </div>
-             
-             <p className="text-center text-[9px] text-muted-foreground mt-4 print:hidden">This is a system-generated digital receipt. No signature required for validation if digital stamp is present.</p>
           </div>
         </DialogContent>
       </Dialog>
@@ -319,19 +302,28 @@ export default function StudentFeesPage() {
             visibility: visible;
           }
           #receipt-printable {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100mm;
-            height: 148mm;
+            position: relative;
+            display: block;
+            width: 148mm !important;
+            height: 105mm !important;
             border: 2px solid black !important;
-            padding: 5mm !important;
+            padding: 10mm !important;
             margin: 0 !important;
             box-shadow: none !important;
+            page-break-inside: avoid;
           }
+          /* Custom layout to fit 4 per page */
           @page {
-            size: A6;
+            size: A4 landscape;
             margin: 0;
+          }
+          html, body {
+            width: 297mm;
+            height: 210mm;
+          }
+          #receipt-printable {
+            float: left;
+            box-sizing: border-box;
           }
         }
       `}</style>

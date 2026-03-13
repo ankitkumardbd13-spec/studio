@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useMemo, useEffect } from 'react';
@@ -8,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Search, Filter, CreditCard, Download, Plus, Save, User, CheckCircle2, Clock, Receipt, Calculator, Printer, History, Trash2, X } from 'lucide-react';
+import { Search, Filter, CreditCard, Download, Plus, Save, User, Receipt, Calculator, Printer, History, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { 
   Dialog, 
@@ -61,20 +60,6 @@ const INITIAL_MOCK_FEE_DATA = [
       { id: 'h3', date: '2024-02-05', amount: 9000, mode: 'UPI', particulars: 'Admission Fee', receiptNo: 'REC-2024-012' }
     ]
   },
-  { 
-    id: '3', 
-    name: 'Vikas Sharma', 
-    fatherName: 'Shri OP Sharma', 
-    rollNo: '2023/FIT/045', 
-    trade: 'Fitter', 
-    total: 24000, 
-    paid: 5000, 
-    pending: 19000, 
-    status: 'Pending',
-    history: [
-      { id: 'h4', date: '2023-08-20', amount: 5000, mode: 'Cash', particulars: 'Registration Fee', receiptNo: 'REC-2023-112' }
-    ]
-  },
 ];
 
 export default function AdminFeesPage() {
@@ -85,12 +70,10 @@ export default function AdminFeesPage() {
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
   const [isStructureOpen, setIsStructureOpen] = useState(false);
   
-  // New Payment Form State
   const [payAmount, setPayAmount] = useState('');
   const [payMode, setPayMode] = useState('Cash');
   const [payParticulars, setPayParticulars] = useState('Tuition Fee');
 
-  // Receipt Modal State
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
   const [selectedReceipt, setSelectedReceipt] = useState<any>(null);
 
@@ -142,10 +125,7 @@ export default function AdminFeesPage() {
 
     setFeeData(updatedData);
     setPayAmount('');
-    toast({
-      title: "Payment Recorded",
-      description: `Receipt ${newPayment.receiptNo} generated for ${selectedStudent.name}.`,
-    });
+    toast({ title: "Payment Recorded", description: `Receipt ${newPayment.receiptNo} generated.` });
   };
 
   const openReceipt = (payment: PaymentRecord) => {
@@ -171,7 +151,7 @@ export default function AdminFeesPage() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    toast({ title: "Report Exported", description: "Detailed fee status saved to CSV." });
+    toast({ title: "Report Exported" });
   };
 
   return (
@@ -283,56 +263,12 @@ export default function AdminFeesPage() {
                  <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden">
                     <div className="bg-primary h-full w-[66%]"></div>
                  </div>
-                 <p className="text-[10px] text-white/50 text-center">Last Updated: Just Now</p>
               </CardContent>
-            </Card>
-
-            <Card className="border-none shadow-sm bg-white">
-               <CardContent className="pt-6">
-                  <h4 className="font-bold text-sm mb-4">Quick Actions</h4>
-                  <div className="space-y-2">
-                    <Button variant="outline" className="w-full justify-start text-xs" onClick={() => toast({ title: "Bulk Receipts", description: "Processing 45 pending receipts for print queue..." })}>
-                      <Receipt className="w-3 h-3 mr-2" /> Bulk Receipt Print
-                    </Button>
-                    <Button variant="outline" className="w-full justify-start text-xs" onClick={() => toast({ title: "Waiver Tool", description: "Select students to apply late fee waivers." })}>
-                      <Calculator className="w-3 h-3 mr-2" /> Late Fee Waiver
-                    </Button>
-                  </div>
-               </CardContent>
             </Card>
           </div>
         </div>
 
-        {/* Create Structure Dialog */}
-        <Dialog open={isStructureOpen} onOpenChange={setIsStructureOpen}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>New Fee Structure</DialogTitle>
-              <DialogDescription>Define base fees for a specific trade and session.</DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
-               <div className="space-y-2">
-                 <Label>Trade / Course</Label>
-                 <Input placeholder="e.g. Electrician 2024-26" />
-               </div>
-               <div className="grid grid-cols-2 gap-4">
-                 <div className="space-y-2">
-                   <Label>Admission Fee</Label>
-                   <Input type="number" placeholder="₹" />
-                 </div>
-                 <div className="space-y-2">
-                   <Label>Tuition Fee (Annual)</Label>
-                   <Input type="number" placeholder="₹" />
-                 </div>
-               </div>
-               <DialogFooter>
-                 <Button className="w-full" onClick={() => { setIsStructureOpen(false); toast({ title: "Structure Created" }); }}>Create Academic Structure</Button>
-               </DialogFooter>
-            </div>
-          </DialogContent>
-        </Dialog>
-
-        {/* Manage Fee & History Dialog */}
+        {/* Manage Fee Dialog */}
         <Dialog open={isUpdateOpen} onOpenChange={setIsUpdateOpen}>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
@@ -342,7 +278,7 @@ export default function AdminFeesPage() {
               <Tabs defaultValue="record" className="w-full">
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="record" className="gap-2"><CreditCard className="w-4 h-4"/> Record Payment</TabsTrigger>
-                  <TabsTrigger value="history" className="gap-2"><History className="w-4 h-4"/> Payment History</TabsTrigger>
+                  <TabsTrigger value="history" className="gap-2"><History className="w-4 h-4"/> History</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="record" className="space-y-6 py-4">
@@ -350,8 +286,7 @@ export default function AdminFeesPage() {
                     <div className="p-3 bg-primary rounded-full text-white"><User className="w-6 h-6"/></div>
                     <div>
                       <p className="font-bold text-slate-900">{selectedStudent.name}</p>
-                      <p className="text-[10px] text-muted-foreground font-bold">Roll No: {selectedStudent.rollNo}</p>
-                      <p className="text-[10px] text-muted-foreground">F/N: {selectedStudent.fatherName}</p>
+                      <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-tight">Roll: {selectedStudent.rollNo}</p>
                     </div>
                   </div>
                   
@@ -362,23 +297,10 @@ export default function AdminFeesPage() {
                     </div>
                     <div className="space-y-2">
                       <Label>Payment Mode</Label>
-                      <Input placeholder="Cash / UPI / Check" value={payMode} onChange={e => setPayMode(e.target.value)} />
-                    </div>
-                    <div className="space-y-2 col-span-2">
-                      <Label>Particulars (Payment Note)</Label>
-                      <Input placeholder="e.g. Sem 2 Tuition Fee" value={payParticulars} onChange={e => setPayParticulars(e.target.value)} />
+                      <Input placeholder="Cash / UPI" value={payMode} onChange={e => setPayMode(e.target.value)} />
                     </div>
                   </div>
-
-                  <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex justify-between items-center">
-                    <div>
-                      <p className="text-[10px] text-red-600 font-bold uppercase tracking-wider">Balance Due</p>
-                      <p className="text-2xl font-black text-red-700">₹{selectedStudent.pending}</p>
-                    </div>
-                    <Button onClick={handleSavePayment} className="gap-2 bg-green-600 hover:bg-green-700 text-white h-12">
-                      <Save className="w-4 h-4"/> Confirm Payment
-                    </Button>
-                  </div>
+                  <Button onClick={handleSavePayment} className="w-full bg-green-600 hover:bg-green-700 text-white h-12">Confirm Payment</Button>
                 </TabsContent>
 
                 <TabsContent value="history" className="py-4">
@@ -388,29 +310,21 @@ export default function AdminFeesPage() {
                         <TableRow>
                           <TableHead>Date</TableHead>
                           <TableHead>Amount</TableHead>
-                          <TableHead>Particulars</TableHead>
-                          <TableHead className="text-right">Receipt</TableHead>
+                          <TableHead className="text-right">Action</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {selectedStudent.history.length > 0 ? (
-                          selectedStudent.history.map((h: any) => (
-                            <TableRow key={h.id}>
-                              <TableCell className="text-xs">{h.date}</TableCell>
-                              <TableCell className="font-bold">₹{h.amount}</TableCell>
-                              <TableCell className="text-xs">{h.particulars || h.mode}</TableCell>
-                              <TableCell className="text-right">
-                                <Button variant="ghost" size="sm" className="text-primary gap-1 h-7 text-[10px]" onClick={() => openReceipt(h)}>
-                                  <Printer className="w-3 h-3"/> View/Print
-                                </Button>
-                              </TableCell>
-                            </TableRow>
-                          ))
-                        ) : (
-                          <TableRow>
-                            <TableCell colSpan={4} className="h-32 text-center text-muted-foreground italic">No old history found.</TableCell>
+                        {selectedStudent.history.map((h: any) => (
+                          <TableRow key={h.id}>
+                            <TableCell className="text-xs">{h.date}</TableCell>
+                            <TableCell className="font-bold">₹{h.amount}</TableCell>
+                            <TableCell className="text-right">
+                              <Button variant="ghost" size="sm" className="text-primary gap-1" onClick={() => openReceipt(h)}>
+                                <Printer className="w-3 h-3"/> Print Slip
+                              </Button>
+                            </TableCell>
                           </TableRow>
-                        )}
+                        ))}
                       </TableBody>
                     </Table>
                   </div>
@@ -421,82 +335,81 @@ export default function AdminFeesPage() {
         </Dialog>
       </main>
 
-      {/* Modern Receipt View for Admin */}
+      {/* Landscape Receipt Dialog - A6 Size (1/4 A4) */}
       <Dialog open={isReceiptOpen} onOpenChange={setIsReceiptOpen}>
-        <DialogContent className="max-w-[420px] p-0 border-none bg-transparent shadow-none">
-          <div className="bg-white p-6 rounded-xl shadow-2xl print:shadow-none print:p-0 relative">
+        <DialogContent className="max-w-[600px] p-0 border-none bg-transparent shadow-none">
+          <div className="bg-white p-6 rounded-xl shadow-2xl print:shadow-none print:p-0 relative overflow-hidden">
              <div className="flex justify-between items-center mb-4 print:hidden">
-               <DialogTitle className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Digital Receipt</DialogTitle>
+               <DialogTitle className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Fees Slip Preview</DialogTitle>
                <div className="flex gap-2">
-                 <Button onClick={handlePrint} size="sm" className="gap-2 bg-primary"><Printer className="w-3 h-3"/> Print</Button>
+                 <Button onClick={handlePrint} size="sm" className="gap-2 bg-primary"><Printer className="w-3 h-3"/> Print Slip</Button>
                  <Button onClick={() => setIsReceiptOpen(false)} variant="ghost" size="icon" className="h-8 w-8"><X className="w-4 h-4"/></Button>
                </div>
              </div>
              
-             {/* Printable Area */}
-             <div id="receipt-printable" className="bg-white border-2 border-slate-900 p-4 w-full aspect-[1/1.4] overflow-hidden flex flex-col relative print:border-none">
-                <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none grayscale rotate-[-15deg]">
-                   {logoUrl && <img src={logoUrl} alt="logo" className="w-64 h-64 object-contain" />}
+             {/* Printable Area - Landscape A6 (Approx 148mm x 105mm) */}
+             <div id="receipt-printable" className="bg-white border-2 border-slate-900 p-6 w-full h-[380px] overflow-hidden flex flex-col relative print:border-2 print:m-0">
+                {/* Center Watermark Logo ONLY */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-[0.05] pointer-events-none grayscale">
+                   {logoUrl && <img src={logoUrl} alt="logo" className="w-[300px] h-[300px] object-contain" />}
                 </div>
 
                 <div className="relative z-10 flex flex-col h-full">
-                  <header className="flex items-center gap-2 border-b-2 border-slate-900 pb-3 mb-3">
-                     <div className="w-12 h-12 flex-shrink-0">
-                        {logoUrl && <img src={logoUrl} alt="Logo" className="w-full h-full object-contain" />}
-                     </div>
-                     <div className="flex-1">
-                        <h2 className="text-sm font-black text-slate-900 uppercase leading-none">Maharana Pratap ITI</h2>
-                        <p className="text-[8px] font-bold text-slate-600 mt-0.5">Saharanpur, Uttar Pradesh - 247001</p>
-                        <p className="text-[7px] text-slate-400">DGT / NCVT Govt. Recognized Institute</p>
-                     </div>
+                  <header className="text-center border-b-2 border-slate-900 pb-2 mb-4">
+                    <h2 className="text-xl font-black text-slate-900 uppercase leading-none tracking-tighter">Maharana Pratap ITI Saharanpur</h2>
+                    <p className="text-[10px] font-bold text-slate-600 mt-1 uppercase">DGT / NCVT Govt. Recognized Institute | Uttar Pradesh</p>
                   </header>
 
-                  <div className="flex justify-between text-[10px] font-bold mb-4">
-                     <div className="bg-slate-900 text-white px-2 py-0.5 rounded">OFFICIAL RECEIPT</div>
-                     <div className="text-right">
-                        <p>No: {selectedReceipt?.receiptNo || selectedReceipt?.receipt}</p>
-                        <p>Date: {selectedReceipt?.date}</p>
+                  <div className="flex justify-between text-[11px] font-bold mb-4">
+                     <div className="bg-slate-900 text-white px-3 py-1 rounded-sm uppercase tracking-widest">Fee Payment Slip</div>
+                     <div className="text-right leading-tight">
+                        <p>Slip No: <span className="font-black">{selectedReceipt?.receiptNo || selectedReceipt?.receipt}</span></p>
+                        <p>Date: <span className="font-black">{selectedReceipt?.date}</span></p>
                      </div>
                   </div>
 
-                  <div className="space-y-2 flex-1">
-                     <div className="grid grid-cols-[80px_1fr] gap-x-2 text-[11px]">
-                        <span className="text-slate-500 font-medium">Candidate:</span>
-                        <span className="font-bold text-slate-900 uppercase border-b border-slate-200">{selectedStudent?.name}</span>
-                        
-                        <span className="text-slate-500 font-medium">Father's Name:</span>
-                        <span className="font-bold text-slate-900 uppercase border-b border-slate-200">{selectedStudent?.fatherName}</span>
-                        
-                        <span className="text-slate-500 font-medium">Roll Number:</span>
-                        <span className="font-bold text-slate-900 border-b border-slate-200">{selectedStudent?.rollNo}</span>
-                        
-                        <span className="text-slate-500 font-medium">Trade:</span>
-                        <span className="font-bold text-slate-900 border-b border-slate-200">{selectedStudent?.trade}</span>
-                        
-                        <span className="text-slate-500 font-medium">Particulars:</span>
-                        <span className="font-bold text-slate-900 border-b border-slate-200 italic">{selectedReceipt?.particulars || selectedReceipt?.mode}</span>
+                  <div className="grid grid-cols-2 gap-x-8 gap-y-3 flex-1">
+                     <div className="space-y-2">
+                        <div className="grid grid-cols-[80px_1fr] gap-x-2 text-[11px]">
+                           <span className="text-slate-500 font-medium">Student:</span>
+                           <span className="font-black text-slate-900 uppercase border-b border-slate-200">{selectedStudent?.name}</span>
+                           
+                           <span className="text-slate-500 font-medium">Father:</span>
+                           <span className="font-black text-slate-900 uppercase border-b border-slate-200">{selectedStudent?.fatherName}</span>
+                           
+                           <span className="text-slate-500 font-medium">Roll No:</span>
+                           <span className="font-black text-slate-900 border-b border-slate-200">{selectedStudent?.rollNo}</span>
+                        </div>
                      </div>
-
-                     <div className="mt-6 p-3 bg-slate-50 border-2 border-slate-900 rounded flex justify-between items-center">
-                        <span className="text-xs font-black uppercase tracking-widest">Amount Received:</span>
-                        <span className="text-xl font-black text-slate-900">₹{selectedReceipt?.amount.toLocaleString()}</span>
+                     <div className="space-y-2">
+                        <div className="grid grid-cols-[80px_1fr] gap-x-2 text-[11px]">
+                           <span className="text-slate-500 font-medium">Trade:</span>
+                           <span className="font-black text-slate-900 border-b border-slate-200 uppercase">{selectedStudent?.trade}</span>
+                           
+                           <span className="text-slate-500 font-medium">Particulars:</span>
+                           <span className="font-black text-slate-900 border-b border-slate-200 italic">{selectedReceipt?.particulars || selectedReceipt?.mode}</span>
+                        </div>
+                        <div className="mt-4 p-3 bg-slate-50 border-2 border-slate-900 rounded-md flex justify-between items-center">
+                           <span className="text-[10px] font-black uppercase">Amount:</span>
+                           <span className="text-2xl font-black text-slate-900">₹{selectedReceipt?.amount.toLocaleString()}</span>
+                        </div>
                      </div>
                   </div>
 
                   <footer className="mt-auto pt-4 flex justify-between items-end">
                      <div className="text-center">
-                        <div className="w-24 h-[1px] bg-slate-400 mb-1"></div>
-                        <p className="text-[8px] font-bold uppercase text-slate-400">Depositor Signature</p>
+                        <div className="w-28 h-[1px] bg-slate-400 mb-1"></div>
+                        <p className="text-[9px] font-bold uppercase text-slate-400">Payer Signature</p>
                      </div>
                      
                      <div className="relative flex flex-col items-center">
                         {stampUrl && (
-                          <div className="absolute -top-12 -right-2 w-20 h-20 opacity-80 mix-blend-multiply rotate-[-10deg]">
+                          <div className="absolute -top-16 -right-2 w-24 h-24 opacity-70 mix-blend-multiply rotate-[-12deg]">
                              <img src={stampUrl} alt="stamp" className="w-full h-full object-contain" />
                           </div>
                         )}
-                        <div className="w-24 h-[1px] bg-slate-900 mb-1"></div>
-                        <p className="text-[8px] font-black uppercase text-slate-900">Principal / Accountant</p>
+                        <div className="w-28 h-[1px] bg-slate-900 mb-1"></div>
+                        <p className="text-[10px] font-black uppercase text-slate-900">Accountant / Principal</p>
                      </div>
                   </footer>
                 </div>
@@ -514,22 +427,32 @@ export default function AdminFeesPage() {
             visibility: visible;
           }
           #receipt-printable {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100mm;
-            height: 148mm;
+            position: relative;
+            display: block;
+            width: 148mm !important;
+            height: 105mm !important;
             border: 2px solid black !important;
-            padding: 5mm !important;
+            padding: 10mm !important;
             margin: 0 !important;
             box-shadow: none !important;
+            page-break-inside: avoid;
           }
+          /* Custom layout to fit 4 per page */
           @page {
-            size: A6;
+            size: A4 landscape;
             margin: 0;
+          }
+          html, body {
+            width: 297mm;
+            height: 210mm;
+          }
+          #receipt-printable {
+            float: left;
+            box-sizing: border-box;
           }
         }
       `}</style>
     </div>
   );
 }
+

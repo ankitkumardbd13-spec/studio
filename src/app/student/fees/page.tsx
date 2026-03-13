@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { CreditCard, ArrowLeft, Download, CheckCircle2, Clock, AlertCircle, Phone, User, FileText } from 'lucide-react';
+import { CreditCard, ArrowLeft, Download, CheckCircle2, Clock, AlertCircle, Phone, User, FileText, Printer, Receipt } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 
@@ -22,14 +22,14 @@ export default function StudentFeesPage() {
   
   const [feeStatus] = useState({
     total: 24000,
-    paid: 12000,
-    pending: 12000,
+    paid: 12500,
+    pending: 11500,
     dueDate: '2024-05-30'
   });
 
   const [history] = useState([
-    { id: '1', date: '2023-08-15', amount: 12000, mode: 'Admission Fee', status: 'Success', receipt: 'REC-1021' },
-    { id: '2', date: '2023-12-10', amount: 500, mode: 'Exam Fee', status: 'Success', receipt: 'REC-1055' },
+    { id: '1', date: '2023-08-15', amount: 12000, mode: 'Admission Fee', status: 'Success', receipt: 'REC-2023-1021' },
+    { id: '2', date: '2023-12-10', amount: 500, mode: 'Exam Fee', status: 'Success', receipt: 'REC-2023-1055' },
   ]);
 
   useEffect(() => {
@@ -115,8 +115,12 @@ export default function StudentFeesPage() {
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
               <Card className="border-none shadow-sm overflow-hidden">
-                <CardHeader className="bg-white border-b">
-                  <CardTitle className="text-lg flex items-center gap-2"><FileText className="w-5 h-5 text-primary"/> Transaction History</CardTitle>
+                <CardHeader className="bg-white border-b flex flex-row items-center justify-between">
+                  <div>
+                    <CardTitle className="text-lg flex items-center gap-2"><FileText className="w-5 h-5 text-primary"/> Transaction History</CardTitle>
+                    <CardDescription>All your historical payments are listed here.</CardDescription>
+                  </div>
+                  <Printer className="w-5 h-5 text-muted-foreground opacity-30" />
                 </CardHeader>
                 <CardContent className="p-0">
                   <Table>
@@ -142,10 +146,10 @@ export default function StudentFeesPage() {
                             <Button 
                               size="sm" 
                               variant="ghost" 
-                              className="text-primary hover:bg-primary/5"
+                              className="text-primary hover:bg-primary/5 gap-1"
                               onClick={() => handleDownloadReceipt(h.receipt)}
                             >
-                              <Download className="w-4 h-4"/>
+                              <Download className="w-3 h-3"/> Receipt
                             </Button>
                           </TableCell>
                         </TableRow>
@@ -154,30 +158,47 @@ export default function StudentFeesPage() {
                   </Table>
                 </CardContent>
               </Card>
+
+              <div className="p-6 bg-white rounded-xl shadow-sm border flex items-start gap-4">
+                <div className="p-3 bg-amber-50 rounded-lg text-amber-600">
+                  <AlertCircle className="w-6 h-6" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-slate-900">Important Note on Manual Payments</h4>
+                  <p className="text-sm text-muted-foreground leading-relaxed mt-1">If you have paid your fees via Cash or Cheque at the office, please allow 24-48 hours for it to reflect in your portal history. Keep your physical receipt safe.</p>
+                </div>
+              </div>
             </div>
 
             <div className="space-y-6">
-              <Card className="border-none shadow-lg bg-secondary text-white">
+              <Card className="border-none shadow-lg bg-secondary text-white overflow-hidden relative">
+                <div className="absolute top-0 right-0 p-4 opacity-10">
+                   <Receipt className="w-20 h-20 rotate-[-15deg]" />
+                </div>
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center gap-2"><CreditCard className="w-5 h-5"/> Pay Balance Online</CardTitle>
                   <CardDescription className="text-white/80">Submit your pending fees securely</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="bg-white/10 p-4 rounded-lg">
+                  <div className="bg-white/10 p-4 rounded-lg border border-white/20">
                     <p className="text-[10px] font-bold uppercase opacity-60">Next Installment Due</p>
                     <p className="text-2xl font-black">₹{feeStatus.pending.toLocaleString()}</p>
                     <p className="text-[10px] mt-2 flex items-center gap-1 font-bold"><Clock className="w-3 h-3"/> Deadline: {feeStatus.dueDate}</p>
                   </div>
-                  <Button onClick={handlePay} className="w-full bg-white text-secondary hover:bg-white/90 font-black h-12">Pay Via UPI / Cards</Button>
+                  <Button onClick={handlePay} className="w-full bg-white text-secondary hover:bg-white/90 font-black h-12 shadow-xl">Pay Via UPI / Cards</Button>
                 </CardContent>
               </Card>
 
               <Card className="border-none shadow-sm">
                 <CardContent className="pt-6 space-y-4">
-                  <h4 className="font-bold text-sm">Official Helpdesk</h4>
-                  <p className="text-[11px] text-muted-foreground leading-relaxed">For manual receipt verification or fee disputes, please visit the ITI account office with your Aadhaar Card.</p>
-                  <div className="flex items-center gap-3 text-xs font-bold text-primary bg-primary/5 p-3 rounded-lg border border-primary/10">
-                    <Phone className="w-4 h-4" /> Account Office: +91 98765 43210
+                  <h4 className="font-bold text-sm">Official Account Office</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 text-xs font-medium text-slate-600">
+                      <Phone className="w-4 h-4 text-primary" /> +91 98765 43210
+                    </div>
+                    <div className="p-3 bg-primary/5 rounded-lg border border-dashed border-primary/20">
+                      <p className="text-[11px] text-primary font-bold italic">"Visit the Account Section for any fee disputes or to apply for government scholarship scholarship schemes."</p>
+                    </div>
                   </div>
                 </CardContent>
               </Card>

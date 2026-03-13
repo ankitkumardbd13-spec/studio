@@ -53,9 +53,9 @@ const generateQuestionsPrompt = ai.definePrompt({
   prompt: `You are an expert educational content creator for Industrial Training Institute (ITI) courses in India.
 Your task is to generate relevant assignment questions based on the provided trade, year, and topic, adhering strictly to the **New DGT/NCVT Syllabus**.
 
-Please generate:
-- 5 Subjective questions that test deep understanding and application of the topic.
-- 5 Objective (MCQ) questions with 4 logical options and a clear correct answer.
+Please generate exactly 20 questions in total:
+- 10 Subjective questions that test deep understanding and application of the topic.
+- 10 Objective (MCQ) questions with 4 logical options and a clear correct answer.
 
 Ensure the questions are technically accurate for a student in the specified ITI trade and year.
 

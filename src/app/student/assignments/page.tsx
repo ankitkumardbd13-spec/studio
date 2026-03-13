@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -6,7 +5,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { LayoutDashboard, FileText, Calendar, Clock, ArrowRight, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { LayoutDashboard, FileText, Calendar, Clock, ArrowRight, AlertCircle, CheckCircle2, Timer } from 'lucide-react';
 import { Navbar } from '@/components/layout/Navbar';
 
 interface Question {
@@ -23,28 +22,37 @@ interface Assignment {
   year: number;
   deadlineDate: string;
   deadlineTime: string;
+  durationMinutes: number;
   questions: Question[];
 }
 
 export default function StudentAssignmentsPage() {
   const [assignments, setAssignments] = useState<Assignment[]>([]);
-  const [studentInfo] = useState({ trade: 'Electrician', year: 1 }); // Mocked logged in user
+  const [submissions, setSubmissions] = useState<string[]>([]);
+  const [studentInfo] = useState({ trade: 'Electrician', year: 1 });
 
   useEffect(() => {
     const saved = localStorage.getItem('mpiti_assignments');
     if (saved) {
       const all: Assignment[] = JSON.parse(saved);
-      // Filter for student's specific trade and year
       const filtered = all.filter(a => a.trade === studentInfo.trade && a.year === studentInfo.year);
       setAssignments(filtered);
     }
+
+    const savedSubmissions = localStorage.getItem('mpiti_submissions');
+    if (savedSubmissions) {
+      setSubmissions(JSON.parse(savedSubmissions));
+    }
   }, []);
 
-  const getStatus = (deadlineStr: string, timeStr: string) => {
-    const deadline = new Date(`${deadlineStr}T${timeStr}`);
+  const getStatus = (a: Assignment) => {
+    if (submissions.includes(a.id)) {
+      return { label: 'Submitted', color: 'bg-green-500', icon: <CheckCircle2 className="w-3 h-3" />, canStart: false };
+    }
+    const deadline = new Date(`${a.deadlineDate}T${a.deadlineTime}`);
     const now = new Date();
-    if (now > deadline) return { label: 'Overdue', color: 'bg-red-500', icon: <AlertCircle className="w-3 h-3" /> };
-    return { label: 'Pending', color: 'bg-amber-500', icon: <Clock className="w-3 h-3" /> };
+    if (now > deadline) return { label: 'Overdue', color: 'bg-red-500', icon: <AlertCircle className="w-3 h-3" />, canStart: false };
+    return { label: 'Pending', color: 'bg-amber-500', icon: <Clock className="w-3 h-3" />, canStart: true };
   };
 
   return (
@@ -53,8 +61,8 @@ export default function StudentAssignmentsPage() {
       <div className="container mx-auto px-4 py-12">
         <header className="max-w-4xl mx-auto mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h1 className="font-headline text-4xl text-primary font-bold">My Assignments</h1>
-            <p className="text-muted-foreground">Trade: {studentInfo.trade} | Academic Year: {studentInfo.year}</p>
+            <h1 className="font-headline text-4xl text-primary font-bold">Assignment Portal</h1>
+            <p className="text-muted-foreground">Trade: {studentInfo.trade} | Year: {studentInfo.year} | 20 Questions Per Test</p>
           </div>
           <Button variant="outline" asChild>
             <Link href="/student/dashboard" className="gap-2"><LayoutDashboard className="w-4 h-4"/> Dashboard</Link>
@@ -63,7 +71,7 @@ export default function StudentAssignmentsPage() {
 
         <div className="max-w-4xl mx-auto grid gap-6">
           {assignments.map(a => {
-            const status = getStatus(a.deadlineDate, a.deadlineTime);
+            const status = getStatus(a);
             return (
               <Card key={a.id} className="border-none shadow-sm overflow-hidden hover:shadow-md transition-shadow">
                 <div className={`h-1 w-full ${status.color}`} />
@@ -79,20 +87,31 @@ export default function StudentAssignmentsPage() {
                   </Badge>
                 </CardHeader>
                 <CardContent className="pt-2">
-                  <div className="flex flex-wrap gap-4 text-sm font-medium">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm font-medium">
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <Calendar className="w-4 h-4 text-primary" /> Last Date: {a.deadlineDate}
                     </div>
                     <div className="flex items-center gap-2 text-muted-foreground">
-                      <Clock className="w-4 h-4 text-primary" /> Submission Time: {a.deadlineTime}
+                      <Clock className="w-4 h-4 text-primary" /> At: {a.deadlineTime}
+                    </div>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Timer className="w-4 h-4 text-secondary" /> Duration: {a.durationMinutes} min
                     </div>
                   </div>
                 </CardContent>
                 <CardFooter className="bg-slate-50/50 border-t mt-4 py-4 flex justify-between items-center">
-                  <span className="text-xs text-muted-foreground">Questions include Objective (MCQs) and Subjective types.</span>
-                  <Button size="sm" className="bg-primary hover:bg-primary/90 text-white gap-2">
-                    Start Assignment <ArrowRight className="w-4 h-4" />
-                  </Button>
+                  <span className="text-xs text-muted-foreground">One-time submission only. Final auto-submit on time up.</span>
+                  {status.canStart ? (
+                    <Button size="sm" className="bg-primary hover:bg-primary/90 text-white gap-2" asChild>
+                      <Link href={`/student/assignments/${a.id}`}>
+                        Start Test <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    </Button>
+                  ) : (
+                    <Button size="sm" disabled variant="outline" className="gap-2">
+                      {submissions.includes(a.id) ? "Already Submitted" : "Access Closed"}
+                    </Button>
+                  )}
                 </CardFooter>
               </Card>
             );

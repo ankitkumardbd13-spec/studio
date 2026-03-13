@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Plus, Trash2, Calendar, Clock, Wand2, FileText, CheckCircle2, Loader2, Save, X } from 'lucide-react';
+import { Plus, Trash2, Calendar, Clock, Wand2, FileText, CheckCircle2, Loader2, Save, X, Timer } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { generateAssignmentAndMockTest } from '@/ai/flows/admin-assignment-mock-test-generator';
 
@@ -29,6 +29,7 @@ interface Assignment {
   year: number;
   deadlineDate: string;
   deadlineTime: string;
+  durationMinutes: number;
   questions: Question[];
   createdAt: string;
 }
@@ -45,6 +46,7 @@ export default function AdminAssignmentsPage() {
   const [year, setYear] = useState('1');
   const [deadlineDate, setDeadlineDate] = useState('');
   const [deadlineTime, setDeadlineTime] = useState('17:00');
+  const [durationMinutes, setDurationMinutes] = useState(60);
   const [questions, setQuestions] = useState<Question[]>([]);
 
   useEffect(() => {
@@ -65,6 +67,7 @@ export default function AdminAssignmentsPage() {
       year: parseInt(year),
       deadlineDate,
       deadlineTime,
+      durationMinutes,
       questions,
       createdAt: new Date().toISOString()
     };
@@ -81,6 +84,7 @@ export default function AdminAssignmentsPage() {
     setTitle('');
     setDeadlineDate('');
     setQuestions([]);
+    setDurationMinutes(60);
   };
 
   const handleAIInvite = async () => {
@@ -105,7 +109,7 @@ export default function AdminAssignmentsPage() {
       }));
       
       setQuestions([...questions, ...aiQuestions]);
-      toast({ title: 'AI Generation Complete', description: `Generated ${aiQuestions.length} technical questions.` });
+      toast({ title: 'AI Generation Complete', description: `Generated ${aiQuestions.length} technical questions (Minimum 20 requested).` });
     } catch (error) {
       console.error(error);
       toast({ variant: 'destructive', title: 'AI Error', description: 'Could not generate questions at this time.' });
@@ -138,7 +142,7 @@ export default function AdminAssignmentsPage() {
         <header className="mb-8 flex justify-between items-center">
           <div>
             <h1 className="font-headline text-4xl text-slate-900 font-bold">Assignment Manager</h1>
-            <p className="text-muted-foreground">Create, schedule and manage trade assignments with AI</p>
+            <p className="text-muted-foreground">Create 20+ question tests with AI and time limits</p>
           </div>
           <Button onClick={() => setIsAdding(!isAdding)} className="gap-2">
             {isAdding ? <><X className="w-4 h-4"/> Cancel</> : <><Plus className="w-4 h-4"/> New Assignment</>}
@@ -149,7 +153,7 @@ export default function AdminAssignmentsPage() {
           <div className="grid lg:grid-cols-3 gap-8 animate-in fade-in slide-in-from-top-4">
             <Card className="lg:col-span-1 border-none shadow-lg h-fit">
               <CardHeader>
-                <CardTitle>Details & Deadline</CardTitle>
+                <CardTitle>Details & Rules</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
@@ -179,16 +183,23 @@ export default function AdminAssignmentsPage() {
                     </Select>
                   </div>
                 </div>
+                <div className="space-y-2">
+                  <Label>Test Duration (Minutes)</Label>
+                  <div className="relative">
+                    <Input type="number" value={durationMinutes} onChange={e => setDurationMinutes(parseInt(e.target.value))} className="pl-9" />
+                    <Timer className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground" />
+                  </div>
+                </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>Last Date</Label>
+                    <Label>Deadline Date</Label>
                     <div className="relative">
                       <Input type="date" value={deadlineDate} onChange={e => setDeadlineDate(e.target.value)} className="pl-9" />
                       <Calendar className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground" />
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label>Last Time</Label>
+                    <Label>Deadline Time</Label>
                     <div className="relative">
                       <Input type="time" value={deadlineTime} onChange={e => setDeadlineTime(e.target.value)} className="pl-9" />
                       <Clock className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground" />
@@ -198,7 +209,7 @@ export default function AdminAssignmentsPage() {
                 <Separator />
                 <Button onClick={handleAIInvite} disabled={loadingAI} variant="outline" className="w-full border-primary text-primary gap-2 h-12">
                   {loadingAI ? <Loader2 className="animate-spin w-4 h-4" /> : <Wand2 className="w-4 h-4" />}
-                  Generate AI Questions
+                  Generate 20 AI Questions
                 </Button>
                 <Button onClick={handleSaveAssignment} className="w-full bg-primary text-white gap-2 h-12">
                    <Save className="w-4 h-4" /> Save & Publish
@@ -208,7 +219,7 @@ export default function AdminAssignmentsPage() {
 
             <div className="lg:col-span-2 space-y-4">
               <div className="flex justify-between items-center px-2">
-                <h3 className="font-bold text-lg">Question List ({questions.length})</h3>
+                <h3 className="font-bold text-lg">Question List ({questions.length}/20+)</h3>
                 <div className="flex gap-2">
                   <Button size="sm" variant="outline" onClick={() => addQuestion('subjective')}>+ Subjective</Button>
                   <Button size="sm" variant="outline" onClick={() => addQuestion('objective')}>+ MCQ</Button>
@@ -258,7 +269,7 @@ export default function AdminAssignmentsPage() {
               {questions.length === 0 && (
                 <div className="bg-white border-2 border-dashed rounded-xl p-12 text-center opacity-40">
                   <Wand2 className="w-10 h-10 mx-auto mb-2 text-primary" />
-                  <p>No questions added yet. Try generating with AI based on your topic!</p>
+                  <p>No questions added yet. AI will generate 10 MCQs and 10 Theory questions.</p>
                 </div>
               )}
             </div>
@@ -278,10 +289,13 @@ export default function AdminAssignmentsPage() {
                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <FileText className="w-4 h-4" /> {a.questions.length} Questions
                    </div>
+                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Timer className="w-4 h-4" /> Duration: {a.durationMinutes} Minutes
+                   </div>
                    <div className="flex items-center gap-2 text-sm font-bold text-secondary">
                       <Calendar className="w-4 h-4" /> Deadline: {a.deadlineDate} @ {a.deadlineTime}
                    </div>
-                   <Button variant="outline" className="w-full">View Submissions (0)</Button>
+                   <Button variant="outline" className="w-full">View Submissions</Button>
                 </CardContent>
               </Card>
             ))}

@@ -9,9 +9,9 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Loader2, MessageSquare, Copy, Send, Layout, Wand2, FileText, Settings } from 'lucide-react';
-import Link from 'next/link';
+import { Loader2, MessageSquare, Copy, Send } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { AdminSidebar } from '@/components/layout/AdminSidebar';
 
 export default function AdminMessagesPage() {
   const { toast } = useToast();
@@ -57,28 +57,7 @@ export default function AdminMessagesPage() {
 
   return (
     <div className="min-h-screen bg-muted/30 flex">
-      {/* Admin Sidebar */}
-      <aside className="hidden lg:flex flex-col w-72 bg-slate-900 text-white">
-        <div className="p-6">
-          <h2 className="font-headline text-2xl font-bold text-primary">MPITI Admin</h2>
-        </div>
-        <nav className="flex-1 px-4 space-y-1">
-          <Link href="/admin/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 transition-colors">
-            <Layout className="w-5 h-5" /> Overview
-          </Link>
-          <Link href="/admin/tools" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 transition-colors">
-            <Wand2 className="w-5 h-5" /> AI Generator Tools
-          </Link>
-          <Link href="/admin/messages" className="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary/20 text-primary font-medium">
-            <MessageSquare className="w-5 h-5" /> Drafting Assistant
-          </Link>
-        </nav>
-        <div className="p-4 border-t border-white/10">
-          <Button variant="ghost" className="w-full justify-start gap-3 text-white hover:bg-white/5" asChild>
-            <Link href="/login">Log Out</Link>
-          </Button>
-        </div>
-      </aside>
+      <AdminSidebar />
 
       {/* Main Panel */}
       <main className="flex-1 p-8 overflow-y-auto">

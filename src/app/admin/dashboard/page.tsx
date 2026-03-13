@@ -2,27 +2,39 @@
 "use client";
 
 import React from 'react';
-import Link from 'next/link';
 import { 
   Users, 
   FileText, 
-  Settings, 
-  Bell, 
-  Download, 
   CheckCircle, 
   XCircle,
-  MessageSquare,
-  Wand2,
+  Download,
   PieChart,
-  Layout,
-  LogOut
+  ArrowRight
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
+import { AdminSidebar } from '@/components/layout/AdminSidebar';
+import { useToast } from '@/hooks/use-toast';
 
 export default function AdminDashboard() {
+  const { toast } = useToast();
+  
+  const handleExport = () => {
+    toast({
+      title: "Export Started",
+      description: "Compiling student database into Excel format...",
+    });
+  };
+
+  const handleReport = () => {
+    toast({
+      title: "Generating Report",
+      description: "Analyzing admission trends for session 2024-25...",
+    });
+  };
+
   const pendingApprovals = [
     { name: 'Amit Tyagi', email: 'amit@example.com', trade: 'Electrician', session: '2024-26' },
     { name: 'Sonia Verma', email: 'sonia@example.com', trade: 'HSI', session: '2024-25' },
@@ -37,39 +49,18 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-muted/30 flex">
-      {/* Admin Sidebar */}
-      <aside className="hidden lg:flex flex-col w-72 bg-slate-900 text-white">
-        <div className="p-6">
-          <h2 className="font-headline text-2xl font-bold text-primary">MPITI Admin</h2>
-        </div>
-        <nav className="flex-1 px-4 space-y-1">
-          <Link href="/admin/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary/20 text-primary font-medium">
-            <Layout className="w-5 h-5" /> Overview
-          </Link>
-          <Link href="/admin/tools" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 transition-colors">
-            <Wand2 className="w-5 h-5" /> AI Generator Tools
-          </Link>
-          <Link href="/admin/messages" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 transition-colors">
-            <MessageSquare className="w-5 h-5" /> Drafting Assistant
-          </Link>
-        </nav>
-        <div className="p-4 border-t border-white/10">
-          <Button variant="ghost" className="w-full justify-start gap-3 text-white hover:bg-white/5" asChild>
-            <Link href="/login"><LogOut className="w-4 h-4" /> Log Out</Link>
-          </Button>
-        </div>
-      </aside>
+      <AdminSidebar />
 
       {/* Main Panel */}
       <main className="flex-1 p-8 overflow-y-auto">
-        <header className="flex justify-between items-center mb-8">
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
           <div>
             <h1 className="font-headline text-4xl text-slate-900 font-bold">Admin Management</h1>
             <p className="text-muted-foreground">Manage ITI students, inquiry forms and AI tools</p>
           </div>
           <div className="flex gap-4">
-            <Button variant="outline" className="gap-2"><Download className="w-4 h-4"/> Export Data</Button>
-            <Button className="bg-primary text-white gap-2"><PieChart className="w-4 h-4"/> Reports</Button>
+            <Button variant="outline" className="gap-2" onClick={handleExport}><Download className="w-4 h-4"/> Export Data</Button>
+            <Button className="bg-primary text-white gap-2" onClick={handleReport}><PieChart className="w-4 h-4"/> Reports</Button>
           </div>
         </header>
 
@@ -92,13 +83,13 @@ export default function AdminDashboard() {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Pending Signups */}
           <div className="lg:col-span-2">
-            <Card className="border-none shadow-sm">
+            <Card className="border-none shadow-sm h-full">
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>
-                  <CardTitle>Recent Portal Registrations</CardTitle>
-                  <CardDescription>Already admitted students awaiting verification</CardDescription>
+                  <CardTitle>Portal Registrations</CardTitle>
+                  <CardDescription>Verify admitted students for portal access</CardDescription>
                 </div>
-                <Badge variant="outline" className="bg-amber-50 text-amber-600 border-amber-200">New</Badge>
+                <Badge variant="outline" className="bg-amber-50 text-amber-600 border-amber-200">Action Required</Badge>
               </CardHeader>
               <CardContent>
                 <Table>
@@ -134,39 +125,46 @@ export default function AdminDashboard() {
                   </TableBody>
                 </Table>
                 <div className="mt-6 text-center">
-                   <Button variant="ghost" className="text-primary text-xs font-bold uppercase tracking-widest">View All Applications</Button>
+                   <Button variant="ghost" className="text-primary text-xs font-bold uppercase tracking-widest">View All Applications <ArrowRight className="w-3 h-3 ml-2"/></Button>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* Quick Tasks */}
           <div className="space-y-6">
             <Card className="border-none shadow-sm bg-slate-800 text-white">
               <CardHeader>
-                <CardTitle className="text-lg">AI Assistant</CardTitle>
-                <CardDescription className="text-white/60">Generate syllabus-based content</CardDescription>
+                <CardTitle className="text-lg">Quick Summary</CardTitle>
+                <CardDescription className="text-white/60">Current Intake Progress</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-3">
-                <Button className="w-full justify-start gap-3 bg-white/10 hover:bg-white/20 text-white border-none" asChild>
-                  <Link href="/admin/tools"><Wand2 className="w-4 h-4 text-primary" /> Generate Mock Test</Link>
-                </Button>
-                <Button className="w-full justify-start gap-3 bg-white/10 hover:bg-white/20 text-white border-none" asChild>
-                  <Link href="/admin/messages"><MessageSquare className="w-4 h-4 text-secondary" /> Draft Admin Message</Link>
-                </Button>
+              <CardContent className="space-y-4">
+                <div>
+                  <div className="flex justify-between text-xs mb-1">
+                    <span>Electrician Slots</span>
+                    <span>34/40</span>
+                  </div>
+                  <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+                    <div className="bg-primary h-full w-[85%]"></div>
+                  </div>
+                </div>
+                <div>
+                  <div className="flex justify-between text-xs mb-1">
+                    <span>Fitter Slots</span>
+                    <span>28/40</span>
+                  </div>
+                  <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+                    <div className="bg-secondary h-full w-[70%]"></div>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
-            <Card className="border-none shadow-sm border-l-4 border-secondary">
-              <CardHeader>
-                <CardTitle className="text-lg">System Status</CardTitle>
+            <Card className="border-none shadow-sm border-l-4 border-green-500">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm">Server Identity</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center gap-2 mb-4">
-                   <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                   <p className="text-sm font-medium">All systems operational</p>
-                </div>
-                <p className="text-xs text-muted-foreground">New Admission Intake: Active<br/>DGT Syllabus Version: 2024.1</p>
+                <p className="text-xs text-muted-foreground">Admin: Maharana Pratap ITI<br/>DGT Syllabus Version: 2024.1<br/>System Time: {new Date().toLocaleDateString()}</p>
               </CardContent>
             </Card>
           </div>

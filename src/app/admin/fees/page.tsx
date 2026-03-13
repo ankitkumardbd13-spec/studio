@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Search, Filter, CreditCard, Download, Plus, Save, User, CheckCircle2, Clock, Receipt, Calculator, Printer, History, Trash2 } from 'lucide-react';
+import { Search, Filter, CreditCard, Download, Plus, Save, User, CheckCircle2, Clock, Receipt, Calculator, Printer, History, Trash2, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { 
   Dialog, 
@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 interface PaymentRecord {
   id: string;
@@ -89,6 +90,13 @@ export default function AdminFeesPage() {
   const [payMode, setPayMode] = useState('Cash');
   const [payParticulars, setPayParticulars] = useState('Tuition Fee');
 
+  // Receipt Modal State
+  const [isReceiptOpen, setIsReceiptOpen] = useState(false);
+  const [selectedReceipt, setSelectedReceipt] = useState<any>(null);
+
+  const logoUrl = PlaceHolderImages.find(img => img.id === 'iti-logo')?.imageUrl;
+  const stampUrl = PlaceHolderImages.find(img => img.id === 'iti-stamp')?.imageUrl;
+
   const filteredData = useMemo(() => {
     return feeData.filter(f => 
       f.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -140,11 +148,13 @@ export default function AdminFeesPage() {
     });
   };
 
-  const handlePrintReceipt = (payment: PaymentRecord) => {
-    toast({
-      title: "Generating Receipt",
-      description: `Downloading Receipt ${payment.receiptNo} as PDF...`,
-    });
+  const openReceipt = (payment: PaymentRecord) => {
+    setSelectedReceipt(payment);
+    setIsReceiptOpen(true);
+  };
+
+  const handlePrint = () => {
+    window.print();
   };
 
   const exportFeeReport = () => {
@@ -167,7 +177,7 @@ export default function AdminFeesPage() {
   return (
     <div className="min-h-screen bg-muted/30 flex">
       <AdminSidebar />
-      <main className="flex-1 p-8">
+      <main className="flex-1 p-8 print:hidden">
         <header className="mb-8 flex justify-between items-center">
           <div>
             <h1 className="font-headline text-4xl text-slate-900 font-bold">Fee Management</h1>
@@ -388,10 +398,10 @@ export default function AdminFeesPage() {
                             <TableRow key={h.id}>
                               <TableCell className="text-xs">{h.date}</TableCell>
                               <TableCell className="font-bold">₹{h.amount}</TableCell>
-                              <TableCell className="text-xs">{h.particulars}</TableCell>
+                              <TableCell className="text-xs">{h.particulars || h.mode}</TableCell>
                               <TableCell className="text-right">
-                                <Button variant="ghost" size="sm" className="text-primary gap-1 h-7 text-[10px]" onClick={() => handlePrintReceipt(h)}>
-                                  <Printer className="w-3 h-3"/> Print
+                                <Button variant="ghost" size="sm" className="text-primary gap-1 h-7 text-[10px]" onClick={() => openReceipt(h)}>
+                                  <Printer className="w-3 h-3"/> View/Print
                                 </Button>
                               </TableCell>
                             </TableRow>
@@ -410,6 +420,116 @@ export default function AdminFeesPage() {
           </DialogContent>
         </Dialog>
       </main>
+
+      {/* Modern Receipt View for Admin */}
+      <Dialog open={isReceiptOpen} onOpenChange={setIsReceiptOpen}>
+        <DialogContent className="max-w-[420px] p-0 border-none bg-transparent shadow-none">
+          <div className="bg-white p-6 rounded-xl shadow-2xl print:shadow-none print:p-0 relative">
+             <div className="flex justify-between items-center mb-4 print:hidden">
+               <DialogTitle className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Digital Receipt</DialogTitle>
+               <div className="flex gap-2">
+                 <Button onClick={handlePrint} size="sm" className="gap-2 bg-primary"><Printer className="w-3 h-3"/> Print</Button>
+                 <Button onClick={() => setIsReceiptOpen(false)} variant="ghost" size="icon" className="h-8 w-8"><X className="w-4 h-4"/></Button>
+               </div>
+             </div>
+             
+             {/* Printable Area */}
+             <div id="receipt-printable" className="bg-white border-2 border-slate-900 p-4 w-full aspect-[1/1.4] overflow-hidden flex flex-col relative print:border-none">
+                <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none grayscale rotate-[-15deg]">
+                   {logoUrl && <img src={logoUrl} alt="logo" className="w-64 h-64 object-contain" />}
+                </div>
+
+                <div className="relative z-10 flex flex-col h-full">
+                  <header className="flex items-center gap-2 border-b-2 border-slate-900 pb-3 mb-3">
+                     <div className="w-12 h-12 flex-shrink-0">
+                        {logoUrl && <img src={logoUrl} alt="Logo" className="w-full h-full object-contain" />}
+                     </div>
+                     <div className="flex-1">
+                        <h2 className="text-sm font-black text-slate-900 uppercase leading-none">Maharana Pratap ITI</h2>
+                        <p className="text-[8px] font-bold text-slate-600 mt-0.5">Saharanpur, Uttar Pradesh - 247001</p>
+                        <p className="text-[7px] text-slate-400">DGT / NCVT Govt. Recognized Institute</p>
+                     </div>
+                  </header>
+
+                  <div className="flex justify-between text-[10px] font-bold mb-4">
+                     <div className="bg-slate-900 text-white px-2 py-0.5 rounded">OFFICIAL RECEIPT</div>
+                     <div className="text-right">
+                        <p>No: {selectedReceipt?.receiptNo || selectedReceipt?.receipt}</p>
+                        <p>Date: {selectedReceipt?.date}</p>
+                     </div>
+                  </div>
+
+                  <div className="space-y-2 flex-1">
+                     <div className="grid grid-cols-[80px_1fr] gap-x-2 text-[11px]">
+                        <span className="text-slate-500 font-medium">Candidate:</span>
+                        <span className="font-bold text-slate-900 uppercase border-b border-slate-200">{selectedStudent?.name}</span>
+                        
+                        <span className="text-slate-500 font-medium">Father's Name:</span>
+                        <span className="font-bold text-slate-900 uppercase border-b border-slate-200">{selectedStudent?.fatherName}</span>
+                        
+                        <span className="text-slate-500 font-medium">Roll Number:</span>
+                        <span className="font-bold text-slate-900 border-b border-slate-200">{selectedStudent?.rollNo}</span>
+                        
+                        <span className="text-slate-500 font-medium">Trade:</span>
+                        <span className="font-bold text-slate-900 border-b border-slate-200">{selectedStudent?.trade}</span>
+                        
+                        <span className="text-slate-500 font-medium">Particulars:</span>
+                        <span className="font-bold text-slate-900 border-b border-slate-200 italic">{selectedReceipt?.particulars || selectedReceipt?.mode}</span>
+                     </div>
+
+                     <div className="mt-6 p-3 bg-slate-50 border-2 border-slate-900 rounded flex justify-between items-center">
+                        <span className="text-xs font-black uppercase tracking-widest">Amount Received:</span>
+                        <span className="text-xl font-black text-slate-900">₹{selectedReceipt?.amount.toLocaleString()}</span>
+                     </div>
+                  </div>
+
+                  <footer className="mt-auto pt-4 flex justify-between items-end">
+                     <div className="text-center">
+                        <div className="w-24 h-[1px] bg-slate-400 mb-1"></div>
+                        <p className="text-[8px] font-bold uppercase text-slate-400">Depositor Signature</p>
+                     </div>
+                     
+                     <div className="relative flex flex-col items-center">
+                        {stampUrl && (
+                          <div className="absolute -top-12 -right-2 w-20 h-20 opacity-80 mix-blend-multiply rotate-[-10deg]">
+                             <img src={stampUrl} alt="stamp" className="w-full h-full object-contain" />
+                          </div>
+                        )}
+                        <div className="w-24 h-[1px] bg-slate-900 mb-1"></div>
+                        <p className="text-[8px] font-black uppercase text-slate-900">Principal / Accountant</p>
+                     </div>
+                  </footer>
+                </div>
+             </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <style jsx global>{`
+        @media print {
+          body * {
+            visibility: hidden;
+          }
+          #receipt-printable, #receipt-printable * {
+            visibility: visible;
+          }
+          #receipt-printable {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100mm;
+            height: 148mm;
+            border: 2px solid black !important;
+            padding: 5mm !important;
+            margin: 0 !important;
+            box-shadow: none !important;
+          }
+          @page {
+            size: A6;
+            margin: 0;
+          }
+        }
+      `}</style>
     </div>
   );
 }

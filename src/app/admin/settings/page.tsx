@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -176,7 +177,7 @@ export default function AdminSettings() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="space-y-2">
-                      <Label>Photo (Upload from PC)</Label>
+                      <Label>Photo (Circular Shape)</Label>
                       <div className="flex flex-col items-center gap-4 p-4 bg-muted/20 rounded-xl border border-dashed border-primary/30">
                         {siteData.chairmanPhoto && (
                           <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-md">
@@ -201,7 +202,7 @@ export default function AdminSettings() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="space-y-2">
-                      <Label>Photo (Upload from PC)</Label>
+                      <Label>Photo (Circular Shape)</Label>
                       <div className="flex flex-col items-center gap-4 p-4 bg-muted/20 rounded-xl border border-dashed border-secondary/30">
                         {siteData.principalPhoto && (
                           <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-md">
@@ -226,7 +227,7 @@ export default function AdminSettings() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="space-y-2">
-                      <Label>Photo (Upload from PC)</Label>
+                      <Label>Photo (Circular Shape)</Label>
                       <div className="flex flex-col items-center gap-4 p-4 bg-muted/20 rounded-xl border border-dashed border-blue-300">
                         {siteData.studentPhoto && (
                           <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-md">

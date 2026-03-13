@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -267,7 +268,7 @@ export default function StudentFeesPage() {
             left: 0 !important;
             top: 0 !important;
             width: 21cm !important;
-            height: auto !important;
+            height: 9cm !important;
             display: flex !important;
             flex-direction: column !important;
             gap: 0 !important;

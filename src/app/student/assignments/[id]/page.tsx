@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { Timer, Send, AlertCircle, Loader2, CheckCircle } from 'lucide-react';
+import { Timer, Send, AlertCircle, Loader2, CheckCircle, Languages } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Navbar } from '@/components/layout/Navbar';
 
@@ -60,7 +60,6 @@ export default function AssignmentTestPage() {
     setIsSubmitting(true);
 
     try {
-      // Mock submission logic
       const submissions = JSON.parse(localStorage.getItem('mpiti_submissions') || '[]');
       localStorage.setItem('mpiti_submissions', JSON.stringify([...submissions, params.id]));
       
@@ -126,12 +125,13 @@ export default function AssignmentTestPage() {
     <main className="min-h-screen bg-muted/30 pb-20">
       <Navbar />
       
-      {/* Floating Timer Header */}
       <div className="sticky top-16 z-40 bg-white border-b shadow-sm py-3 px-4 flex justify-between items-center">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="text-primary border-primary">{assignment.title}</Badge>
-            <span className="hidden md:inline text-xs text-muted-foreground">Q-Count: {assignment.questions.length}</span>
+            <div className="hidden md:flex items-center gap-1 text-[10px] text-muted-foreground uppercase font-bold">
+              <Languages className="w-3 h-3" /> Bilingual Mode
+            </div>
           </div>
           <div className={`flex items-center gap-2 px-4 py-1.5 rounded-full font-bold text-lg ${timeLeft !== null && timeLeft < 300 ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-slate-100 text-slate-800'}`}>
             <Timer className="w-5 h-5" />
@@ -141,10 +141,10 @@ export default function AssignmentTestPage() {
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-3xl mx-auto space-y-6">
+        <div className="max-w-4xl mx-auto space-y-6">
           <header className="mb-8 text-center">
             <h1 className="font-headline text-3xl font-bold text-primary">{assignment.title}</h1>
-            <p className="text-muted-foreground">Complete all {assignment.questions.length} Objective questions. One-time submission only.</p>
+            <p className="text-muted-foreground">Complete all {assignment.questions.length} Bilingual (English / हिंदी) MCQs.</p>
           </header>
 
           {assignment.questions.map((q, idx) => (
@@ -152,9 +152,11 @@ export default function AssignmentTestPage() {
               <CardHeader className="bg-slate-50/50 pb-4">
                 <div className="flex justify-between items-start">
                   <Badge variant="secondary">Question {idx + 1}</Badge>
-                  <span className="text-[10px] uppercase font-bold text-muted-foreground">Objective (MCQ)</span>
+                  <span className="text-[10px] uppercase font-bold text-muted-foreground">MCQ / वस्तुनिष्ठ</span>
                 </div>
-                <CardTitle className="text-lg mt-2 leading-relaxed">{q.text}</CardTitle>
+                <CardTitle className="text-xl mt-2 leading-relaxed font-body">
+                   {q.text}
+                </CardTitle>
               </CardHeader>
               <CardContent className="pt-6">
                 <RadioGroup 
@@ -162,9 +164,11 @@ export default function AssignmentTestPage() {
                   className="grid gap-3"
                 >
                   {q.options.map((opt, oIdx) => (
-                    <div key={oIdx} className="flex items-center space-x-3 p-3 rounded-lg border hover:bg-slate-50 transition-colors cursor-pointer">
+                    <div key={oIdx} className="flex items-center space-x-3 p-4 rounded-lg border hover:bg-slate-50 transition-colors cursor-pointer group">
                       <RadioGroupItem value={opt} id={`q-${q.id}-o-${oIdx}`} />
-                      <Label htmlFor={`q-${q.id}-o-${oIdx}`} className="flex-1 cursor-pointer font-medium">{opt}</Label>
+                      <Label htmlFor={`q-${q.id}-o-${oIdx}`} className="flex-1 cursor-pointer font-medium text-base group-hover:text-primary transition-colors">
+                        {opt}
+                      </Label>
                     </div>
                   ))}
                 </RadioGroup>
@@ -173,9 +177,9 @@ export default function AssignmentTestPage() {
           ))}
 
           <div className="pt-8 flex flex-col items-center gap-4">
-            <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg flex gap-3 text-sm text-amber-800">
+            <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg flex gap-3 text-sm text-amber-800 max-w-lg">
                <AlertCircle className="w-5 h-5 flex-shrink-0" />
-               <p>Warning: Final auto-submit on time up. Once submitted, answers cannot be edited.</p>
+               <p>Warning: Final auto-submit on time up. Ensure you have selected all answers before clicking submit.</p>
             </div>
             <Button 
               size="lg" 

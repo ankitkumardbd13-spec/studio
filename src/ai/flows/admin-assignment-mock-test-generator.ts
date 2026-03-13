@@ -1,8 +1,8 @@
 'use server';
 /**
- * @fileOverview An AI-powered tool for administrators to generate objective MCQ assignment questions.
+ * @fileOverview An AI-powered tool for administrators to generate bilingual objective MCQ assignment questions.
  *
- * - generateAssignmentAndMockTest - A function that handles the generation of 20 MCQ questions.
+ * - generateAssignmentAndMockTest - A function that handles the generation of 20 bilingual MCQ questions.
  * - AdminAssignmentAndMockTestGeneratorInput - The input type for the generateAssignmentAndMockTest function.
  * - AdminAssignmentAndMockTestGeneratorOutput - The return type for the generateAssignmentAndMockTest function.
  */
@@ -11,10 +11,10 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const QuestionSchema = z.object({
-  text: z.string().describe('The text of the question.'),
+  text: z.string().describe('The bilingual text of the question (English / Hindi). Example: "What is current? / विद्युत धारा क्या है?"'),
   type: z.literal('objective').describe('The type of the question (always objective for MCQ).'),
-  options: z.array(z.string()).describe('Provide exactly 4 distinct options (A, B, C, D).'),
-  correctAnswer: z.string().describe('Specify which of the 4 options is the correct one.'),
+  options: z.array(z.string()).describe('Provide exactly 4 distinct bilingual options (English / Hindi).'),
+  correctAnswer: z.string().describe('Specify which of the 4 bilingual options is the correct one.'),
 });
 
 const AdminAssignmentAndMockTestGeneratorInputSchema = z.object({
@@ -34,7 +34,7 @@ export type AdminAssignmentAndMockTestGeneratorInput = z.infer<
 >;
 
 const AdminAssignmentAndMockTestGeneratorOutputSchema = z.object({
-  questions: z.array(QuestionSchema).describe('Exactly 20 objective (MCQ) questions generated for the topic.'),
+  questions: z.array(QuestionSchema).describe('Exactly 20 bilingual objective (MCQ) questions generated for the topic.'),
 });
 export type AdminAssignmentAndMockTestGeneratorOutput = z.infer<
   typeof AdminAssignmentAndMockTestGeneratorOutputSchema
@@ -54,9 +54,12 @@ const generateQuestionsPrompt = ai.definePrompt({
 Your task is to generate relevant assignment questions based on the provided trade, year, and topic, adhering strictly to the **New DGT/NCVT Syllabus**.
 
 Please generate exactly 20 Objective (MCQ) questions. 
-Each question MUST have exactly 4 options and one clearly marked correct answer.
 
-Ensure the questions are technically accurate for a student in the specified ITI trade and year.
+**IMPORTANT BILINGUAL REQUIREMENT:**
+- Every question text MUST be provided in both English and Hindi, separated by a forward slash.
+- Every option (A, B, C, D) MUST be provided in both English and Hindi, separated by a forward slash.
+- Example Question: "What is the unit of resistance? / प्रतिरोध की इकाई क्या है?"
+- Example Option: "Ohm / ओम"
 
 Trade: {{{trade}}}
 Year: {{{year}}}

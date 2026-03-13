@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Plus, Trash2, Calendar, Clock, Wand2, FileText, Loader2, Save, X, Timer } from 'lucide-react';
+import { Plus, Trash2, Calendar, Clock, Wand2, FileText, Loader2, Save, X, Timer, Languages } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { generateAssignmentAndMockTest } from '@/ai/flows/admin-assignment-mock-test-generator';
 
@@ -77,7 +77,7 @@ export default function AdminAssignmentsPage() {
     localStorage.setItem('mpiti_assignments', JSON.stringify(updated));
     resetForm();
     setIsAdding(false);
-    toast({ title: 'Assignment Created', description: 'Students can now view this on their dashboard.' });
+    toast({ title: 'Assignment Created', description: 'Students can now view this bilingual test.' });
   };
 
   const resetForm = () => {
@@ -89,7 +89,7 @@ export default function AdminAssignmentsPage() {
 
   const handleAIInvite = async () => {
     if (!title) {
-      toast({ title: 'Provide a Topic', description: 'Please enter a title/topic for AI to generate questions.' });
+      toast({ title: 'Provide a Topic', description: 'Please enter a title/topic for AI to generate bilingual questions.' });
       return;
     }
     setLoadingAI(true);
@@ -109,7 +109,7 @@ export default function AdminAssignmentsPage() {
       }));
       
       setQuestions([...questions, ...aiQuestions]);
-      toast({ title: 'AI Generation Complete', description: `Generated ${aiQuestions.length} Objective (MCQ) questions.` });
+      toast({ title: 'AI Generation Complete', description: `Generated ${aiQuestions.length} Bilingual MCQ questions.` });
     } catch (error) {
       console.error(error);
       toast({ variant: 'destructive', title: 'AI Error', description: 'Could not generate questions at this time.' });
@@ -143,7 +143,7 @@ export default function AdminAssignmentsPage() {
         <header className="mb-8 flex justify-between items-center">
           <div>
             <h1 className="font-headline text-4xl text-slate-900 font-bold">Assignment Manager</h1>
-            <p className="text-muted-foreground">Create 20-question MCQ tests with AI and time limits</p>
+            <p className="text-muted-foreground">Create 20-question Bilingual (Hindi/English) MCQ tests</p>
           </div>
           <Button onClick={() => setIsAdding(!isAdding)} className="gap-2">
             {isAdding ? <><X className="w-4 h-4"/> Cancel</> : <><Plus className="w-4 h-4"/> New Assignment</>}
@@ -210,7 +210,7 @@ export default function AdminAssignmentsPage() {
                 <Separator />
                 <Button onClick={handleAIInvite} disabled={loadingAI} variant="outline" className="w-full border-primary text-primary gap-2 h-12">
                   {loadingAI ? <Loader2 className="animate-spin w-4 h-4" /> : <Wand2 className="w-4 h-4" />}
-                  Generate 20 MCQ (AI)
+                  Generate 20 Bilingual MCQ (AI)
                 </Button>
                 <Button onClick={handleSaveAssignment} className="w-full bg-primary text-white gap-2 h-12">
                    <Save className="w-4 h-4" /> Save & Publish
@@ -221,8 +221,8 @@ export default function AdminAssignmentsPage() {
             <div className="lg:col-span-2 space-y-4">
               <div className="flex justify-between items-center px-2">
                 <h3 className="font-bold text-lg">Question List ({questions.length}/20)</h3>
-                <div className="flex gap-2">
-                  <Button size="sm" variant="outline" onClick={addQuestion}>+ Add MCQ Manual</Button>
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <Languages className="w-3 h-3" /> Bilingual Mode Enabled
                 </div>
               </div>
 
@@ -230,32 +230,32 @@ export default function AdminAssignmentsPage() {
                 <Card key={q.id} className="border-none shadow-sm group">
                   <CardContent className="p-4">
                     <div className="flex justify-between gap-4 mb-4">
-                      <Badge variant="secondary" className="h-fit">Q{idx + 1}: MCQ</Badge>
+                      <Badge variant="secondary" className="h-fit">Q{idx + 1}: Bilingual MCQ</Badge>
                       <Button variant="ghost" size="sm" onClick={() => setQuestions(questions.filter(item => item.id !== q.id))} className="text-red-400 h-6 w-6 p-0"><Trash2 className="w-4 h-4" /></Button>
                     </div>
                     <Textarea 
-                      placeholder="Enter question text..." 
+                      placeholder="Enter bilingual question (English / Hindi)..." 
                       value={q.text} 
                       onChange={e => {
                         const updated = [...questions];
                         updated[idx].text = e.target.value;
                         setQuestions(updated);
                       }}
-                      className="mb-4 min-h-[60px]"
+                      className="mb-4 min-h-[80px]"
                     />
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {q.options.map((opt, oIdx) => (
                         <div key={oIdx} className="flex items-center gap-2">
                           <span className="text-xs font-bold text-muted-foreground">{String.fromCharCode(65 + oIdx)}.</span>
                           <Input 
-                            placeholder={`Option ${oIdx + 1}`} 
+                            placeholder={`English / Hindi Option ${oIdx + 1}`} 
                             value={opt} 
                             onChange={e => {
                               const updated = [...questions];
                               updated[idx].options[oIdx] = e.target.value;
                               setQuestions(updated);
                             }}
-                            className="h-8 text-sm"
+                            className="h-10 text-sm"
                           />
                         </div>
                       ))}
@@ -270,12 +270,12 @@ export default function AdminAssignmentsPage() {
                           setQuestions(updated);
                         }}
                       >
-                        <SelectTrigger className="w-32 h-8 text-xs">
+                        <SelectTrigger className="w-48 h-8 text-xs">
                           <SelectValue placeholder="Correct Opt" />
                         </SelectTrigger>
                         <SelectContent>
                           {q.options.map((opt, oIdx) => (
-                             opt && <SelectItem key={oIdx} value={opt}>Option {String.fromCharCode(65 + oIdx)}</SelectItem>
+                             opt && <SelectItem key={oIdx} value={opt}>Option {String.fromCharCode(65 + oIdx)}: {opt.substring(0, 20)}...</SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
@@ -287,7 +287,7 @@ export default function AdminAssignmentsPage() {
               {questions.length === 0 && (
                 <div className="bg-white border-2 border-dashed rounded-xl p-12 text-center opacity-40">
                   <Wand2 className="w-10 h-10 mx-auto mb-2 text-primary" />
-                  <p>No questions added. AI will generate 20 technical MCQs for this topic.</p>
+                  <p>No questions added. AI will generate 20 bilingual MCQs for this topic.</p>
                 </div>
               )}
             </div>
@@ -305,7 +305,7 @@ export default function AdminAssignmentsPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <FileText className="w-4 h-4" /> {a.questions.length} MCQs
+                      <FileText className="w-4 h-4" /> {a.questions.length} Bilingual MCQs
                    </div>
                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <Timer className="w-4 h-4" /> Duration: {a.durationMinutes} Minutes

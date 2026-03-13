@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -28,7 +29,6 @@ export default function Home() {
   const [galleryItems, setGalleryItems] = useState<any[]>([]);
 
   useEffect(() => {
-    // Load dynamic data from localStorage if admin has saved any
     const savedData = localStorage.getItem('mpiti_site_settings');
     if (savedData) {
       setSiteData(JSON.parse(savedData));
@@ -87,10 +87,10 @@ export default function Home() {
             {siteData.heroSub}
           </p>
           <div className="mt-12 flex flex-wrap justify-center gap-6">
-            <Button size="lg" asChild className="bg-secondary hover:bg-secondary/90 text-white border-none h-16 px-10 text-xl font-bold gap-3 shadow-xl transition-transform hover:scale-105 active:scale-95">
+            <Button size="lg" asChild className="bg-secondary hover:bg-secondary/90 text-white border-none h-16 px-10 text-xl font-black gap-3 shadow-[0_10px_40px_-10px_rgba(193,69,38,0.5)] transition-transform hover:scale-105 active:scale-95">
               <Link href="/admission"><ClipboardList className="w-6 h-6"/> New Admission Inquiry</Link>
             </Button>
-            <Button size="lg" variant="outline" asChild className="bg-white/20 text-white border-white/50 hover:bg-white/30 h-16 px-10 text-xl font-bold gap-3 backdrop-blur-md transition-transform hover:scale-105 active:scale-95">
+            <Button size="lg" variant="outline" asChild className="bg-white text-primary border-white hover:bg-white/90 h-16 px-10 text-xl font-bold gap-3 transition-transform hover:scale-105 active:scale-95">
               <Link href="/login"><GraduationCap className="w-6 h-6"/> Student Portal</Link>
             </Button>
           </div>
@@ -213,10 +213,10 @@ export default function Home() {
            <h2 className="font-headline text-5xl font-bold mb-8">Empowering Youth with Skills</h2>
            <p className="text-2xl opacity-90 mb-12 max-w-3xl mx-auto">Join Maharana Pratap ITI and prepare for a career in India's growing industrial sector.</p>
            <div className="flex flex-wrap justify-center gap-6">
-             <Button size="lg" variant="secondary" asChild className="font-bold px-12 h-14 text-xl shadow-lg">
+             <Button size="lg" variant="secondary" asChild className="bg-secondary hover:bg-secondary/90 text-white font-black px-12 h-16 text-xl shadow-2xl transition-transform hover:scale-105">
                <Link href="/admission">Apply for Admission</Link>
              </Button>
-             <Button size="lg" variant="outline" asChild className="border-white text-white hover:bg-white/10 font-bold px-12 h-14 text-xl backdrop-blur-sm">
+             <Button size="lg" asChild className="bg-white text-primary hover:bg-white/90 font-black px-12 h-16 text-xl shadow-2xl transition-transform hover:scale-105">
                <Link href="/contact">Enquire Now</Link>
              </Button>
            </div>

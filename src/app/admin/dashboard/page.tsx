@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useMemo } from 'react';
@@ -300,19 +299,10 @@ export default function AdminDashboard() {
                 </div>
               </CardContent>
             </Card>
-
-            <Card className="border-none shadow-sm border-l-4 border-green-500">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm">Server Identity</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-xs text-muted-foreground">Admin: Maharana Pratap ITI<br/>DGT Syllabus Version: 2024.1<br/>System Time: {new Date().toLocaleDateString()}</p>
-              </CardContent>
-            </Card>
           </div>
         </div>
 
-        {/* Student Details Dialog */}
+        {/* Student Details Dialog with PDF Formatting */}
         <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
           <DialogContent className="max-w-2xl print:max-w-full print:shadow-none print:border-none">
             <DialogHeader className="print:hidden">

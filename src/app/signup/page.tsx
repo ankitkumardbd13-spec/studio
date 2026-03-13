@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from 'react';
@@ -149,26 +148,6 @@ export default function SignupPage() {
                         </div>
                         <p className="font-bold text-slate-700">Click to Upload JPG/PNG</p>
                         <p className="text-xs text-muted-foreground mt-1 uppercase tracking-widest font-bold">Recommended: Clear face photo with white background</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Address Details */}
-                <div className="space-y-6">
-                  <h3 className="text-xl font-bold border-b-2 border-slate-100 pb-3 text-slate-900 flex items-center gap-2">
-                    <div className="w-2 h-8 bg-blue-500 rounded-full" /> 3. Address Info
-                  </h3>
-                  <div className="grid md:grid-cols-3 gap-8">
-                    <div className="space-y-2">
-                      <Label htmlFor="stateName" className="text-slate-700 font-bold">State</Label>
-                      <Input id="stateName" defaultValue="Uttar Pradesh" required className="h-12 border-slate-300" />
-                    </div>
-                    <div className="space-y-2 md:col-span-2">
-                      <Label htmlFor="fullAddress" className="text-slate-700 font-bold">Full Address (Village/Post Office)</Label>
-                      <div className="relative">
-                        <Input id="fullAddress" placeholder="Complete residental address" required className="h-12 pl-12 border-slate-300" />
-                        <MapPin className="absolute left-4 top-3.5 w-5 h-5 text-muted-foreground" />
                       </div>
                     </div>
                   </div>

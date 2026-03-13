@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -10,7 +9,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Trash2, Calendar, Clock, Wand2, FileText, CheckCircle2, Loader2, Save } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
+import { Plus, Trash2, Calendar, Clock, Wand2, FileText, CheckCircle2, Loader2, Save, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { generateAssignmentAndMockTest } from '@/ai/flows/admin-assignment-mock-test-generator';
 
@@ -96,14 +96,18 @@ export default function AdminAssignmentsPage() {
         topic: title
       });
 
-      const aiQuestions: Question[] = [
-        ...result.assignmentQuestions.map(q => ({ id: Math.random().toString(), text: q, type: 'subjective' as const })),
-        ...result.mockTestQuestions.map(q => ({ id: Math.random().toString(), text: q, type: 'objective' as const, options: ['Option A', 'Option B', 'Option C', 'Option D'] }))
-      ];
+      const aiQuestions: Question[] = result.questions.map(q => ({
+        id: Math.random().toString(),
+        text: q.text,
+        type: q.type,
+        options: q.options,
+        correctAnswer: q.correctAnswer
+      }));
       
       setQuestions([...questions, ...aiQuestions]);
-      toast({ title: 'AI Generation Complete', description: 'Added subjective and objective questions to your list.' });
+      toast({ title: 'AI Generation Complete', description: `Generated ${aiQuestions.length} technical questions.` });
     } catch (error) {
+      console.error(error);
       toast({ variant: 'destructive', title: 'AI Error', description: 'Could not generate questions at this time.' });
     } finally {
       setLoadingAI(false);
@@ -134,10 +138,10 @@ export default function AdminAssignmentsPage() {
         <header className="mb-8 flex justify-between items-center">
           <div>
             <h1 className="font-headline text-4xl text-slate-900 font-bold">Assignment Manager</h1>
-            <p className="text-muted-foreground">Create, schedule and manage trade assignments</p>
+            <p className="text-muted-foreground">Create, schedule and manage trade assignments with AI</p>
           </div>
           <Button onClick={() => setIsAdding(!isAdding)} className="gap-2">
-            {isAdding ? 'Cancel' : <><Plus className="w-4 h-4"/> New Assignment</>}
+            {isAdding ? <><X className="w-4 h-4"/> Cancel</> : <><Plus className="w-4 h-4"/> New Assignment</>}
           </Button>
         </header>
 
@@ -192,11 +196,11 @@ export default function AdminAssignmentsPage() {
                   </div>
                 </div>
                 <Separator />
-                <Button onClick={handleAIInvite} disabled={loadingAI} variant="outline" className="w-full border-primary text-primary gap-2">
+                <Button onClick={handleAIInvite} disabled={loadingAI} variant="outline" className="w-full border-primary text-primary gap-2 h-12">
                   {loadingAI ? <Loader2 className="animate-spin w-4 h-4" /> : <Wand2 className="w-4 h-4" />}
-                  Generate Questions with AI
+                  Generate AI Questions
                 </Button>
-                <Button onClick={handleSaveAssignment} className="w-full bg-primary text-white gap-2">
+                <Button onClick={handleSaveAssignment} className="w-full bg-primary text-white gap-2 h-12">
                    <Save className="w-4 h-4" /> Save & Publish
                 </Button>
               </CardContent>
@@ -207,7 +211,7 @@ export default function AdminAssignmentsPage() {
                 <h3 className="font-bold text-lg">Question List ({questions.length})</h3>
                 <div className="flex gap-2">
                   <Button size="sm" variant="outline" onClick={() => addQuestion('subjective')}>+ Subjective</Button>
-                  <Button size="sm" variant="outline" onClick={() => addQuestion('objective')}>+ Objective (MCQ)</Button>
+                  <Button size="sm" variant="outline" onClick={() => addQuestion('objective')}>+ MCQ</Button>
                 </div>
               </div>
 
@@ -215,8 +219,8 @@ export default function AdminAssignmentsPage() {
                 <Card key={q.id} className="border-none shadow-sm group">
                   <CardContent className="p-4">
                     <div className="flex justify-between gap-4 mb-4">
-                      <Badge variant="secondary" className="h-fit">Q{idx + 1}: {q.type === 'objective' ? 'MCQ' : 'Subjective'}</Badge>
-                      <Button variant="ghost" size="sm" onClick={() => setQuestions(questions.filter(item => item.id !== q.id))} className="text-red-400 opacity-0 group-hover:opacity-100 h-6 w-6 p-0"><Trash2 className="w-4 h-4" /></Button>
+                      <Badge variant="secondary" className="h-fit">Q{idx + 1}: {q.type === 'objective' ? 'Objective (MCQ)' : 'Subjective'}</Badge>
+                      <Button variant="ghost" size="sm" onClick={() => setQuestions(questions.filter(item => item.id !== q.id))} className="text-red-400 h-6 w-6 p-0"><Trash2 className="w-4 h-4" /></Button>
                     </div>
                     <Textarea 
                       placeholder="Enter question text..." 
@@ -253,7 +257,8 @@ export default function AdminAssignmentsPage() {
 
               {questions.length === 0 && (
                 <div className="bg-white border-2 border-dashed rounded-xl p-12 text-center opacity-40">
-                  No questions added yet. Use AI or add manually.
+                  <Wand2 className="w-10 h-10 mx-auto mb-2 text-primary" />
+                  <p>No questions added yet. Try generating with AI based on your topic!</p>
                 </div>
               )}
             </div>
@@ -264,7 +269,7 @@ export default function AdminAssignmentsPage() {
               <Card key={a.id} className="border-none shadow-sm hover:shadow-md transition-shadow">
                 <CardHeader className="pb-2">
                   <div className="flex justify-between items-start">
-                    <Badge variant="outline" className="bg-primary/5 text-primary">{a.trade} - Y{a.year}</Badge>
+                    <Badge variant="outline" className="bg-primary/5 text-primary">{a.trade} - Year {a.year}</Badge>
                     <Button variant="ghost" size="sm" onClick={() => deleteAssignment(a.id)} className="text-red-400 h-8 w-8 p-0"><Trash2 className="w-4 h-4" /></Button>
                   </div>
                   <CardTitle className="text-xl mt-2">{a.title}</CardTitle>
@@ -273,7 +278,7 @@ export default function AdminAssignmentsPage() {
                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <FileText className="w-4 h-4" /> {a.questions.length} Questions
                    </div>
-                   <div className="flex items-center gap-2 text-sm font-medium text-secondary">
+                   <div className="flex items-center gap-2 text-sm font-bold text-secondary">
                       <Calendar className="w-4 h-4" /> Deadline: {a.deadlineDate} @ {a.deadlineTime}
                    </div>
                    <Button variant="outline" className="w-full">View Submissions (0)</Button>

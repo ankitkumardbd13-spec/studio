@@ -1,4 +1,3 @@
-
 'use server';
 /**
  * @fileOverview An AI-powered tool for administrators to generate assignment and mock test questions.
@@ -10,6 +9,13 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+
+const QuestionSchema = z.object({
+  text: z.string().describe('The text of the question.'),
+  type: z.enum(['subjective', 'objective']).describe('The type of the question (subjective for theory, objective for MCQ).'),
+  options: z.array(z.string()).optional().describe('For objective (MCQ) questions, provide exactly 4 distinct options.'),
+  correctAnswer: z.string().optional().describe('For objective questions, specify which option is correct.'),
+});
 
 const AdminAssignmentAndMockTestGeneratorInputSchema = z.object({
   trade: z
@@ -28,12 +34,7 @@ export type AdminAssignmentAndMockTestGeneratorInput = z.infer<
 >;
 
 const AdminAssignmentAndMockTestGeneratorOutputSchema = z.object({
-  assignmentQuestions: z
-    .array(z.string())
-    .describe('A list of assignment questions for the given topic.'),
-  mockTestQuestions: z
-    .array(z.string())
-    .describe('A list of mock test questions for the given topic.'),
+  questions: z.array(QuestionSchema).describe('A mixed list of subjective and objective questions generated for the topic.'),
 });
 export type AdminAssignmentAndMockTestGeneratorOutput = z.infer<
   typeof AdminAssignmentAndMockTestGeneratorOutputSchema
@@ -50,13 +51,13 @@ const generateQuestionsPrompt = ai.definePrompt({
   input: {schema: AdminAssignmentAndMockTestGeneratorInputSchema},
   output: {schema: AdminAssignmentAndMockTestGeneratorOutputSchema},
   prompt: `You are an expert educational content creator for Industrial Training Institute (ITI) courses in India.
-Your task is to generate relevant assignment questions and mock test questions based on the provided trade, year, and topic, adhering strictly to the **New DGT/NCVT Syllabus**.
+Your task is to generate relevant assignment questions based on the provided trade, year, and topic, adhering strictly to the **New DGT/NCVT Syllabus**.
 
 Please generate:
-- 5-7 comprehensive assignment questions that test understanding and application.
-- 5-7 multiple-choice or short-answer mock test questions suitable for assessing knowledge.
+- 5 Subjective questions that test deep understanding and application of the topic.
+- 5 Objective (MCQ) questions with 4 logical options and a clear correct answer.
 
-Ensure the questions are appropriate for a student in the specified ITI trade and year, focusing on technical accuracy and current industry standards.
+Ensure the questions are technically accurate for a student in the specified ITI trade and year.
 
 Trade: {{{trade}}}
 Year: {{{year}}}

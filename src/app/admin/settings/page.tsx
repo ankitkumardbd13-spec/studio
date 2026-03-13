@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AdminSidebar } from '@/components/layout/AdminSidebar';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,15 +9,16 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Save, Image as ImageIcon, MapPin, Plus, Trash2, UserCheck, LayoutGrid } from 'lucide-react';
+import { Save, Image as ImageIcon, MapPin, Plus, Trash2, UserCheck, LayoutGrid, Upload, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { compressImage } from '@/lib/image-utils';
 
 export default function AdminSettings() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [compressing, setCompressing] = useState<string | null>(null);
 
-  // Mock initial state for site data
   const [siteData, setSiteData] = useState({
     address: 'Near Delhi Road, Saharanpur, Uttar Pradesh - 247001',
     phone1: '+91 98765 43210',
@@ -33,21 +34,56 @@ export default function AdminSettings() {
     heroSub: 'Saharanpur, Uttar Pradesh - Following New DGT NCVT Syllabus for Skilled Excellence'
   });
 
-  const [galleryImages, setGalleryImages] = useState([
-    { id: 1, url: 'https://picsum.photos/seed/lab1/800/600', caption: 'Practical Lab' },
-    { id: 2, url: 'https://picsum.photos/seed/class1/800/600', caption: 'Classroom Session' },
-    { id: 3, url: 'https://picsum.photos/seed/equip1/800/600', caption: 'Workshop Tools' },
-  ]);
+  const [galleryImages, setGalleryImages] = useState<any[]>([]);
 
-  const [newImageUrl, setNewImageUrl] = useState('');
-  const [newCaption, setNewCaption] = useState('');
+  useEffect(() => {
+    const savedData = localStorage.getItem('mpiti_site_settings');
+    if (savedData) {
+      setSiteData(JSON.parse(savedData));
+    }
+    const savedGallery = localStorage.getItem('mpiti_gallery');
+    if (savedGallery) {
+      setGalleryImages(JSON.parse(savedGallery));
+    } else {
+      setGalleryImages([
+        { id: 1, url: 'https://picsum.photos/seed/lab1/800/600', caption: 'Practical Lab' },
+        { id: 2, url: 'https://picsum.photos/seed/class1/800/600', caption: 'Classroom Session' },
+        { id: 3, url: 'https://picsum.photos/seed/equip1/800/600', caption: 'Workshop Tools' },
+      ]);
+    }
+  }, []);
 
-  const handleAddGalleryImage = () => {
-    if (!newImageUrl) return;
-    setGalleryImages([...galleryImages, { id: Date.now(), url: newImageUrl, caption: newCaption }]);
-    setNewImageUrl('');
-    setNewCaption('');
-    toast({ title: "Image Added", description: "The image has been added to the gallery preview." });
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: keyof typeof siteData) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setCompressing(field as string);
+    try {
+      const compressedBase64 = await compressImage(file, 50);
+      setSiteData(prev => ({ ...prev, [field]: compressedBase64 }));
+      toast({ title: "Image Uploaded", description: "Image compressed to ~50KB and updated." });
+    } catch (error) {
+      toast({ variant: "destructive", title: "Upload Failed", description: "Could not process image." });
+    } finally {
+      setCompressing(null);
+    }
+  };
+
+  const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setCompressing('gallery');
+    try {
+      const compressedBase64 = await compressImage(file, 50);
+      const newImg = { id: Date.now(), url: compressedBase64, caption: 'New Campus Image' };
+      setGalleryImages(prev => [...prev, newImg]);
+      toast({ title: "Gallery Image Added", description: "New photo added and compressed." });
+    } catch (error) {
+      toast({ variant: "destructive", title: "Upload Failed", description: "Could not process image." });
+    } finally {
+      setCompressing(null);
+    }
   };
 
   const handleRemoveGalleryImage = (id: number) => {
@@ -57,31 +93,34 @@ export default function AdminSettings() {
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    localStorage.setItem('mpiti_site_settings', JSON.stringify(siteData));
+    localStorage.setItem('mpiti_gallery', JSON.stringify(galleryImages));
+    
     setTimeout(() => {
       setLoading(false);
       toast({
-        title: "Settings Updated",
-        description: "All changes including messages, photos, and gallery have been saved.",
+        title: "Settings Saved",
+        description: "Your updates are now live on the website.",
       });
-    }, 1000);
+    }, 800);
   };
 
   return (
     <div className="min-h-screen bg-muted/30 flex">
       <AdminSidebar />
       <main className="flex-1 p-8 overflow-y-auto">
-        <header className="mb-8">
-          <h1 className="font-headline text-4xl text-slate-900 font-bold">Site Management</h1>
-          <p className="text-muted-foreground">Manage content, photos, and leadership messages</p>
+        <header className="mb-8 flex justify-between items-center">
+          <div>
+            <h1 className="font-headline text-4xl text-slate-900 font-bold">Site Management</h1>
+            <p className="text-muted-foreground">Manage content, photos (Auto-resized to 50KB), and leadership</p>
+          </div>
+          <Button onClick={handleSave} disabled={loading} className="gap-2 bg-primary">
+            {loading ? <Loader2 className="animate-spin w-4 h-4"/> : <Save className="w-4 h-4"/>}
+            Save All Changes
+          </Button>
         </header>
 
         <form onSubmit={handleSave}>
-          <div className="flex justify-end mb-6">
-            <Button type="submit" disabled={loading} className="gap-2 bg-primary">
-              {loading ? "Saving..." : <><Save className="w-4 h-4"/> Save All Changes</>}
-            </Button>
-          </div>
-
           <Tabs defaultValue="leadership" className="space-y-6">
             <TabsList className="bg-white p-1 rounded-lg border shadow-sm">
               <TabsTrigger value="leadership">Leadership & Photos</TabsTrigger>
@@ -99,8 +138,14 @@ export default function AdminSettings() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="space-y-2">
-                      <Label>Photo URL</Label>
-                      <Input value={siteData.chairmanPhoto} onChange={(e) => setSiteData({...siteData, chairmanPhoto: e.target.value})} />
+                      <Label>Photo (Upload from PC)</Label>
+                      <div className="flex flex-col gap-2">
+                        {siteData.chairmanPhoto && (
+                          <img src={siteData.chairmanPhoto} alt="Preview" className="w-full h-32 object-cover rounded-lg border" />
+                        )}
+                        <Input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'chairmanPhoto')} />
+                        {compressing === 'chairmanPhoto' && <p className="text-xs text-primary animate-pulse">Compressing...</p>}
+                      </div>
                     </div>
                     <div className="space-y-2">
                       <Label>Message Content</Label>
@@ -116,8 +161,14 @@ export default function AdminSettings() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="space-y-2">
-                      <Label>Photo URL</Label>
-                      <Input value={siteData.principalPhoto} onChange={(e) => setSiteData({...siteData, principalPhoto: e.target.value})} />
+                      <Label>Photo (Upload from PC)</Label>
+                      <div className="flex flex-col gap-2">
+                        {siteData.principalPhoto && (
+                          <img src={siteData.principalPhoto} alt="Preview" className="w-full h-32 object-cover rounded-lg border" />
+                        )}
+                        <Input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'principalPhoto')} />
+                        {compressing === 'principalPhoto' && <p className="text-xs text-primary animate-pulse">Compressing...</p>}
+                      </div>
                     </div>
                     <div className="space-y-2">
                       <Label>Message Content</Label>
@@ -126,18 +177,24 @@ export default function AdminSettings() {
                   </CardContent>
                 </Card>
 
-                {/* Student Manager/Rep */}
+                {/* Alumni/Student Success */}
                 <Card className="border-none shadow-sm">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-lg"><UserCheck className="w-5 h-5 text-blue-500"/> Student Rep</CardTitle>
+                    <CardTitle className="flex items-center gap-2 text-lg"><UserCheck className="w-5 h-5 text-blue-500"/> Alumni Rep</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="space-y-2">
-                      <Label>Photo URL</Label>
-                      <Input value={siteData.studentPhoto} onChange={(e) => setSiteData({...siteData, studentPhoto: e.target.value})} />
+                      <Label>Photo (Upload from PC)</Label>
+                      <div className="flex flex-col gap-2">
+                        {siteData.studentPhoto && (
+                          <img src={siteData.studentPhoto} alt="Preview" className="w-full h-32 object-cover rounded-lg border" />
+                        )}
+                        <Input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'studentPhoto')} />
+                        {compressing === 'studentPhoto' && <p className="text-xs text-primary animate-pulse">Compressing...</p>}
+                      </div>
                     </div>
                     <div className="space-y-2">
-                      <Label>Message Content</Label>
+                      <Label>Success Story Message</Label>
                       <Textarea value={siteData.studentMsg} onChange={(e) => setSiteData({...siteData, studentMsg: e.target.value})} />
                     </div>
                   </CardContent>
@@ -149,21 +206,20 @@ export default function AdminSettings() {
               <Card className="border-none shadow-sm">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2"><LayoutGrid className="w-5 h-5 text-primary"/> Manage Homepage Gallery</CardTitle>
-                  <CardDescription>Add or remove photos from the main website gallery</CardDescription>
+                  <CardDescription>Upload workshop and campus photos from your PC.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div className="grid md:grid-cols-3 gap-4 p-4 border rounded-xl bg-slate-50">
-                    <div className="space-y-2">
-                      <Label>New Image URL</Label>
-                      <Input placeholder="https://..." value={newImageUrl} onChange={(e) => setNewImageUrl(e.target.value)} />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Caption</Label>
-                      <Input placeholder="e.g. Electrician Lab" value={newCaption} onChange={(e) => setNewCaption(e.target.value)} />
-                    </div>
-                    <div className="flex items-end">
-                      <Button type="button" onClick={handleAddGalleryImage} className="w-full gap-2"><Plus className="w-4 h-4"/> Add to Gallery</Button>
-                    </div>
+                  <div className="p-8 border-2 border-dashed rounded-xl bg-slate-50 flex flex-col items-center justify-center text-center">
+                    <Upload className="w-10 h-10 text-muted-foreground mb-4" />
+                    <p className="mb-4 text-sm text-muted-foreground">Select a local photo to add to the gallery.<br/>The system will automatically resize it to ~50KB.</p>
+                    <Input 
+                      type="file" 
+                      accept="image/*" 
+                      className="max-w-xs" 
+                      onChange={handleGalleryUpload} 
+                      disabled={!!compressing}
+                    />
+                    {compressing === 'gallery' && <p className="mt-2 text-primary animate-pulse font-bold">Resizing & Compressing...</p>}
                   </div>
 
                   <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
@@ -171,7 +227,6 @@ export default function AdminSettings() {
                       <div key={img.id} className="relative group rounded-lg overflow-hidden border shadow-sm aspect-square bg-white">
                         <img src={img.url} alt={img.caption} className="object-cover w-full h-full" />
                         <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-2 text-center">
-                          <p className="text-[10px] text-white mb-2">{img.caption}</p>
                           <Button variant="destructive" size="icon" className="h-8 w-8" onClick={() => handleRemoveGalleryImage(img.id)}>
                             <Trash2 className="w-4 h-4" />
                           </Button>
@@ -186,24 +241,46 @@ export default function AdminSettings() {
             <TabsContent value="contact">
               <Card className="border-none shadow-sm">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2"><MapPin className="w-5 h-5 text-primary"/> Institute Contact</CardTitle>
+                  <CardTitle className="flex items-center gap-2"><MapPin className="w-5 h-5 text-primary"/> Institute Contact Details</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label>Address</Label>
+                      <Label>Full Address</Label>
                       <Textarea value={siteData.address} onChange={(e) => setSiteData({...siteData, address: e.target.value})} />
                     </div>
                     <div className="space-y-4">
                       <div className="space-y-2">
-                        <Label>Primary Phone</Label>
+                        <Label>Primary Mobile</Label>
                         <Input value={siteData.phone1} onChange={(e) => setSiteData({...siteData, phone1: e.target.value})} />
                       </div>
                       <div className="space-y-2">
-                        <Label>Email</Label>
+                        <Label>Secondary/Office Phone</Label>
+                        <Input value={siteData.phone2} onChange={(e) => setSiteData({...siteData, phone2: e.target.value})} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Official Email</Label>
                         <Input value={siteData.email} onChange={(e) => setSiteData({...siteData, email: e.target.value})} />
                       </div>
                     </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="homepage">
+              <Card className="border-none shadow-sm">
+                <CardHeader>
+                  <CardTitle>Hero Section Text</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label>Main Title (Big Text)</Label>
+                    <Input value={siteData.heroTitle} onChange={(e) => setSiteData({...siteData, heroTitle: e.target.value})} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Sub-heading (Smaller Text)</Label>
+                    <Textarea value={siteData.heroSub} onChange={(e) => setSiteData({...siteData, heroSub: e.target.value})} />
                   </div>
                 </CardContent>
               </Card>

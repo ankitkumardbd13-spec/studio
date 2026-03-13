@@ -7,6 +7,12 @@
       "imageHint": "college campus building"
     },
     {
+      "id": "iti-stamp",
+      "description": "Official ITI Stamp - Maharana Pratap ITI",
+      "imageUrl": "https://picsum.photos/seed/itistamp/300/300",
+      "imageHint": "official blue circular stamp seal"
+    },
+    {
       "id": "chairman",
       "description": "Chairman of Maharana Pratap ITI",
       "imageUrl": "https://picsum.photos/seed/chairman/400/500",

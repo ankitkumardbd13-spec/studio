@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -12,6 +11,7 @@ import Link from 'next/link';
 
 export default function IDCardPage() {
   const studentPhoto = PlaceHolderImages.find(img => img.id === 'student-1')?.imageUrl;
+  const itiStamp = PlaceHolderImages.find(img => img.id === 'iti-stamp')?.imageUrl;
 
   return (
     <main className="min-h-screen bg-muted/30">
@@ -38,23 +38,29 @@ export default function IDCardPage() {
               <p className="text-[10px] opacity-80 uppercase tracking-widest">Saharanpur, UP</p>
               
               <div className="mt-8 flex flex-col items-center gap-2">
-                <div className="w-24 h-24 border-2 border-white rounded-lg overflow-hidden bg-muted">
-                  {studentPhoto && <Image src={studentPhoto} alt="Student" width={96} height={96} className="object-cover" />}
+                <div className="w-24 h-24 border-2 border-white rounded-lg overflow-hidden bg-muted relative">
+                  {studentPhoto && <Image src={studentPhoto} alt="Student" fill className="object-cover" />}
                 </div>
                 <div className="text-xs font-bold mt-2">STUDENT</div>
               </div>
            </div>
 
            {/* Content Section */}
-           <div className="flex-1 p-8 bg-cream flex flex-col justify-between">
+           <div className="flex-1 p-8 bg-cream flex flex-col justify-between relative">
               <div>
                 <div className="flex justify-between items-start mb-6">
                   <div>
                     <h3 className="text-2xl font-headline font-bold text-primary">Rahul Kumar</h3>
                     <p className="text-xs text-muted-foreground">Roll No: 2023/MP/ELEC/042</p>
                   </div>
-                  <div className="w-12 h-12 flex items-center justify-center text-[8px] border-2 border-primary/40 rounded-full text-center p-1 text-primary italic font-bold">
-                    Official Seal
+                  <div className="w-16 h-16 relative opacity-80">
+                    {itiStamp ? (
+                      <Image src={itiStamp} alt="Official Stamp" fill className="object-contain" />
+                    ) : (
+                      <div className="w-12 h-12 flex items-center justify-center text-[8px] border-2 border-primary/40 rounded-full text-center p-1 text-primary italic font-bold">
+                        Official Seal
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -94,7 +100,7 @@ export default function IDCardPage() {
         </div>
 
         <p className="mt-8 text-sm text-muted-foreground max-w-md text-center">
-          This is a digitally generated ID card. For physical use, please print on a 300gsm card and get it stamped by the principal's office.
+          This is a digitally generated ID card. For physical use, please print on a 300gsm card. The official blue stamp of Maharana Pratap ITI Saharanpur is included digitally.
         </p>
       </div>
     </main>

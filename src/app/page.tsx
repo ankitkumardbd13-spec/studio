@@ -215,7 +215,7 @@ export default function Home() {
              <Button size="lg" asChild className="bg-secondary hover:bg-secondary/90 text-white font-black px-12 h-16 text-xl shadow-[0_10px_40px_-10px_rgba(193,69,38,0.8)] transition-transform hover:scale-105 active:scale-95">
                <Link href="/admission">Apply for Admission</Link>
              </Button>
-             <Button size="lg" asChild className="bg-white text-primary hover:bg-white/90 font-black px-12 h-16 text-xl shadow-2xl transition-transform hover:scale-105 active:scale-95">
+             <Button size="lg" asChild className="bg-secondary hover:bg-secondary/90 text-white font-black px-12 h-16 text-xl shadow-2xl transition-transform hover:scale-105 active:scale-95">
                <Link href="/contact">Enquire Now</Link>
              </Button>
            </div>
@@ -254,7 +254,7 @@ export default function Home() {
             </div>
           </div>
           <div className="pt-10 border-t border-white/10 text-center text-sm opacity-50">
-            © 2024 Maharana Pratap ITI Rankhandi. Managed via Admin Portal.
+            © 2024 Maharana Pratap ITI Rankhandi. Established 2015.
           </div>
         </div>
       </footer>

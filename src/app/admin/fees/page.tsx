@@ -142,6 +142,64 @@ export default function AdminFeesPage() {
     window.print();
   };
 
+  const ReceiptCard = ({ payment }: { payment: any }) => (
+    <div className="receipt-slip bg-white border-2 border-slate-900 p-2 w-[7cm] h-[3.5cm] overflow-hidden flex flex-col relative">
+      {/* LOGO ONLY AS WATERMARK */}
+      <div className="absolute inset-0 flex items-center justify-center opacity-[0.05] pointer-events-none grayscale">
+        {logoUrl && <img src={logoUrl} alt="watermark" className="w-20 h-20 object-contain" />}
+      </div>
+
+      <div className="relative z-10 flex flex-col h-full">
+        <header className="text-center border-b border-slate-900 pb-0.5 mb-1">
+          <h2 className="text-[10px] font-black text-slate-900 uppercase leading-none tracking-tighter">Maharana Pratap ITI</h2>
+          <p className="text-[5px] font-bold text-slate-500 uppercase">FEE RECEIPT - {payment?.receiptNo || payment?.receipt}</p>
+        </header>
+
+        <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 mt-0.5">
+          <div className="flex flex-col">
+            <span className="text-[4px] font-bold text-slate-400 uppercase">Student Name</span>
+            <span className="text-[7px] font-black text-slate-900 uppercase truncate">{selectedStudent?.name}</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[4px] font-bold text-slate-400 uppercase">Father's Name</span>
+            <span className="text-[6px] font-black text-slate-800 uppercase truncate">{selectedStudent?.fatherName}</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[4px] font-bold text-slate-400 uppercase">Roll No</span>
+            <span className="text-[6px] font-bold text-slate-900">{selectedStudent?.rollNo}</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[4px] font-bold text-slate-400 uppercase">Date</span>
+            <span className="text-[6px] font-bold text-slate-900">{payment?.date}</span>
+          </div>
+        </div>
+
+        <div className="mt-1 flex justify-between items-center border-t border-dashed border-slate-300 pt-1">
+          <div className="flex flex-col">
+            <span className="text-[4px] font-bold text-slate-400 uppercase">Particulars</span>
+            <span className="text-[6px] font-bold text-slate-700 italic">{payment?.particulars || payment?.mode}</span>
+          </div>
+          <div className="bg-slate-900 text-white px-2 py-0.5 rounded-sm">
+            <span className="text-[9px] font-black">₹{payment?.amount.toLocaleString()}</span>
+          </div>
+        </div>
+
+        <footer className="mt-auto flex justify-between items-end">
+          <p className="text-[4px] text-slate-400 italic">MPITI Saharanpur</p>
+          <div className="relative">
+            {stampUrl && (
+              <div className="absolute -top-4 -right-1 w-6 h-6 opacity-40 mix-blend-multiply rotate-[-10deg]">
+                <img src={stampUrl} alt="stamp" className="w-full h-full object-contain" />
+              </div>
+            )}
+            <div className="w-12 h-[0.5px] bg-slate-900 mb-0.5"></div>
+            <p className="text-[5px] font-black text-slate-900 text-center uppercase">Auth. Sign</p>
+          </div>
+        </footer>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-muted/30 flex">
       <AdminSidebar />
@@ -314,73 +372,23 @@ export default function AdminFeesPage() {
         </Dialog>
       </main>
 
-      {/* Tiny Receipt Dialog - 7cm x 3.5cm */}
+      {/* Tiny Receipt Dialog - 3 slips stacked */}
       <Dialog open={isReceiptOpen} onOpenChange={setIsReceiptOpen}>
-        <DialogContent className="max-w-[400px] p-0 border-none bg-transparent shadow-none">
+        <DialogContent className="max-w-[450px] p-0 border-none bg-transparent shadow-none">
           <div className="bg-white p-6 rounded-xl shadow-2xl print:shadow-none print:p-0 flex flex-col items-center">
              <div className="flex justify-between items-center w-full mb-4 print:hidden">
-               <DialogTitle className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Tiny Slip Preview (7x3.5cm)</DialogTitle>
+               <DialogTitle className="text-xs font-bold uppercase tracking-widest text-muted-foreground">3-Slip A4 Preview (Upper Side)</DialogTitle>
                <div className="flex gap-2">
                  <Button onClick={handlePrint} size="sm" className="gap-2 bg-primary h-8"><Printer className="w-3 h-3"/> Print</Button>
                  <Button onClick={() => setIsReceiptOpen(false)} variant="ghost" size="icon" className="h-8 w-8"><X className="w-4 h-4"/></Button>
                </div>
              </div>
              
-             {/* Printable Area - 7cm x 3.5cm */}
-             <div id="receipt-printable" className="bg-white border-2 border-slate-900 p-2 w-[7cm] h-[3.5cm] overflow-hidden flex flex-col relative print:border-2 print:m-0">
-                {/* LOGO ONLY AS WATERMARK */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-[0.05] pointer-events-none grayscale">
-                   {logoUrl && <img src={logoUrl} alt="watermark" className="w-20 h-20 object-contain" />}
-                </div>
-
-                <div className="relative z-10 flex flex-col h-full">
-                  <header className="text-center border-b border-slate-900 pb-0.5 mb-1">
-                    <h2 className="text-[10px] font-black text-slate-900 uppercase leading-none tracking-tighter">Maharana Pratap ITI</h2>
-                    <p className="text-[5px] font-bold text-slate-500 uppercase">FEE RECEIPT - {selectedReceipt?.receiptNo || selectedReceipt?.receipt}</p>
-                  </header>
-
-                  <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 mt-0.5">
-                    <div className="flex flex-col">
-                      <span className="text-[4px] font-bold text-slate-400 uppercase">Student Name</span>
-                      <span className="text-[7px] font-black text-slate-900 uppercase truncate">{selectedStudent?.name}</span>
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-[4px] font-bold text-slate-400 uppercase">Father's Name</span>
-                      <span className="text-[6px] font-black text-slate-800 uppercase truncate">{selectedStudent?.fatherName}</span>
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-[4px] font-bold text-slate-400 uppercase">Roll No</span>
-                      <span className="text-[6px] font-bold text-slate-900">{selectedStudent?.rollNo}</span>
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-[4px] font-bold text-slate-400 uppercase">Date</span>
-                      <span className="text-[6px] font-bold text-slate-900">{selectedReceipt?.date}</span>
-                    </div>
-                  </div>
-
-                  <div className="mt-1 flex justify-between items-center border-t border-dashed border-slate-300 pt-1">
-                    <div className="flex flex-col">
-                       <span className="text-[4px] font-bold text-slate-400 uppercase">Particulars</span>
-                       <span className="text-[6px] font-bold text-slate-700 italic">{selectedReceipt?.particulars || selectedReceipt?.mode}</span>
-                    </div>
-                    <div className="bg-slate-900 text-white px-2 py-0.5 rounded-sm">
-                       <span className="text-[9px] font-black">₹{selectedReceipt?.amount.toLocaleString()}</span>
-                    </div>
-                  </div>
-
-                  <footer className="mt-auto flex justify-between items-end">
-                     <p className="text-[4px] text-slate-400 italic">MPITI Saharanpur</p>
-                     <div className="relative">
-                        {stampUrl && (
-                           <div className="absolute -top-4 -right-1 w-6 h-6 opacity-40 mix-blend-multiply rotate-[-10deg]">
-                              <img src={stampUrl} alt="stamp" className="w-full h-full object-contain" />
-                           </div>
-                        )}
-                        <div className="w-12 h-[0.5px] bg-slate-900 mb-0.5"></div>
-                        <p className="text-[5px] font-black text-slate-900 text-center uppercase">Auth. Sign</p>
-                     </div>
-                  </footer>
-                </div>
+             {/* Printable Area - 3 stacked slips */}
+             <div id="receipts-wrapper" className="bg-white p-0 flex flex-col items-center gap-2 print:m-0 print:p-0">
+                <ReceiptCard payment={selectedReceipt} />
+                <ReceiptCard payment={selectedReceipt} />
+                <ReceiptCard payment={selectedReceipt} />
              </div>
           </div>
         </DialogContent>
@@ -391,25 +399,32 @@ export default function AdminFeesPage() {
           body * {
             visibility: hidden;
           }
-          #receipt-printable, #receipt-printable * {
+          #receipts-wrapper, #receipts-wrapper * {
             visibility: visible;
           }
-          #receipt-printable {
+          #receipts-wrapper {
             position: absolute;
-            left: 0;
+            left: 50%;
             top: 0;
-            display: block !important;
+            transform: translateX(-50%);
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 2mm !important;
+            width: 7cm !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+          }
+          .receipt-slip {
             width: 7cm !important;
             height: 3.5cm !important;
             border: 1px solid black !important;
-            padding: 2mm !important;
             margin: 0 !important;
-            box-shadow: none !important;
             page-break-inside: avoid;
           }
           @page {
             size: A4;
-            margin: 0;
+            margin: 5mm;
           }
         }
       `}</style>

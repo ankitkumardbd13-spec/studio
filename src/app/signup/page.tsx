@@ -10,7 +10,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { UserPlus, Upload, Calendar } from 'lucide-react';
+import { UserPlus, Upload, Calendar, Info } from 'lucide-react';
+import Link from 'next/link';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -23,8 +24,8 @@ export default function SignupPage() {
     // Simulate API call
     setTimeout(() => {
       toast({
-        title: "Registration Submitted!",
-        description: "Your registration is under review. Admin will verify your details within 24-48 hours.",
+        title: "Portal Registration Submitted!",
+        description: "Admin will verify your admission status and activate your portal access.",
       });
       setIsSubmitting(false);
       router.push('/login');
@@ -36,6 +37,13 @@ export default function SignupPage() {
       <Navbar />
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto">
+          <div className="mb-6 p-4 bg-primary/10 border-l-4 border-primary rounded-r-lg flex gap-4">
+             <Info className="w-6 h-6 text-primary flex-shrink-0" />
+             <p className="text-sm">
+               <strong>Important:</strong> This form is only for students <strong>already admitted</strong> to Maharana Pratap ITI. If you are a new applicant, please fill the <Link href="/admission" className="text-secondary underline font-bold">Admission Inquiry Form</Link> instead.
+             </p>
+          </div>
+
           <Card className="border-none shadow-2xl">
             <CardHeader className="bg-primary text-primary-foreground rounded-t-lg">
               <div className="flex items-center gap-4">
@@ -43,8 +51,8 @@ export default function SignupPage() {
                   <UserPlus className="w-8 h-8" />
                 </div>
                 <div>
-                  <CardTitle className="font-headline text-3xl">Student Registration</CardTitle>
-                  <CardDescription className="text-primary-foreground/80">Complete the form for admin verification and portal access.</CardDescription>
+                  <CardTitle className="font-headline text-3xl">Portal Registration</CardTitle>
+                  <CardDescription className="text-primary-foreground/80">Register your student account for portal access (Assignments, ID Card, Results).</CardDescription>
                 </div>
               </div>
             </CardHeader>
@@ -56,15 +64,15 @@ export default function SignupPage() {
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <Label htmlFor="fullName">Student Full Name</Label>
-                      <Input id="fullName" placeholder="As per 10th Certificate" required />
+                      <Input id="fullName" placeholder="As per Admission Record" required />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="fatherName">Father's Name</Label>
-                      <Input id="fatherName" placeholder="As per 10th Certificate" required />
+                      <Input id="fatherName" placeholder="As per Admission Record" required />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="motherName">Mother's Name</Label>
-                      <Input id="motherName" placeholder="As per 10th Certificate" required />
+                      <Input id="motherName" placeholder="As per Admission Record" required />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="dob">Date of Birth</Label>
@@ -151,22 +159,6 @@ export default function SignupPage() {
                       <Input id="district" placeholder="Saharanpur" required />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="tehsil">Tehsil</Label>
-                      <Input id="tehsil" placeholder="Tehsil Name" required />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="postOffice">Post Office</Label>
-                      <Input id="postOffice" placeholder="Post Office Name" required />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="policeStation">Police Station</Label>
-                      <Input id="policeStation" placeholder="Police Station Name" required />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="state">State</Label>
-                      <Input id="state" value="Uttar Pradesh" readOnly />
-                    </div>
-                    <div className="space-y-2">
                       <Label htmlFor="pincode">Pincode</Label>
                       <Input id="pincode" placeholder="247XXX" required />
                     </div>
@@ -174,11 +166,11 @@ export default function SignupPage() {
                 </div>
 
                 <div className="pt-6">
-                  <Button type="submit" disabled={isSubmitting} className="w-full h-12 text-lg bg-secondary hover:bg-secondary/90 text-white">
-                    {isSubmitting ? "Submitting Registration..." : "Complete Sign Up"}
+                  <Button type="submit" disabled={isSubmitting} className="w-full h-12 text-lg bg-secondary hover:bg-secondary/90 text-white font-bold">
+                    {isSubmitting ? "Submitting Registration..." : "Complete Portal Registration"}
                   </Button>
                   <p className="text-center mt-4 text-sm text-muted-foreground">
-                    Already have an account? <Link href="/login" className="text-primary font-bold hover:underline">Log in here</Link>
+                    Already registered? <Link href="/login" className="text-primary font-bold hover:underline">Log in here</Link>
                   </p>
                 </div>
               </form>

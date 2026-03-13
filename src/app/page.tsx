@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { MapPin, Phone, Mail, Clock, GraduationCap, Users, BookOpen, LayoutDashboard, UserPlus } from 'lucide-react';
+import { MapPin, Phone, Mail, GraduationCap, Users, BookOpen, LayoutDashboard, UserPlus, ClipboardList } from 'lucide-react';
 import { Navbar } from '@/components/layout/Navbar';
 
 export default function Home() {
@@ -48,12 +48,12 @@ export default function Home() {
           <p className="text-xl md:text-2xl text-white max-w-2xl drop-shadow-md">
             Saharanpur, Uttar Pradesh - Shaping the Future of Skilled Professionals
           </p>
-          <div className="mt-8 flex gap-4">
-            <Button size="lg" asChild className="bg-secondary hover:bg-secondary/90 text-white border-none">
-              <Link href="/signup">Admission 2024 Open</Link>
+          <div className="mt-8 flex flex-wrap justify-center gap-4">
+            <Button size="lg" asChild className="bg-secondary hover:bg-secondary/90 text-white border-none gap-2">
+              <Link href="/admission"><ClipboardList className="w-5 h-5"/> New Admission 2024</Link>
             </Button>
-            <Button size="lg" variant="outline" asChild className="bg-white/10 text-white border-white hover:bg-white/20">
-              <Link href="/login">Student Portal</Link>
+            <Button size="lg" variant="outline" asChild className="bg-white/10 text-white border-white hover:bg-white/20 gap-2">
+              <Link href="/login"><GraduationCap className="w-5 h-5"/> Student Portal</Link>
             </Button>
           </div>
         </div>
@@ -90,11 +90,8 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="bg-muted rounded-2xl overflow-hidden aspect-video relative">
-          <div className="absolute inset-0 flex items-center justify-center bg-primary/10">
-             <MapPin className="w-20 h-20 text-primary opacity-20" />
-          </div>
-          <iframe 
+        <div className="bg-muted rounded-2xl overflow-hidden aspect-video relative border-4 border-primary/10 shadow-xl">
+           <iframe 
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d110502.60385923485!2d77.46609404285223!3d29.9619175463056!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ee99222409549%3A0xe16541f92e3a73c0!2sSaharanpur%2C%20Uttar%20Pradesh!5e0!3m2!1sen!2sin!4v1716543123456!5m2!1sen!2sin" 
             width="100%" height="100%" style={{border:0}} loading="lazy"></iframe>
         </div>
@@ -142,7 +139,7 @@ export default function Home() {
         <h2 className="font-headline text-4xl text-center text-primary mb-12">Offered Trades</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {courses.map((course, idx) => (
-            <Card key={idx} className="hover:shadow-lg transition-shadow">
+            <Card key={idx} className="hover:shadow-lg transition-shadow border-none shadow-sm">
               <CardHeader>
                 <div className="p-3 bg-secondary/10 rounded-lg w-fit mb-2 text-secondary">
                   {course.icon}
@@ -158,39 +155,49 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-20 bg-muted">
+      {/* CTA Section */}
+      <section className="py-20 bg-primary text-white text-center">
         <div className="container mx-auto px-4">
-          <h2 className="font-headline text-4xl text-center text-primary mb-12">What Our Students Say</h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            {testimonials.map((t, idx) => (
-              <div key={idx} className="bg-white p-8 rounded-2xl shadow-md flex gap-6">
-                <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 border-2 border-primary">
-                  {t.photo && (
-                     <Image src={PlaceHolderImages.find(img => img.id === t.photo)?.imageUrl || ''} alt={t.name} width={64} height={64} className="object-cover" />
-                  )}
-                </div>
-                <div>
-                  <p className="text-lg italic mb-4">"{t.feedback}"</p>
-                  <p className="font-bold text-primary">{t.name}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+           <h2 className="font-headline text-4xl mb-6">Take the first step towards a bright career</h2>
+           <p className="text-xl opacity-90 mb-10 max-w-2xl mx-auto">Join thousands of successful alumni who have built their future with our technical expertise.</p>
+           <div className="flex flex-wrap justify-center gap-4">
+             <Button size="lg" variant="secondary" asChild className="font-bold px-10">
+               <Link href="/admission">Apply for Admission</Link>
+             </Button>
+             <Button size="lg" variant="outline" asChild className="border-white text-white hover:bg-white/10 font-bold px-10">
+               <Link href="/contact">Inquiry Now</Link>
+             </Button>
+           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-primary text-primary-foreground py-12">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="font-headline text-3xl mb-4">Maharana Pratap ITI Saharanpur</h2>
-          <p className="opacity-80 mb-8">Empowering Skills, Enabling Futures.</p>
-          <div className="flex justify-center gap-6 mb-8">
-             <Link href="/" className="hover:underline">Home</Link>
-             <Link href="/contact" className="hover:underline">Contact</Link>
-             <Link href="/signup" className="hover:underline">Admissions</Link>
+      <footer className="bg-slate-900 text-white py-12">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-3 gap-12 mb-12">
+            <div>
+              <h2 className="font-headline text-2xl mb-4 text-primary">Maharana Pratap ITI</h2>
+              <p className="opacity-70 text-sm">Saharanpur's premier technical institute providing industry-standard training for the youth of Uttar Pradesh.</p>
+            </div>
+            <div>
+              <h3 className="font-bold mb-4 uppercase text-xs tracking-widest text-secondary">Quick Links</h3>
+              <ul className="space-y-2 text-sm opacity-80">
+                <li><Link href="/" className="hover:text-primary">Home</Link></li>
+                <li><Link href="/admission" className="hover:text-primary">New Admission</Link></li>
+                <li><Link href="/signup" className="hover:text-primary">Student Registration</Link></li>
+                <li><Link href="/login" className="hover:text-primary">Portal Login</Link></li>
+              </ul>
+            </div>
+            <div>
+               <h3 className="font-bold mb-4 uppercase text-xs tracking-widest text-secondary">Connect</h3>
+               <p className="text-sm opacity-80 mb-2">Near Delhi Road, Saharanpur, UP</p>
+               <p className="text-sm opacity-80">+91 98765 43210</p>
+               <p className="text-sm opacity-80">info@mpitisre.edu.in</p>
+            </div>
           </div>
-          <p className="text-sm opacity-60">© 2024 MPITI Saharanpur Connect. All Rights Reserved.</p>
+          <div className="pt-8 border-t border-white/10 text-center text-xs opacity-50">
+            © 2024 MPITI Saharanpur Connect. All Rights Reserved.
+          </div>
         </div>
       </footer>
     </main>

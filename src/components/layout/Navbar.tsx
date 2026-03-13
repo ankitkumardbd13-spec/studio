@@ -10,9 +10,8 @@ import {
   BookOpen, 
   Phone, 
   FileText, 
-  ClipboardList,
-  GraduationCap,
-  UserPlus
+  UserPlus,
+  GraduationCap
 } from 'lucide-react';
 import {
   Sheet,
@@ -34,7 +33,7 @@ export function Navbar() {
 
         <div className="hidden lg:flex items-center gap-8">
           <Link href="/" className="text-sm font-medium hover:text-primary transition-colors">Home</Link>
-          <Link href="/signup" className="text-sm font-medium hover:text-primary transition-colors">Admission Form</Link>
+          <Link href="/admission" className="text-sm font-medium hover:text-primary transition-colors">Admission Form</Link>
           <Link href="/contact" className="text-sm font-medium hover:text-primary transition-colors">Contact</Link>
           <Separator orientation="vertical" className="h-6" />
           <div className="flex items-center gap-2">
@@ -45,7 +44,7 @@ export function Navbar() {
             </Button>
             <Button asChild size="sm" className="bg-secondary hover:bg-secondary/90 text-white">
               <Link href="/signup" className="gap-2">
-                <UserPlus className="w-4 h-4" /> Registration
+                <UserPlus className="w-4 h-4" /> Portal Registration
               </Link>
             </Button>
           </div>
@@ -73,9 +72,9 @@ export function Navbar() {
                       </Link>
                     </Button>
                     <Button asChild variant="outline" className="justify-start gap-3">
-                      <Link href="/login?type=admin">
-                        <LogIn className="w-4 h-4" />
-                        Admin Access
+                      <Link href="/signup">
+                        <UserPlus className="w-4 h-4" />
+                        Portal Registration
                       </Link>
                     </Button>
                   </div>
@@ -93,7 +92,7 @@ export function Navbar() {
                       </Link>
                     </Button>
                     <Button asChild variant="ghost" className="justify-start gap-3 w-full">
-                      <Link href="/signup">
+                      <Link href="/admission">
                         <FileText className="w-4 h-4" />
                         Admission Form
                       </Link>
@@ -105,12 +104,6 @@ export function Navbar() {
                       </Link>
                     </Button>
                   </div>
-                </div>
-
-                <div className="pt-10">
-                  <Button asChild className="w-full bg-secondary hover:bg-secondary/90 text-white">
-                    <Link href="/signup">New Student Signup</Link>
-                  </Button>
                 </div>
               </div>
             </SheetContent>

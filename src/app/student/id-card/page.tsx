@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -11,15 +12,31 @@ import Link from 'next/link';
 
 export default function IDCardPage() {
   const [siteData, setSiteData] = useState<any>(null);
+  const [profile, setProfile] = useState<any>({
+    name: 'RAHUL KUMAR',
+    father: 'Shri Suresh Kumar',
+    trade: 'Electrician',
+    session: '2023 - 2025',
+    year: 'First Year',
+    rollNo: '2023/MP/ELEC/042',
+    dob: '15-05-2002',
+    photo: PlaceHolderImages.find(img => img.id === 'student-1')?.imageUrl
+  });
 
   useEffect(() => {
-    const saved = localStorage.getItem('mpiti_site_settings');
-    if (saved) {
-      setSiteData(JSON.parse(saved));
+    // Load dynamic site settings
+    const savedSite = localStorage.getItem('mpiti_site_settings');
+    if (savedSite) {
+      setSiteData(JSON.parse(savedSite));
+    }
+
+    // Load student's custom profile data
+    const savedProfile = localStorage.getItem('mpiti_student_profile');
+    if (savedProfile) {
+      setProfile(prev => ({ ...prev, ...JSON.parse(savedProfile) }));
     }
   }, []);
 
-  const studentPhoto = PlaceHolderImages.find(img => img.id === 'student-1')?.imageUrl;
   const itiStamp = siteData?.stamp || PlaceHolderImages.find(img => img.id === 'iti-stamp')?.imageUrl;
   const logoUrl = siteData?.logo || PlaceHolderImages.find(img => img.id === 'iti-logo')?.imageUrl;
 
@@ -65,9 +82,9 @@ export default function IDCardPage() {
               <div className="my-8">
                 {/* Circular Student Photo */}
                 <div className="w-36 h-36 border-4 border-white/50 rounded-full overflow-hidden bg-white shadow-2xl mx-auto flex items-center justify-center">
-                  {studentPhoto && (
+                  {profile.photo && (
                     <img 
-                      src={studentPhoto} 
+                      src={profile.photo} 
                       alt="Student" 
                       className="w-full h-full object-cover"
                     />
@@ -93,10 +110,10 @@ export default function IDCardPage() {
               <div className="relative z-10">
                 <header className="flex justify-between items-start mb-10">
                   <div>
-                    <h1 className="text-4xl font-headline font-black text-slate-900 mb-1">RAHUL KUMAR</h1>
+                    <h1 className="text-4xl font-headline font-black text-slate-900 mb-1 uppercase">{profile.name}</h1>
                     <div className="flex items-center gap-2">
                       <span className="text-[11px] bg-secondary/10 text-secondary px-3 py-1 rounded-md font-bold uppercase tracking-wider">
-                        Roll: 2023/MP/ELEC/042
+                        Roll: {profile.rollNo}
                       </span>
                     </div>
                   </div>
@@ -106,19 +123,19 @@ export default function IDCardPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                    <div className="space-y-1">
                      <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">Father's Name</p>
-                     <p className="font-bold text-slate-800 text-base">Shri Suresh Kumar</p>
+                     <p className="font-bold text-slate-800 text-base">{profile.father}</p>
                    </div>
                    <div className="space-y-1">
                      <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">Date of Birth</p>
-                     <p className="font-bold text-slate-800 text-base">15 May 2002</p>
+                     <p className="font-bold text-slate-800 text-base">{profile.dob}</p>
                    </div>
                    <div className="space-y-1">
                      <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">Trade</p>
-                     <p className="font-bold text-primary text-base">Electrician</p>
+                     <p className="font-bold text-primary text-base">{profile.trade}</p>
                    </div>
                    <div className="space-y-1">
                      <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">Academic Year</p>
-                     <p className="font-bold text-slate-800 text-base">First Year</p>
+                     <p className="font-bold text-slate-800 text-base">{profile.year}</p>
                    </div>
                 </div>
               </div>
@@ -127,7 +144,7 @@ export default function IDCardPage() {
               <div className="relative z-10 pt-8 mt-10 border-t border-slate-100 flex justify-between items-end">
                 <div className="space-y-1">
                   <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">Valid Session</p>
-                  <p className="font-black text-3xl text-secondary">2023 - 2025</p>
+                  <p className="font-black text-3xl text-secondary">{profile.session}</p>
                 </div>
                 
                 <div className="relative flex flex-col items-center">

@@ -9,23 +9,73 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { ClipboardList, Send, GraduationCap, MapPin, Phone } from 'lucide-react';
+import { ClipboardList, Send, GraduationCap, MapPin, Phone, Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { useFirestore } from '@/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError } from '@/firebase/errors';
 
 export default function AdmissionPage() {
   const { toast } = useToast();
+  const db = useFirestore();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const [formData, setFormData] = useState({
+    name: '',
+    fatherName: '',
+    mobile: '',
+    whatsapp: '',
+    fatherMobile: '',
+    trade: '',
+    state: '',
+    tehsil: '',
+    postOffice: '',
+    address: ''
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!db) return;
+    
     setIsSubmitting(true);
-    setTimeout(() => {
+    
+    const inquiriesRef = collection(db, 'inquiries');
+    
+    addDoc(inquiriesRef, {
+      ...formData,
+      status: 'new',
+      timestamp: serverTimestamp()
+    })
+    .then(() => {
       toast({
         title: "Inquiry Submitted!",
         description: "Our admission counselor will contact you on your WhatsApp/Mobile shortly.",
       });
+      setFormData({
+        name: '',
+        fatherName: '',
+        mobile: '',
+        whatsapp: '',
+        fatherMobile: '',
+        trade: '',
+        state: '',
+        tehsil: '',
+        postOffice: '',
+        address: ''
+      });
+    })
+    .catch(async (error) => {
+      const permissionError = new FirestorePermissionError({
+        path: 'inquiries',
+        operation: 'create',
+        requestResourceData: formData
+      });
+      errorEmitter.emit('permission-error', permissionError);
+    })
+    .finally(() => {
       setIsSubmitting(false);
-    }, 1500);
+    });
   };
 
   return (
@@ -47,72 +97,70 @@ export default function AdmissionPage() {
             </CardHeader>
             <CardContent className="p-8">
               <form onSubmit={handleSubmit} className="space-y-8">
-                {/* Personal & Contact */}
                 <div className="space-y-6">
                   <h3 className="text-lg font-bold border-b pb-2 text-primary flex items-center gap-2"><Phone className="w-5 h-5"/> Personal & Contact Details</h3>
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <Label htmlFor="candidateName">Candidate's Full Name</Label>
-                      <Input id="candidateName" placeholder="Enter full name" required />
+                      <Input id="candidateName" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} placeholder="Enter full name" required />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="parentName">Father's Name</Label>
-                      <Input id="parentName" placeholder="Enter father's name" required />
+                      <Input id="parentName" value={formData.fatherName} onChange={e => setFormData({...formData, fatherName: e.target.value})} placeholder="Enter father's name" required />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="mobile">Personal Mobile Number</Label>
-                      <Input id="mobile" type="tel" placeholder="+91" required />
+                      <Input id="mobile" type="tel" value={formData.mobile} onChange={e => setFormData({...formData, mobile: e.target.value})} placeholder="+91" required />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="whatsapp">WhatsApp Number</Label>
-                      <Input id="whatsapp" type="tel" placeholder="+91" required />
+                      <Input id="whatsapp" type="tel" value={formData.whatsapp} onChange={e => setFormData({...formData, whatsapp: e.target.value})} placeholder="+91" required />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="fatherMobile">Father's Mobile Number</Label>
-                      <Input id="fatherMobile" type="tel" placeholder="+91" required />
+                      <Input id="fatherMobile" type="tel" value={formData.fatherMobile} onChange={e => setFormData({...formData, fatherMobile: e.target.value})} placeholder="+91" required />
                     </div>
                     <div className="space-y-2">
                       <Label>Trade Interested In</Label>
-                      <Select required>
+                      <Select value={formData.trade} onValueChange={v => setFormData({...formData, trade: v})} required>
                         <SelectTrigger>
                           <SelectValue placeholder="Select Trade" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="electrician">Electrician (2 Years)</SelectItem>
-                          <SelectItem value="fitter">Fitter (2 Years)</SelectItem>
-                          <SelectItem value="hsi">HSI (Health Sanitary Inspector - 1 Year)</SelectItem>
+                          <SelectItem value="Electrician">Electrician (2 Years)</SelectItem>
+                          <SelectItem value="Fitter">Fitter (2 Years)</SelectItem>
+                          <SelectItem value="HSI">HSI (Health Sanitary Inspector - 1 Year)</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                   </div>
                 </div>
 
-                {/* Address Details */}
                 <div className="space-y-6">
                   <h3 className="text-lg font-bold border-b pb-2 text-primary flex items-center gap-2"><MapPin className="w-5 h-5"/> Address Information</h3>
                   <div className="grid md:grid-cols-3 gap-6">
                     <div className="space-y-2">
                       <Label htmlFor="state">State Name</Label>
-                      <Input id="state" placeholder="e.g. Uttar Pradesh" required />
+                      <Input id="state" value={formData.state} onChange={e => setFormData({...formData, state: e.target.value})} placeholder="e.g. Uttar Pradesh" required />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="tehsil">Tehsil Name</Label>
-                      <Input id="tehsil" placeholder="Enter Tehsil" required />
+                      <Input id="tehsil" value={formData.tehsil} onChange={e => setFormData({...formData, tehsil: e.target.value})} placeholder="Enter Tehsil" required />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="postOffice">Post Office Name</Label>
-                      <Input id="postOffice" placeholder="Enter Post Office" required />
+                      <Input id="postOffice" value={formData.postOffice} onChange={e => setFormData({...formData, postOffice: e.target.value})} placeholder="Enter Post Office" required />
                     </div>
                     <div className="space-y-2 md:col-span-3">
                       <Label htmlFor="city">City / Village / Full Address</Label>
-                      <Input id="city" placeholder="Complete address detail" required />
+                      <Input id="city" value={formData.address} onChange={e => setFormData({...formData, address: e.target.value})} placeholder="Complete address detail" required />
                     </div>
                   </div>
                 </div>
 
                 <div className="pt-4">
                   <Button type="submit" disabled={isSubmitting} className="w-full h-12 text-lg bg-primary hover:bg-primary/90 text-white gap-2">
-                    {isSubmitting ? "Submitting..." : <><Send className="w-5 h-5" /> Submit Admission Inquiry</>}
+                    {isSubmitting ? <Loader2 className="animate-spin w-5 h-5" /> : <><Send className="w-5 h-5" /> Submit Admission Inquiry</>}
                   </Button>
                 </div>
                 

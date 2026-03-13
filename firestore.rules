@@ -1,3 +1,4 @@
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -9,7 +10,14 @@ service cloud.firestore {
     // Student access to their own profile
     match /students/{studentId} {
       allow read: if request.auth != null && request.auth.uid == studentId;
-      allow write: if false; // Only admin can approve/edit core profile
+      allow create: if true; // Allow portal registration
+      allow update: if request.auth != null && request.auth.uid == studentId;
+    }
+
+    // Public inquiries
+    match /inquiries/{inquiryId} {
+      allow create: if true;
+      allow read, write: if request.auth != null && request.auth.token.admin == true;
     }
 
     // Access to assignments and results

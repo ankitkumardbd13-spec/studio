@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -93,7 +92,7 @@ export default function Home() {
             {data.heroSub}
           </p>
           <div className="mt-12 flex flex-wrap justify-center gap-6">
-            <Button size="lg" asChild className="bg-secondary hover:bg-secondary/90 text-white border-none h-16 px-10 text-xl font-black gap-3 shadow-[0_10px_40px_-10px_rgba(193,69,38,0.8)] transition-transform hover:scale-105 active:scale-95">
+            <Button size="lg" asChild className="bg-secondary hover:bg-secondary/90 text-white border-none h-16 px-10 text-xl font-black gap-3 shadow-2xl transition-transform hover:scale-105 active:scale-95">
               <Link href="/admission"><ClipboardList className="w-6 h-6"/> New Admission Inquiry</Link>
             </Button>
             <Button size="lg" variant="outline" asChild className="bg-white text-primary border-white hover:bg-white/90 h-16 px-10 text-xl font-bold gap-3 transition-transform hover:scale-105 active:scale-95">
@@ -185,34 +184,12 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-24 bg-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="font-headline text-5xl text-primary font-bold mb-16">Approved ITI Trades</h2>
-          <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto text-left">
-            {courses.map((course, idx) => (
-              <Card key={idx} className="hover:shadow-2xl transition-all border-none shadow-lg bg-slate-50/50 hover:-translate-y-2 duration-300">
-                <CardHeader>
-                  <div className="p-5 bg-secondary/10 rounded-2xl w-fit mb-4 text-secondary">
-                    {course.icon}
-                  </div>
-                  <CardTitle className="text-2xl font-bold">{course.name}</CardTitle>
-                  <CardDescription className="text-lg font-bold text-primary">Duration: {course.duration}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground leading-relaxed">Technical training focused on industrial proficiency and safety according to the latest NCVT DGT guidelines.</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-24 bg-primary text-white text-center">
+      <section className="py-24 bg-white text-center">
         <div className="container mx-auto px-4">
-           <h2 className="font-headline text-5xl font-bold mb-8">Empowering Youth with Skills</h2>
-           <p className="text-2xl opacity-90 mb-12 max-w-3xl mx-auto">Join Maharana Pratap ITI and prepare for a career in India's growing industrial sector.</p>
+           <h2 className="font-headline text-5xl font-bold text-primary mb-8">Empowering Youth with Skills</h2>
+           <p className="text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto">Join Maharana Pratap ITI and prepare for a career in India's growing industrial sector.</p>
            <div className="flex flex-wrap justify-center gap-6">
-             <Button size="lg" asChild className="bg-secondary hover:bg-secondary/90 text-white font-black px-12 h-16 text-xl shadow-[0_10px_40px_-10px_rgba(193,69,38,0.8)] transition-transform hover:scale-105 active:scale-95">
+             <Button size="lg" asChild className="bg-secondary hover:bg-secondary/90 text-white font-black px-12 h-16 text-xl shadow-2xl transition-transform hover:scale-105 active:scale-95">
                <Link href="/admission">Apply for Admission</Link>
              </Button>
              <Button size="lg" asChild className="bg-secondary hover:bg-secondary/90 text-white font-black px-12 h-16 text-xl shadow-2xl transition-transform hover:scale-105 active:scale-95">

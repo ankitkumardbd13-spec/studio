@@ -4,8 +4,9 @@ import { Toaster } from "@/components/ui/toaster"
 import { FirebaseClientProvider } from "@/firebase";
 
 export const metadata: Metadata = {
-  title: 'MPITI Saharanpur Connect',
-  description: 'Maharana Pratap ITI Saharanpur, Uttar Pradesh - Official Portal',
+  title: 'Maharana Pratap ITI Rankhandi | Official Portal',
+  description: 'Maharana Pratap ITI, Village Post Rankhandi, Deoband, Saharanpur, UP - Established 2015. Leading technical education center for Electrician, Fitter, and HSI trades.',
+  keywords: 'ITI Saharanpur, Maharana Pratap ITI, Rankhandi ITI, ITI Admission 2024, Electrician ITI, Fitter ITI, HSI ITI',
 };
 
 export default function RootLayout({

@@ -24,6 +24,8 @@ interface Assignment {
   id: string;
   title: string;
   subject: string;
+  trade: string;
+  year: number;
   durationMinutes: number;
   questions: Question[];
 }
@@ -65,32 +67,52 @@ export default function AssignmentTestPage() {
     setIsSubmitting(true);
 
     try {
-      // Calculate Score
-      let score = 0;
+      // Get Student Info
+      const savedProfile = localStorage.getItem('mpiti_student_profile');
+      const profile = savedProfile ? JSON.parse(savedProfile) : { name: 'Unknown Student', father: 'Unknown', rollNo: 'N/A', trade: assignment.trade, year: assignment.year };
+
+      // Calculate Metrics
+      const totalQuestions = assignment.questions.length;
+      const attemptedQuestions = Object.keys(answers).length;
+      let rightQuestions = 0;
+
       assignment.questions.forEach(q => {
         if (answers[q.id] === q.correctAnswer) {
-          score++;
+          rightQuestions++;
         }
       });
+
+      const percentage = (rightQuestions / totalQuestions) * 100;
+      const status = percentage >= 40 ? 'Pass' : 'Fail';
 
       const resultRecord = {
         id: Date.now().toString(),
         assignmentId: assignment.id,
         title: assignment.title,
         subject: assignment.subject,
-        score,
-        total: assignment.questions.length,
-        percentage: (score / assignment.questions.length) * 100,
+        studentName: profile.name,
+        fatherName: profile.father,
+        rollNo: profile.rollNo,
+        trade: profile.trade,
+        year: profile.year,
+        totalQuestions,
+        attemptedQuestions,
+        rightQuestions,
+        score: rightQuestions, // Obtained Marks
+        totalMarks: totalQuestions, // Total Marks (1 per question)
+        percentage,
+        status,
         date: new Date().toISOString()
       };
 
+      // Save locally
       const results = JSON.parse(localStorage.getItem('mpiti_results') || '[]');
       localStorage.setItem('mpiti_results', JSON.stringify([resultRecord, ...results]));
       
       setIsSubmitted(true);
       toast({
         title: isAuto ? "Time Up! Auto-Submitted" : "Test Complete",
-        description: `Your score: ${score}/${assignment.questions.length}. Results saved.`,
+        description: `Score: ${rightQuestions}/${totalQuestions} (${status}). Redirecting to results...`,
       });
       
       setTimeout(() => {
@@ -138,7 +160,7 @@ export default function AssignmentTestPage() {
         <Card className="max-w-md w-full text-center p-8 border-none shadow-2xl">
           <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold mb-2">Test Submitted!</h2>
-          <p className="text-muted-foreground mb-6">Great job! You can view your detailed marksheet in the Exam Results section.</p>
+          <p className="text-muted-foreground mb-6">Your record has been updated in the Student Portal and Admin Panel.</p>
           <Button onClick={() => router.push('/student/results')}>View My Results</Button>
         </Card>
       </div>

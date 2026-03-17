@@ -2,12 +2,20 @@
 
 Official management and student portal for Maharana Pratap ITI, Rankhandi, Saharanpur.
 
-## 🚀 How to fix the "Welcome" page error
-If you see the "Firebase Hosting Setup Complete" page instead of your app, follow these steps:
+## 🚀 Deployment & Automation
+The app is configured with **GitHub Actions** for automatic deployment. 
 
-1. **Delete the Placeholder**: Go to your `public/` folder and delete the file named `index.html`. This file is a Firebase default that overrides your actual app.
-2. **Build the Project**: Run `npm run build` in your terminal. This generates the static site in the `out/` folder.
-3. **Deploy Again**: Run `firebase deploy`.
+### To set up Automatic GitHub Updates:
+1. **GitHub Secrets**: Go to your GitHub Repository Settings > Secrets and variables > Actions.
+2. **Add Secret**: Add a new secret named `FIREBASE_SERVICE_ACCOUNT_MPITI_PORTAL`.
+3. **Value**: Paste your Firebase Service Account JSON (found in Firebase Console > Project Settings > Service Accounts).
+4. **Push to Main**: Every time you push to the `main` branch, the site will automatically build and go live.
+
+## 🛠 Fix "Welcome" Page Error
+If you see the default Firebase page instead of your app:
+1. **Delete**: `public/index.html` (this is a placeholder created by Firebase).
+2. **Build**: `npm run build` (generates the `out` folder).
+3. **Deploy**: `firebase deploy`.
 
 ## Project Details
 - **Address**: Village Post Rankhandi, Deoband, Dist Saharanpur, UP, PIN 247554

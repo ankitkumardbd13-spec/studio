@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -6,11 +7,14 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { CreditCard, ArrowLeft, Download, AlertCircle, User, FileText, Printer, Receipt, X } from 'lucide-react';
+import { CreditCard, ArrowLeft, Download, AlertCircle, User, FileText, Printer, Receipt, X, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { useFirestore, useDoc } from '@/firebase';
+import { doc } from 'firebase/firestore';
+import { useMemoFirebase } from '@/firebase/hooks/use-memo-firebase';
 
 interface PaymentHistory {
   id: string;
@@ -23,6 +27,15 @@ interface PaymentHistory {
 
 export default function StudentFeesPage() {
   const { toast } = useToast();
+  const db = useFirestore();
+
+  const configQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return doc(db, 'siteSettings', 'config');
+  }, [db]);
+
+  const { data: siteSettings, loading: configLoading } = useDoc(configQuery);
+
   const [profile, setProfile] = useState<any>({
     name: 'Rahul Kumar',
     father: 'Shri Suresh Kumar',
@@ -44,16 +57,11 @@ export default function StudentFeesPage() {
 
   const [selectedReceipt, setSelectedReceipt] = useState<PaymentHistory | null>(null);
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
-  const [siteSettings, setSiteSettings] = useState<any>(null);
 
   useEffect(() => {
     const savedProfile = localStorage.getItem('mpiti_student_profile');
     if (savedProfile) {
       setProfile(JSON.parse(savedProfile));
-    }
-    const savedSite = localStorage.getItem('mpiti_site_settings');
-    if (savedSite) {
-      setSiteSettings(JSON.parse(savedSite));
     }
   }, []);
 
@@ -136,6 +144,14 @@ export default function StudentFeesPage() {
       </div>
     </div>
   );
+
+  if (configLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Loader2 className="w-10 h-10 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-muted/30">

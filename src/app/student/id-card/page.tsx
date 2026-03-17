@@ -7,11 +7,22 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Navbar } from '@/components/layout/Navbar';
-import { Printer, Download, ArrowLeft, ShieldCheck } from 'lucide-react';
+import { Printer, Download, ArrowLeft, ShieldCheck, Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { useFirestore, useDoc } from '@/firebase';
+import { doc } from 'firebase/firestore';
+import { useMemoFirebase } from '@/firebase/hooks/use-memo-firebase';
 
 export default function IDCardPage() {
-  const [siteData, setSiteData] = useState<any>(null);
+  const db = useFirestore();
+  
+  const configQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return doc(db, 'siteSettings', 'config');
+  }, [db]);
+
+  const { data: siteSettings, loading: configLoading } = useDoc(configQuery);
+
   const [profile, setProfile] = useState<any>({
     name: 'RAHUL KUMAR',
     father: 'Shri Suresh Kumar',
@@ -24,21 +35,23 @@ export default function IDCardPage() {
   });
 
   useEffect(() => {
-    // Load dynamic site settings
-    const savedSite = localStorage.getItem('mpiti_site_settings');
-    if (savedSite) {
-      setSiteData(JSON.parse(savedSite));
-    }
-
-    // Load student's custom profile data
+    // Load student's custom profile data from local session
     const savedProfile = localStorage.getItem('mpiti_student_profile');
     if (savedProfile) {
       setProfile(prev => ({ ...prev, ...JSON.parse(savedProfile) }));
     }
   }, []);
 
-  const itiStamp = siteData?.stamp || PlaceHolderImages.find(img => img.id === 'iti-stamp')?.imageUrl;
-  const logoUrl = siteData?.logo || PlaceHolderImages.find(img => img.id === 'iti-logo')?.imageUrl;
+  const itiStamp = siteSettings?.stamp || PlaceHolderImages.find(img => img.id === 'iti-stamp')?.imageUrl;
+  const logoUrl = siteSettings?.logo || PlaceHolderImages.find(img => img.id === 'iti-logo')?.imageUrl;
+
+  if (configLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Loader2 className="w-10 h-10 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-muted/30">

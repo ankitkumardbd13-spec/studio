@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
@@ -13,26 +13,29 @@ import {
   LogOut,
   FileText,
   CreditCard,
-  Award
+  Award,
+  Loader2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { useFirestore, useDoc } from '@/firebase';
+import { doc } from 'firebase/firestore';
+import { useMemoFirebase } from '@/firebase/hooks/use-memo-firebase';
 
 export function AdminSidebar() {
   const pathname = usePathname();
-  const [siteLogo, setSiteLogo] = useState<string | null>(null);
+  const db = useFirestore();
 
-  useEffect(() => {
-    const saved = localStorage.getItem('mpiti_site_settings');
-    if (saved) {
-      const data = JSON.parse(saved);
-      if (data.logo) setSiteLogo(data.logo);
-    }
-  }, []);
+  const configQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return doc(db, 'siteSettings', 'config');
+  }, [db]);
+
+  const { data: siteSettings, loading } = useDoc(configQuery);
 
   const defaultLogo = PlaceHolderImages.find(img => img.id === 'iti-logo')?.imageUrl;
-  const logoUrl = siteLogo || defaultLogo;
+  const logoUrl = siteSettings?.logo || defaultLogo;
 
   const menuItems = [
     { name: 'Overview', href: '/admin/dashboard', icon: Layout },
@@ -49,12 +52,16 @@ export function AdminSidebar() {
     <aside className="hidden lg:flex flex-col w-72 bg-slate-900 text-white min-h-screen sticky top-0">
       <div className="p-6 border-b border-white/5 flex items-center gap-3">
         <div className="relative w-10 h-10 overflow-hidden rounded-lg bg-white p-1 flex items-center justify-center">
-          {logoUrl && (
-            <img 
-              src={logoUrl} 
-              alt="Logo" 
-              className="w-full h-full object-contain" 
-            />
+          {loading ? (
+            <Loader2 className="w-4 h-4 animate-spin text-primary" />
+          ) : (
+            logoUrl && (
+              <img 
+                src={logoUrl} 
+                alt="Logo" 
+                className="w-full h-full object-contain" 
+              />
+            )
           )}
         </div>
         <div>

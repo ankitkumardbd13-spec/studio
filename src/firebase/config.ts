@@ -2,10 +2,14 @@ import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
 import { getFirestore, Firestore } from "firebase/firestore";
 import { getAuth, Auth } from "firebase/auth";
 
+/**
+ * Replace the placeholders below with your actual Firebase configuration
+ * found in the Firebase Console: Project Settings > General > Your Apps.
+ */
 const firebaseConfig = {
   apiKey: "PLACEHOLDER",
   authDomain: "PLACEHOLDER",
-  projectId: "PLACEHOLDER",
+  projectId: "PLACEHOLDER", // This is where your Project ID goes
   storageBucket: "PLACEHOLDER",
   messagingSenderId: "PLACEHOLDER",
   appId: "PLACEHOLDER"

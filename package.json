@@ -64,8 +64,3 @@
     "typescript": "^5"
   }
 }
-"scripts": {
-  "dev": "next dev",
-  "build": "next build",
-  "start": "next start"
-}

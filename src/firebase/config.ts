@@ -9,7 +9,7 @@ import { getAuth, Auth } from "firebase/auth";
 const firebaseConfig = {
   apiKey: "PLACEHOLDER",
   authDomain: "PLACEHOLDER",
-  projectId: "PLACEHOLDER", // This is where your Project ID goes
+  projectId: "PLACEHOLDER", // This is where your Project ID goes (e.g., 'mpiti-portal-123')
   storageBucket: "PLACEHOLDER",
   messagingSenderId: "PLACEHOLDER",
   appId: "PLACEHOLDER"

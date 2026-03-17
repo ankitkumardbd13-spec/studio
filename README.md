@@ -1,9 +1,15 @@
 # Maharana Pratap ITI Saharanpur - Connect Portal
 
-A comprehensive technical education management portal for Maharana Pratap ITI, Rankhandi, Saharanpur.
+Official management and student portal for Maharana Pratap ITI, Rankhandi, Saharanpur.
 
-## Project Location
-This project is currently hosted in **Firebase Studio**. 
+## Project Details
+- **Address**: Village Post Rankhandi, Deoband, Dist Saharanpur, UP, PIN 247554
+- **Established**: 2015
+
+## Firebase Console Link
+To manage your live database, authentication, and hosting, visit your project in the Firebase Console:
+- **URL**: [https://console.firebase.google.com/](https://console.firebase.google.com/)
+- Select your project from the list to see the dashboard, Firestore data, and deployment settings.
 
 ## How to Save to Your Computer
 To get this code onto your local machine:
@@ -15,14 +21,7 @@ To get this code onto your local machine:
      git branch -M main
      git push -u origin main
      ```
-2. **Download**: Use the "Download" or "Export" feature in the Firebase Studio UI to save a ZIP file to your computer.
-
-## How to Go Live (Public URL)
-To deploy this project to a public URL:
-1. Go to the **Firebase Console**.
-2. Select your project.
-3. Navigate to **App Hosting** or **Hosting**.
-4. Connect your GitHub repository to enable automatic deployments.
+2. **Download**: Use the "Download" or "Export" feature in the Firebase Studio UI to save a ZIP file.
 
 ## Tech Stack
 - **Framework**: Next.js 15 (App Router)

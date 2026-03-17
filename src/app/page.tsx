@@ -158,11 +158,11 @@ export default function Home() {
               { title: content.success, msg: data.studentMsg, photo: data.studentPhoto, color: 'blue-600' }
             ].map((lead, i) => (
               <Card key={i} className="border-none shadow-xl bg-card overflow-hidden group flex flex-col items-center pt-10 text-center">
-                <div className={`w-48 h-48 rounded-full overflow-hidden border-4 border-${lead.color}/20 shadow-lg relative shrink-0`}>
+                <div className={`w-48 h-48 rounded-full overflow-hidden border-4 border-slate-200 shadow-lg relative shrink-0`}>
                   <img src={lead.photo} alt={lead.title} className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500" />
                 </div>
                 <div className="mt-6 px-4">
-                   <p className={`text-${lead.color} font-bold text-xl uppercase tracking-tight`}>{lead.title}</p>
+                   <p className="text-primary font-bold text-xl uppercase tracking-tight">{lead.title}</p>
                    <p className="text-muted-foreground text-[10px] font-black uppercase tracking-[0.2em] mb-4">MPITI Rankhandi</p>
                 </div>
                 <CardContent className="pt-4 pb-10 relative">

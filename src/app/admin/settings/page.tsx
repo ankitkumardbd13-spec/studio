@@ -132,7 +132,7 @@ export default function AdminSettings() {
                       {siteData.logo && (
                         <img src={siteData.logo} alt="Logo Preview" className="h-24 w-24 object-contain" />
                       )}
-                      <Input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'logo')} />
+                      <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'logo')} className="mt-2 text-sm" />
                     </div>
                   </CardContent>
                 </Card>
@@ -147,7 +147,7 @@ export default function AdminSettings() {
                       {siteData.stamp && (
                         <img src={siteData.stamp} alt="Stamp Preview" className="h-24 w-24 object-contain rounded-full bg-white border p-1" />
                       )}
-                      <Input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'stamp')} />
+                      <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'stamp')} className="mt-2 text-sm" />
                     </div>
                   </CardContent>
                 </Card>
@@ -167,7 +167,7 @@ export default function AdminSettings() {
                           <img src={siteData.chairmanPhoto} alt="Preview" className="w-full h-full object-cover" />
                         </div>
                       )}
-                      <Input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'chairmanPhoto')} />
+                      <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'chairmanPhoto')} className="mt-2 text-sm" />
                     </div>
                     <Textarea value={siteData.chairmanMsg} onChange={(e) => setSiteData({...siteData, chairmanMsg: e.target.value})} />
                   </CardContent>
@@ -184,7 +184,7 @@ export default function AdminSettings() {
                           <img src={siteData.principalPhoto} alt="Preview" className="w-full h-full object-cover" />
                         </div>
                       )}
-                      <Input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'principalPhoto')} />
+                      <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'principalPhoto')} className="mt-2 text-sm" />
                     </div>
                     <Textarea value={siteData.principalMsg} onChange={(e) => setSiteData({...siteData, principalMsg: e.target.value})} />
                   </CardContent>
@@ -201,7 +201,7 @@ export default function AdminSettings() {
                           <img src={siteData.studentPhoto} alt="Preview" className="w-full h-full object-cover" />
                         </div>
                       )}
-                      <Input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'studentPhoto')} />
+                      <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'studentPhoto')} className="mt-2 text-sm" />
                     </div>
                     <Textarea value={siteData.studentMsg} onChange={(e) => setSiteData({...siteData, studentMsg: e.target.value})} />
                   </CardContent>

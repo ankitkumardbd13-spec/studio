@@ -13,6 +13,17 @@ import { useFirestore, useDoc } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { useMemoFirebase } from '@/firebase/hooks/use-memo-firebase';
 
+interface StudentProfile {
+  name: string;
+  father: string;
+  trade: string;
+  session: string;
+  year: string;
+  rollNo: string;
+  dob: string;
+  photo?: string;
+}
+
 export default function IDCardPage() {
   const db = useFirestore();
   
@@ -23,7 +34,7 @@ export default function IDCardPage() {
 
   const { data: siteSettings, isLoading: configLoading } = useDoc(configQuery);
 
-  const [profile, setProfile] = useState<any>({
+  const [profile, setProfile] = useState<StudentProfile>({
     name: 'RAHUL KUMAR',
     father: 'Shri Suresh Kumar',
     trade: 'Electrician',
@@ -35,10 +46,9 @@ export default function IDCardPage() {
   });
 
   useEffect(() => {
-    // Load student's custom profile data from local session
     const savedProfile = localStorage.getItem('mpiti_student_profile');
     if (savedProfile) {
-      setProfile(prev => ({ ...prev, ...JSON.parse(savedProfile) }));
+      setProfile((prev: StudentProfile) => ({ ...prev, ...JSON.parse(savedProfile) }));
     }
   }, []);
 
@@ -57,7 +67,6 @@ export default function IDCardPage() {
     <main className="min-h-screen bg-muted/30">
       <Navbar />
       <div className="container mx-auto px-4 py-12 flex flex-col items-center">
-        {/* Actions Header */}
         <div className="w-full max-w-2xl flex justify-between items-center mb-8">
            <Button variant="ghost" asChild>
              <Link href="/student/dashboard" className="gap-2 text-muted-foreground hover:text-primary">
@@ -74,13 +83,10 @@ export default function IDCardPage() {
            </div>
         </div>
 
-        {/* ID CARD COMPONENT */}
         <div className="relative w-full max-w-[400px] md:max-w-[650px] bg-white rounded-3xl shadow-2xl border border-border overflow-hidden flex flex-col md:flex-row print:shadow-none print:border-slate-300">
            
-           {/* Left Sidebar: Branding & Photo */}
            <div className="bg-primary p-8 md:w-[240px] flex flex-col items-center justify-between text-center text-white relative z-10 border-r border-white/10">
               <div className="space-y-4 w-full">
-                {/* Logo at the very top */}
                 <div className="relative w-20 h-20 bg-white rounded-2xl p-2 mx-auto shadow-xl flex items-center justify-center">
                    {logoUrl && (
                     <img src={logoUrl} alt="Logo" className="w-full h-full object-contain" />
@@ -93,7 +99,6 @@ export default function IDCardPage() {
               </div>
               
               <div className="my-8">
-                {/* Circular Student Photo */}
                 <div className="w-36 h-36 border-4 border-white/50 rounded-full overflow-hidden bg-white shadow-2xl mx-auto flex items-center justify-center">
                   {profile.photo && (
                     <img 
@@ -112,10 +117,8 @@ export default function IDCardPage() {
               </div>
            </div>
 
-           {/* Right Content Section */}
            <div className="flex-1 p-10 bg-card relative flex flex-col justify-between min-h-[450px]">
               
-              {/* Subtle Watermark Background */}
               <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none select-none rotate-[-15deg]">
                 {logoUrl && <img src={logoUrl} alt="Watermark" className="w-80 h-80 object-contain grayscale" />}
               </div>
@@ -153,7 +156,6 @@ export default function IDCardPage() {
                 </div>
               </div>
 
-              {/* Bottom Section: Session & Authenticated Stamp */}
               <div className="relative z-10 pt-8 mt-10 border-t border-slate-100 flex justify-between items-end">
                 <div className="space-y-1">
                   <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">Valid Session</p>
@@ -161,7 +163,6 @@ export default function IDCardPage() {
                 </div>
                 
                 <div className="relative flex flex-col items-center">
-                  {/* Official Circular Stamp Overlay */}
                   <div className="absolute -top-20 -right-4 w-32 h-32 pointer-events-none">
                     {itiStamp && (
                       <div className="relative w-full h-full rounded-full overflow-hidden p-1 bg-transparent flex items-center justify-center rotate-[-15deg]">
@@ -174,7 +175,6 @@ export default function IDCardPage() {
                     )}
                   </div>
                   
-                  {/* Principal Signature Line */}
                   <div className="text-center mt-6">
                     <div className="h-[1px] bg-slate-400 w-40 mx-auto mb-2"></div>
                     <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">Principal / प्रधानाचार्य</p>
@@ -184,7 +184,6 @@ export default function IDCardPage() {
            </div>
         </div>
 
-        {/* Security Note */}
         <div className="mt-12 max-w-xl text-center space-y-4">
           <div className="inline-flex items-center gap-2 bg-white px-5 py-2.5 rounded-full border shadow-sm text-xs font-bold text-primary">
             <ShieldCheck className="w-4 h-4" /> Digtally Verified Document

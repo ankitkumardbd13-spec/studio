@@ -15,12 +15,26 @@ import { useToast } from '@/hooks/use-toast';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { compressImage } from '@/lib/image-utils';
 
+interface StudentProfile {
+  name: string;
+  father: string;
+  trade: string;
+  session: string;
+  year: string;
+  mobile: string;
+  aadhaar: string;
+  rollNo: string;
+  dob: string;
+  address: string;
+  photo: string;
+}
+
 export default function StudentProfilePage() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
-  const [profile, setProfile] = useState({
+  const [profile, setProfile] = useState<StudentProfile>({
     name: 'Rahul Kumar',
     father: 'Shri Suresh Kumar',
     trade: 'Electrician',
@@ -37,7 +51,7 @@ export default function StudentProfilePage() {
   useEffect(() => {
     const saved = localStorage.getItem('mpiti_student_profile');
     if (saved) {
-      setProfile(prev => ({ ...prev, ...JSON.parse(saved) }));
+      setProfile((prev: StudentProfile) => ({ ...prev, ...JSON.parse(saved) }));
     }
   }, []);
 
@@ -48,7 +62,7 @@ export default function StudentProfilePage() {
     setIsUploading(true);
     try {
       const compressedBase64 = await compressImage(file, 50);
-      setProfile(prev => ({ ...prev, photo: compressedBase64 }));
+      setProfile((prev: StudentProfile) => ({ ...prev, photo: compressedBase64 }));
       toast({ title: "Photo Updated", description: "Your profile photo has been updated and compressed." });
     } catch (error) {
       toast({ variant: "destructive", title: "Upload Failed", description: "Could not process image." });
@@ -61,7 +75,6 @@ export default function StudentProfilePage() {
     e.preventDefault();
     setLoading(true);
     
-    // Save to localStorage so it persists across pages (like ID Card)
     localStorage.setItem('mpiti_student_profile', JSON.stringify(profile));
     
     setTimeout(() => {
@@ -90,7 +103,6 @@ export default function StudentProfilePage() {
           </header>
 
           <form onSubmit={handleSave} className="grid md:grid-cols-3 gap-8">
-            {/* Left: Identity Card Photo Section */}
             <Card className="md:col-span-1 border-none shadow-lg h-fit">
               <CardContent className="pt-8 flex flex-col items-center text-center">
                 <div className="relative group">
@@ -130,7 +142,6 @@ export default function StudentProfilePage() {
               </CardContent>
             </Card>
 
-            {/* Right: Editable Details Form */}
             <Card className="md:col-span-2 border-none shadow-lg">
               <CardHeader>
                 <div className="flex justify-between items-center">

@@ -6,11 +6,11 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   typescript: {
-    // Allows production builds to complete even if there are type errors.
+    // Ensure build completes even if there are type errors during the transition
     ignoreBuildErrors: true,
   },
   eslint: {
-    // Allows production builds to complete even if there are ESLint errors.
+    // Prevent ESLint from blocking the generation of the 'out' directory
     ignoreDuringBuilds: true,
   },
 };

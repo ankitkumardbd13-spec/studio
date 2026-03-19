@@ -12,9 +12,8 @@ import { Save, Image as ImageIcon, MapPin, Plus, Trash2, UserCheck, LayoutGrid, 
 import { useToast } from '@/hooks/use-toast';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { compressImage } from '@/lib/image-utils';
-import { useFirestore, useDoc } from '@/firebase';
+import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc, setDoc } from 'firebase/firestore';
-import { useMemoFirebase } from '@/firebase/hooks/use-memo-firebase';
 
 export default function AdminSettings() {
   const { toast } = useToast();

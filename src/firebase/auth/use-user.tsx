@@ -9,6 +9,7 @@ export function useUser() {
   const [isUserLoading, setIsUserLoading] = useState(true);
 
   useEffect(() => {
+    // Correctly initialize Firebase to get the auth instance
     const { auth } = initializeFirebase();
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);

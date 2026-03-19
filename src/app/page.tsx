@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -9,9 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { MapPin, Phone, Mail, GraduationCap, BookOpen, ClipboardList, ShieldCheck, LayoutGrid, Quote, Loader2, CheckCircle } from 'lucide-react';
 import { Navbar } from '@/components/layout/Navbar';
-import { useFirestore, useDoc } from '@/firebase';
+import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
-import { useMemoFirebase } from '@/firebase/hooks/use-memo-firebase';
 import { useApp } from '@/components/providers/AppProviders';
 
 export default function Home() {

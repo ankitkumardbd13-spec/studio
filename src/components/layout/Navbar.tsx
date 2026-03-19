@@ -4,9 +4,8 @@ import React from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useApp } from '@/components/providers/AppProviders';
-import { useFirestore, useDoc } from '@/firebase';
+import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
-import { useMemoFirebase } from '@/firebase/hooks/use-memo-firebase';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { 
   Menu, 

@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -10,9 +9,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { MapPin, Phone, Mail, Clock, Send, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { useFirestore, useDoc } from '@/firebase';
+import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
-import { useMemoFirebase } from '@/firebase/hooks/use-memo-firebase';
 
 export default function ContactPage() {
   const { toast } = useToast();

@@ -1,17 +1,7 @@
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    /**
-     * MAHARANA PRATAP ITI SECURITY RULES
-     * 
-     * CORE PHILOSOPHY:
-     * This ruleset implements a dual-layer security model: Database-Backed Access Control (DBAC) 
-     * for administrators and a strict Ownership model for students. Authentication via Firebase 
-     * Auth is required for all non-public interactions.
-     */
-
-    // --- Global Helper Functions ---
 
     function isSignedIn() {
       return request.auth != null;
@@ -25,86 +15,48 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == userId;
     }
 
-    // --- Collection Rules ---
-
-    /**
-     * @description Global site configuration (Logo, Stamp, Address).
-     * @path /siteSettings/config
-     */
+    // Site settings are public for branding (logo, address)
     match /siteSettings/config {
       allow get: if true;
-      allow create, update, delete: if isAdmin();
+      allow write: if isAdmin();
     }
 
-    /**
-     * @description Public admission inquiries.
-     * @path /inquiries/{inquiryId}
-     */
+    // Inquiries can be submitted by anyone
     match /inquiries/{inquiryId} {
       allow create: if true;
       allow read, update, delete: if isAdmin();
     }
 
-    /**
-     * @description Student profiles and registration data.
-     * @path /students/{studentId}
-     */
+    // Students can register themselves or be managed by admin
     match /students/{studentId} {
       allow get, list: if isAdmin() || isOwner(studentId);
-      allow create: if true; // Allow initial portal registration
+      allow create: if true;
       allow update: if isAdmin() || isOwner(studentId);
       allow delete: if isAdmin();
     }
 
-    /**
-     * @description Registry for administrative users.
-     * @path /roles_admin/{adminUid}
-     */
+    // Admin role registry
     match /roles_admin/{adminUid} {
       allow get: if isSignedIn();
-      allow list, create, update, delete: if false;
+      allow write: if false;
     }
 
-    /**
-     * @description Collection of courses/trades offered by the ITI.
-     */
-    match /trades/{tradeId} {
-      allow get, list: if true;
-      allow create, update, delete: if isAdmin();
+    // Assignments and Results
+    match /assignments/{id} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
     }
 
-    /**
-     * @description Academic assignments.
-     */
-    match /assignments/{assignmentId} {
-      allow get, list: if isSignedIn();
-      allow create, update, delete: if isAdmin();
-    }
-
-    /**
-     * @description Student results and submissions.
-     */
-    match /results/{resultId} {
+    match /results/{id} {
       allow read: if isAdmin() || (isSignedIn() && resource.data.studentId == request.auth.uid);
       allow create: if isSignedIn();
       allow update, delete: if isAdmin();
     }
 
-    /**
-     * @description Financial records for student fees.
-     */
-    match /fees/{feeId} {
-      allow get, list: if isAdmin() || (isSignedIn() && resource.data.studentId == request.auth.uid);
-      allow create, update: if isAdmin();
-      allow delete: if false;
-    }
-
-    /**
-     * @description Global announcements.
-     */
-    match /notifications/{notificationId} {
-      allow get, list: if isSignedIn();
-      allow create, update, delete: if isAdmin();
+    // Fees
+    match /fees/{id} {
+      allow read: if isAdmin() || (isSignedIn() && resource.data.studentId == request.auth.uid);
+      allow write: if isAdmin();
     }
   }
 }

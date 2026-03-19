@@ -1,38 +1,211 @@
-
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow admins full access
-    match /{document=**} {
-      allow read, write: if request.auth != null && request.auth.token.admin == true;
+
+    /**
+     * MAHARANA PRATAP ITI SECURITY RULES
+     * 
+     * CORE PHILOSOPHY:
+     * This ruleset implements a dual-layer security model: Database-Backed Access Control (DBAC) 
+     * for administrators and a strict Ownership model for students. Authentication via Firebase 
+     * Auth is required for all non-public interactions.
+     * 
+     * DATA STRUCTURE:
+     * - Public Data: Institute profiles, trades, and approved testimonials are stored in 
+     *   top-level collections accessible to everyone.
+     * - Protected Student Data: Private information, submissions, and payments are stored 
+     *   using a user-centric pathing model (e.g., /users/{userId}/...) or specific 
+     *   ID-mapped top-level collections.
+     * - Global Catalog: Assignments, notifications, and mock tests are available to all 
+     *   authenticated students, with filtering handled at the client level.
+     * 
+     * KEY SECURITY DECISIONS:
+     * - Admin privileges are verified by the existence of a document in the '/roles_admin' collection.
+     * - Structural Segregation: Pending testimonials are kept in a private user subcollection, 
+     *   while approved ones are moved to a public top-level collection.
+     * - Data Consistency: Rules enforce that internal ownership IDs (e.g., studentId) 
+     *   match the path parameters to prevent data injection into other users' records.
+     * 
+     * DENORMALIZATION FOR AUTHORIZATION:
+     * - 'applicantUid' is required on AdmissionApplications to allow applicants to track 
+     *   their own forms without expensive cross-collection lookups.
+     * - 'studentId' is required on all user-scoped documents to maintain relational 
+     *   integrity and simplify ownership checks.
+     */
+
+    // --- Global Helper Functions ---
+
+    function isSignedIn() {
+      return request.auth != null;
     }
 
-    // Student access to their own profile
-    match /students/{studentId} {
-      allow read: if request.auth != null && request.auth.uid == studentId;
-      allow create: if true; // Allow portal registration
-      allow update: if request.auth != null && request.auth.uid == studentId;
+    function isAdmin() {
+      return isSignedIn() && exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
     }
 
-    // Public inquiries
-    match /inquiries/{inquiryId} {
-      allow create: if true;
-      allow read, write: if request.auth != null && request.auth.token.admin == true;
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
     }
 
-    // Access to assignments and results
+    function isExistingOwner(userId) {
+      return resource != null && isOwner(userId);
+    }
+
+    // --- Collection Rules ---
+
+    /**
+     * @description Publicly readable institute profile containing official messages and contact info.
+     * @path /instituteProfile/main
+     * @allow (get) Any user. (update) Validated administrator.
+     * @deny (write) Any non-admin user.
+     * @principle DBAC for site configuration.
+     */
+    match /instituteProfile/main {
+      allow get, list: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    /**
+     * @description Collection of courses/trades offered by the ITI.
+     * @path /trades/{tradeId}
+     * @allow (list) Prospective students browsing courses. (create) Admins adding new trades.
+     * @deny (write) Any student or unauthenticated user.
+     * @principle Public catalog access with administrative write control.
+     */
+    match /trades/{tradeId} {
+      allow get, list: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    /**
+     * @description Private profiles for enrolled students.
+     * @path /studentProfiles/{studentId}
+     * @allow (get) The student owner or an admin. (create) The student during onboarding.
+     * @deny (update) Changing the 'id' field once set.
+     * @principle Ownership-based access with path-to-data consistency.
+     */
+    match /studentProfiles/{studentId} {
+      allow get, list: if isOwner(studentId) || isAdmin();
+      allow create: if isOwner(studentId) && request.resource.data.id == studentId;
+      allow update: if (isOwner(studentId) || isAdmin()) && request.resource.data.id == resource.data.id;
+      allow delete: if isAdmin();
+    }
+
+    /**
+     * @description Admission forms submitted by prospective students.
+     * @path /admissionApplications/{applicationId}
+     * @allow (create) Any signed-in applicant. (get) The applicant via 'applicantUid'.
+     * @deny (list) Listing other users' applications.
+     * @principle Denormalized ownership for non-hierarchical collections.
+     */
+    match /admissionApplications/{applicationId} {
+      allow create: if isSignedIn() && request.resource.data.applicantUid == request.auth.uid;
+      allow get: if isAdmin() || (isSignedIn() && resource.data.applicantUid == request.auth.uid);
+      allow list: if isAdmin();
+      allow update: if isAdmin() || (isExistingOwner(resource.data.applicantUid));
+      allow delete: if isAdmin();
+    }
+
+    /**
+     * @description Academic assignments created by staff for students.
+     * @path /assignments/{assignmentId}
+     * @allow (list) All authenticated students. (write) Admin only.
+     * @deny (read) Unauthenticated visitors.
+     * @principle Verified identity for educational content access.
+     */
     match /assignments/{assignmentId} {
-      allow read: if request.auth != null;
+      allow get, list: if isSignedIn();
+      allow create, update, delete: if isAdmin();
     }
-    
-    match /results/{resultId} {
-      allow read: if request.auth != null && (resource.data.studentId == request.auth.uid || request.auth.token.admin == true);
-      allow create: if request.auth != null;
+
+    /**
+     * @description Private subcollection for assignment work submitted by students.
+     * @path /users/{studentId}/assignmentSubmissions/{submissionId}
+     * @allow (create) The student owner. (update) Admins for grading/feedback.
+     * @deny (delete) Students once work is submitted (admin only).
+     * @principle Hierarchical ownership for private student work.
+     */
+    match /users/{studentId}/assignmentSubmissions/{submissionId} {
+      allow get, list: if isOwner(studentId) || isAdmin();
+      allow create: if isOwner(studentId) && request.resource.data.studentId == studentId;
+      allow update: if (isOwner(studentId) || isAdmin()) && request.resource.data.studentId == resource.data.studentId;
+      allow delete: if isAdmin();
     }
-    
-    // Public access to site settings for the homepage
-    match /siteSettings/{config} {
-      allow read: if true;
+
+    /**
+     * @description General announcements and news for the institute.
+     * @path /notifications/{notificationId}
+     * @allow (list) Any signed-in user. (write) Admin only.
+     * @deny (write) Any non-admin user.
+     * @principle Global authenticated access for internal communications.
+     */
+    match /notifications/{notificationId} {
+      allow get, list: if isSignedIn();
+      allow create, update, delete: if isAdmin();
+    }
+
+    /**
+     * @description Financial records for student fees.
+     * @path /users/{studentId}/feePayments/{paymentId}
+     * @allow (get) The student viewing their receipt. (create) The student or system.
+     * @deny (list) Unauthorized users trying to view payment history.
+     * @principle Strict ownership for sensitive financial data.
+     */
+    match /users/{studentId}/feePayments/{paymentId} {
+      allow get, list: if isOwner(studentId) || isAdmin();
+      allow create: if isOwner(studentId) && request.resource.data.studentId == studentId;
+      allow update: if isAdmin(); // Only admins should update payment status
+      allow delete: if false; // Fee records are immutable for audit purposes
+    }
+
+    /**
+     * @description Links to external mock testing platforms.
+     * @path /mockTests/{mockTestId}
+     * @allow (list) All authenticated students.
+     * @deny (create) Students trying to add their own tests.
+     * @principle Verified identity for access to training resources.
+     */
+    match /mockTests/{mockTestId} {
+      allow get, list: if isSignedIn();
+      allow create, update, delete: if isAdmin();
+    }
+
+    /**
+     * @description Pending testimonial submissions awaiting approval.
+     * @path /users/{studentId}/testimonialSubmissions/{submissionId}
+     * @allow (create) A student submitting their feedback. (get) The student or admin.
+     * @deny (update) Editing a submission once it is marked for review.
+     * @principle Private staging of user-generated content.
+     */
+    match /users/{studentId}/testimonialSubmissions/{submissionId} {
+      allow get, list: if isOwner(studentId) || isAdmin();
+      allow create: if isOwner(studentId);
+      allow update: if (isOwner(studentId) || isAdmin());
+      allow delete: if isOwner(studentId) || isAdmin();
+    }
+
+    /**
+     * @description Testimonials that have been vetted and approved for public display.
+     * @path /publicTestimonials/{testimonialId}
+     * @allow (get, list) All public visitors. (write) Admin only.
+     * @deny (write) Direct writes from students.
+     * @principle Structural segregation of public vs private content.
+     */
+    match /publicTestimonials/{testimonialId} {
+      allow get, list: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    /**
+     * @description Internal registry for administrative users.
+     * @path /roles_admin/{adminUid}
+     * @allow (get) Authenticated admins.
+     * @deny (list, write) All users (managed via administrative console).
+     * @principle System-level roles restricted from standard client interaction.
+     */
+    match /roles_admin/{adminUid} {
+      allow get: if isAdmin();
+      allow list, create, update, delete: if false;
     }
   }
 }

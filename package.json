@@ -1,4 +1,3 @@
-
 {
   "name": "mpiti-portal",
   "version": "0.1.0",
@@ -41,7 +40,7 @@
     "firebase": "^11.9.1",
     "genkit": "^1.28.0",
     "lucide-react": "^0.475.0",
-    "next": "15.1.7",
+    "next": "^16.2.1-canary.1",
     "react": "^19.0.0",
     "react-day-picker": "^9.11.3",
     "react-dom": "^19.0.0",
@@ -60,5 +59,6 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
-  }
+  },
+  "packageManager": "pnpm@10.32.1+sha512.a706938f0e89ac1456b6563eab4edf1d1faf3368d1191fc5c59790e96dc918e4456ab2e67d613de1043d2e8c81f87303e6b40d4ffeca9df15ef1ad567348f2be"
 }

@@ -28,7 +28,7 @@ export default function AdminSettings() {
     return doc(db, 'siteSettings', 'config');
   }, [db]);
 
-  const { data: remoteConfig, loading: configLoading } = useDoc(configDocQuery);
+  const { data: remoteConfig, isLoading: configLoading } = useDoc(configDocQuery);
 
   const [siteData, setSiteData] = useState({
     logo: PlaceHolderImages.find(i => i.id === 'iti-logo')?.imageUrl || '',

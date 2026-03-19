@@ -32,7 +32,7 @@ export function AdminSidebar() {
     return doc(db, 'siteSettings', 'config');
   }, [db]);
 
-  const { data: siteSettings, loading } = useDoc(configQuery);
+  const { data: siteSettings, isLoading: loading } = useDoc(configQuery);
 
   const defaultLogo = PlaceHolderImages.find(img => img.id === 'iti-logo')?.imageUrl;
   const logoUrl = siteSettings?.logo || defaultLogo;

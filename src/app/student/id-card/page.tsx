@@ -21,7 +21,7 @@ export default function IDCardPage() {
     return doc(db, 'siteSettings', 'config');
   }, [db]);
 
-  const { data: siteSettings, loading: configLoading } = useDoc(configQuery);
+  const { data: siteSettings, isLoading: configLoading } = useDoc(configQuery);
 
   const [profile, setProfile] = useState<any>({
     name: 'RAHUL KUMAR',

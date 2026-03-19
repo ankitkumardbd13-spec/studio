@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -22,7 +23,7 @@ export default function Home() {
     return doc(db, 'siteSettings', 'config');
   }, [db]);
 
-  const { data: siteSettings, loading } = useDoc(configQuery);
+  const { data: siteSettings, isLoading } = useDoc(configQuery);
 
   const defaultData = {
     address: 'Village Post Rankhandi, Deoband, Dist Saharanpur, UP, PIN 247554',
@@ -76,7 +77,7 @@ export default function Home() {
     { id: 'g4', url: 'https://picsum.photos/seed/itiaihero/800/600', title: 'Campus View' },
   ];
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <Loader2 className="w-10 h-10 animate-spin text-primary" />

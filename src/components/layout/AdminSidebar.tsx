@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -32,7 +31,7 @@ export function AdminSidebar() {
     return doc(db, 'siteSettings', 'config');
   }, [db]);
 
-  const { data: siteSettings, isLoading: loading } = useDoc(configQuery);
+  const { data: siteSettings, isLoading } = useDoc(configQuery);
 
   const defaultLogo = PlaceHolderImages.find(img => img.id === 'iti-logo')?.imageUrl;
   const logoUrl = siteSettings?.logo || defaultLogo;
@@ -52,7 +51,7 @@ export function AdminSidebar() {
     <aside className="hidden lg:flex flex-col w-72 bg-slate-900 text-white min-h-screen sticky top-0">
       <div className="p-6 border-b border-white/5 flex items-center gap-3">
         <div className="relative w-10 h-10 overflow-hidden rounded-lg bg-white p-1 flex items-center justify-center">
-          {loading ? (
+          {isLoading ? (
             <Loader2 className="w-4 h-4 animate-spin text-primary" />
           ) : (
             logoUrl && (

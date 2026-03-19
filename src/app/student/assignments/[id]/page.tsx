@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -11,6 +10,11 @@ import { Label } from '@/components/ui/label';
 import { Timer, Send, AlertCircle, Loader2, CheckCircle, Languages } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Navbar } from '@/components/layout/Navbar';
+
+// For static export compatibility
+export async function generateStaticParams() {
+  return [];
+}
 
 interface Question {
   id: string;
@@ -32,6 +36,7 @@ interface Assignment {
 
 export default function AssignmentTestPage() {
   const params = useParams();
+  const id = params.id as string;
   const router = useRouter();
   const { toast } = useToast();
   const [assignment, setAssignment] = useState<Assignment | null>(null);
@@ -41,39 +46,37 @@ export default function AssignmentTestPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
+    if (!id) return;
+    
     const saved = localStorage.getItem('mpiti_assignments');
     const results = JSON.parse(localStorage.getItem('mpiti_results') || '[]');
     
-    // Check if already attempted
-    const alreadyDone = results.some((r: any) => r.assignmentId === params.id);
+    const alreadyDone = results.some((r: any) => r.assignmentId === id);
     if (alreadyDone) {
-      toast({ variant: 'destructive', title: 'Already Attempted', description: 'You have already completed this test. Results are in the Results section.' });
+      toast({ variant: 'destructive', title: 'Already Attempted', description: 'You have already completed this test.' });
       router.push('/student/assignments');
       return;
     }
 
     if (saved) {
       const all: Assignment[] = JSON.parse(saved);
-      const found = all.find(a => a.id === params.id);
+      const found = all.find(a => a.id === id);
       if (found) {
         setAssignment(found);
         setTimeLeft(found.durationMinutes * 60);
       }
     }
-  }, [params.id, router, toast]);
+  }, [id, router, toast]);
 
   const handleSubmit = useCallback(async (isAuto = false) => {
     if (isSubmitting || isSubmitted || !assignment) return;
     setIsSubmitting(true);
 
     try {
-      // Get Student Info
       const savedProfile = localStorage.getItem('mpiti_student_profile');
       const profile = savedProfile ? JSON.parse(savedProfile) : { name: 'Unknown Student', father: 'Unknown', rollNo: 'N/A', trade: assignment.trade, year: assignment.year };
 
-      // Calculate Metrics
       const totalQuestions = assignment.questions.length;
-      const attemptedQuestions = Object.keys(answers).length;
       let rightQuestions = 0;
 
       assignment.questions.forEach(q => {
@@ -96,30 +99,29 @@ export default function AssignmentTestPage() {
         trade: profile.trade,
         year: profile.year,
         totalQuestions,
-        attemptedQuestions,
+        attemptedQuestions: Object.keys(answers).length,
         rightQuestions,
-        score: rightQuestions, // Obtained Marks
-        totalMarks: totalQuestions, // Total Marks (1 per question)
+        score: rightQuestions,
+        totalMarks: totalQuestions,
         percentage,
         status,
         date: new Date().toISOString()
       };
 
-      // Save locally
       const results = JSON.parse(localStorage.getItem('mpiti_results') || '[]');
       localStorage.setItem('mpiti_results', JSON.stringify([resultRecord, ...results]));
       
       setIsSubmitted(true);
       toast({
         title: isAuto ? "Time Up! Auto-Submitted" : "Test Complete",
-        description: `Score: ${rightQuestions}/${totalQuestions} (${status}). Redirecting to results...`,
+        description: `Score: ${rightQuestions}/${totalQuestions}.`,
       });
       
       setTimeout(() => {
         router.push('/student/results');
       }, 3000);
     } catch (error) {
-      toast({ variant: 'destructive', title: 'Submission Failed', description: 'Please check your connection and try again.' });
+      toast({ variant: 'destructive', title: 'Submission Failed' });
     } finally {
       setIsSubmitting(false);
     }
@@ -127,16 +129,11 @@ export default function AssignmentTestPage() {
 
   useEffect(() => {
     if (timeLeft === null || isSubmitted) return;
-
     if (timeLeft <= 0) {
       handleSubmit(true);
       return;
     }
-
-    const timer = setInterval(() => {
-      setTimeLeft(prev => (prev !== null ? prev - 1 : null));
-    }, 1000);
-
+    const timer = setInterval(() => setTimeLeft(prev => (prev !== null ? prev - 1 : null)), 1000);
     return () => clearInterval(timer);
   }, [timeLeft, isSubmitted, handleSubmit]);
 
@@ -147,20 +144,15 @@ export default function AssignmentTestPage() {
   };
 
   if (!assignment) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="animate-spin w-10 h-10 text-primary" />
-      </div>
-    );
+    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin w-10 h-10 text-primary" /></div>;
   }
 
   if (isSubmitted) {
     return (
       <div className="min-h-screen bg-muted/30 flex flex-col items-center justify-center p-4">
-        <Card className="max-w-md w-full text-center p-8 border-none shadow-2xl">
+        <Card className="max-w-md w-full text-center p-8">
           <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold mb-2">Test Submitted!</h2>
-          <p className="text-muted-foreground mb-6">Your record has been updated in the Student Portal and Admin Panel.</p>
           <Button onClick={() => router.push('/student/results')}>View My Results</Button>
         </Card>
       </div>
@@ -170,71 +162,38 @@ export default function AssignmentTestPage() {
   return (
     <main className="min-h-screen bg-muted/30 pb-20">
       <Navbar />
-      
       <div className="sticky top-16 z-40 bg-white border-b shadow-sm py-3 px-4 flex justify-between items-center">
         <div className="container mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <Badge variant="outline" className="text-primary border-primary">{assignment.title}</Badge>
-            <div className="hidden md:flex items-center gap-1 text-[10px] text-muted-foreground uppercase font-bold">
-              <Languages className="w-3 h-3" /> Bilingual Mode
-            </div>
-          </div>
-          <div className={`flex items-center gap-2 px-4 py-1.5 rounded-full font-bold text-lg ${timeLeft !== null && timeLeft < 300 ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-slate-100 text-slate-800'}`}>
+          <Badge variant="outline">{assignment.title}</Badge>
+          <div className={`flex items-center gap-2 font-bold text-lg ${timeLeft !== null && timeLeft < 300 ? 'text-red-600 animate-pulse' : ''}`}>
             <Timer className="w-5 h-5" />
             {timeLeft !== null ? formatTime(timeLeft) : '--:--'}
           </div>
         </div>
       </div>
-
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto space-y-6">
-          <header className="mb-8 text-center">
-            <h1 className="font-headline text-3xl font-bold text-primary">{assignment.title}</h1>
-            <p className="text-muted-foreground">Complete all {assignment.questions.length} Bilingual (English / हिंदी) MCQs.</p>
-          </header>
-
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <div className="space-y-6">
           {assignment.questions.map((q, idx) => (
-            <Card key={q.id} className="border-none shadow-sm overflow-hidden">
-              <CardHeader className="bg-slate-50/50 pb-4">
-                <div className="flex justify-between items-start">
-                  <Badge variant="secondary">Question {idx + 1}</Badge>
-                  <span className="text-[10px] uppercase font-bold text-muted-foreground">MCQ / वस्तुनिष्ठ</span>
-                </div>
-                <CardTitle className="text-xl mt-2 leading-relaxed font-body">
-                   {q.text}
-                </CardTitle>
+            <Card key={q.id}>
+              <CardHeader className="bg-slate-50/50">
+                <Badge variant="secondary">Question {idx + 1}</Badge>
+                <CardTitle className="text-xl mt-2">{q.text}</CardTitle>
               </CardHeader>
               <CardContent className="pt-6">
-                <RadioGroup 
-                  onValueChange={(val) => setAnswers(prev => ({ ...prev, [q.id]: val }))}
-                  className="grid gap-3"
-                >
+                <RadioGroup onValueChange={(val) => setAnswers(prev => ({ ...prev, [q.id]: val }))}>
                   {q.options.map((opt, oIdx) => (
-                    <div key={oIdx} className="flex items-center space-x-3 p-4 rounded-lg border hover:bg-slate-50 transition-colors cursor-pointer group">
-                      <RadioGroupItem value={opt} id={`q-${q.id}-o-${oIdx}`} />
-                      <Label htmlFor={`q-${q.id}-o-${oIdx}`} className="flex-1 cursor-pointer font-medium text-base group-hover:text-primary transition-colors">
-                        {opt}
-                      </Label>
+                    <div key={oIdx} className="flex items-center space-x-3 p-4 rounded-lg border hover:bg-slate-50">
+                      <RadioGroupItem value={opt} id={`q-${idx}-o-${oIdx}`} />
+                      <Label htmlFor={`q-${idx}-o-${oIdx}`} className="flex-1 cursor-pointer">{opt}</Label>
                     </div>
                   ))}
                 </RadioGroup>
               </CardContent>
             </Card>
           ))}
-
-          <div className="pt-8 flex flex-col items-center gap-4">
-            <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg flex gap-3 text-sm text-amber-800 max-w-lg">
-               <AlertCircle className="w-5 h-5 flex-shrink-0" />
-               <p>Warning: Final auto-submit on time up. Ensure you have selected all answers before clicking submit.</p>
-            </div>
-            <Button 
-              size="lg" 
-              className="w-full max-w-sm bg-primary hover:bg-primary/90 text-white gap-2 h-14 text-xl font-bold"
-              onClick={() => handleSubmit(false)}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? <Loader2 className="animate-spin" /> : <Send className="w-5 h-5" />}
-              Submit My Test
+          <div className="pt-8 flex justify-center">
+            <Button size="lg" className="w-full max-w-sm h-14" onClick={() => handleSubmit(false)} disabled={isSubmitting}>
+              {isSubmitting ? <Loader2 className="animate-spin" /> : "Submit My Test"}
             </Button>
           </div>
         </div>

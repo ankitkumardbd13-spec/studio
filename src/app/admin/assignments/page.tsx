@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Plus, Trash2, Calendar, Clock, Wand2, FileText, Loader2, Save, X, Timer, Languages, BookOpen } from 'lucide-react';
+import { Plus, Trash2, Calendar, Clock, Wand2, FileText, Loader2, Save, X, Timer, Languages } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { generateAssignmentAndMockTest } from '@/ai/flows/admin-assignment-mock-test-generator';
 
@@ -81,6 +81,13 @@ export default function AdminAssignmentsPage() {
     resetForm();
     setIsAdding(false);
     toast({ title: 'Assignment Created', description: 'Students can now view this bilingual test.' });
+  };
+
+  const deleteAssignment = (id: string) => {
+    const updated = assignments.filter(a => a.id !== id);
+    setAssignments(updated);
+    localStorage.setItem('mpiti_assignments', JSON.stringify(updated));
+    toast({ title: 'Assignment Deleted', variant: 'destructive' });
   };
 
   const resetForm = () => {

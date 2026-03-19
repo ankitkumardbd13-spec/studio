@@ -1,4 +1,3 @@
-
 'use client';
 
 import { firebaseConfig } from '@/firebase/config';
@@ -41,4 +40,5 @@ export * from './non-blocking-updates';
 export * from './non-blocking-login';
 export * from './errors';
 export * from './error-emitter';
-export * from './hooks/use-memo-firebase';
+
+// Removed conflicting export from ./hooks/use-memo-firebase as it is handled by provider.tsx

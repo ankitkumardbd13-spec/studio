@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { LayoutDashboard, FileText, Calendar, Clock, ArrowRight, AlertCircle, CheckCircle2, Timer, BookOpen } from 'lucide-react';
 import { Navbar } from '@/components/layout/Navbar';
+import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, query, where, orderBy } from 'firebase/firestore';
 
 interface Question {
   id: string;
@@ -25,27 +27,31 @@ interface Assignment {
   deadlineTime: string;
   durationMinutes: number;
   questions: Question[];
+  createdAt: any;
 }
 
 export default function StudentAssignmentsPage() {
-  const [assignments, setAssignments] = useState<Assignment[]>([]);
-  const [submissions, setSubmissions] = useState<string[]>([]);
+  const db = useFirestore();
   const [studentInfo] = useState({ trade: 'Electrician', year: 1 });
+  const [submissions, setSubmissions] = useState<string[]>([]);
+
+  const assignmentsQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return query(
+      collection(db, 'assignments'), 
+      where('trade', '==', studentInfo.trade),
+      where('year', '==', studentInfo.year)
+    );
+  }, [db, studentInfo.trade, studentInfo.year]);
+
+  const { data: assignments, isLoading: assignmentsLoading } = useCollection<Assignment>(assignmentsQuery);
 
   useEffect(() => {
-    const saved = localStorage.getItem('mpiti_assignments');
-    if (saved) {
-      const all: Assignment[] = JSON.parse(saved);
-      // Filter by student trade and year
-      const filtered = all.filter(a => a.trade === studentInfo.trade && a.year === studentInfo.year);
-      setAssignments(filtered);
-    }
-
     const savedSubmissions = localStorage.getItem('mpiti_submissions');
     if (savedSubmissions) {
       setSubmissions(JSON.parse(savedSubmissions));
     }
-  }, [studentInfo.trade, studentInfo.year]);
+  }, []);
 
   const getStatus = (a: Assignment) => {
     if (submissions.includes(a.id)) {
@@ -72,57 +78,61 @@ export default function StudentAssignmentsPage() {
         </header>
 
         <div className="max-w-4xl mx-auto grid gap-6">
-          {assignments.map(a => {
-            const status = getStatus(a);
-            return (
-              <Card key={a.id} className="border-none shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-                <div className={`h-1 w-full ${status.color}`} />
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <div className="space-y-1">
-                    <CardTitle className="text-2xl">{a.title}</CardTitle>
-                    <CardDescription className="flex items-center gap-2 font-bold text-primary">
-                       <BookOpen className="w-4 h-4" /> {a.subject}
-                    </CardDescription>
-                  </div>
-                  <Badge className={`${status.color} text-white gap-1`}>
-                    {status.icon} {status.label}
-                  </Badge>
-                </CardHeader>
-                <CardContent className="pt-2">
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm font-medium">
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <FileText className="w-4 h-4" /> {a.questions.length} Qs
+          {assignmentsLoading ? (
+            <div className="flex justify-center py-20"><Timer className="animate-spin w-10 h-10 text-primary" /></div>
+          ) : (
+            assignments?.map(a => {
+              const status = getStatus(a);
+              return (
+                <Card key={a.id} className="border-none shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+                  <div className={`h-1 w-full ${status.color}`} />
+                  <CardHeader className="flex flex-row items-center justify-between pb-2">
+                    <div className="space-y-1">
+                      <CardTitle className="text-2xl">{a.title}</CardTitle>
+                      <CardDescription className="flex items-center gap-2 font-bold text-primary">
+                         <BookOpen className="w-4 h-4" /> {a.subject}
+                      </CardDescription>
                     </div>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <Calendar className="w-4 h-4 text-primary" /> {a.deadlineDate}
+                    <Badge className={`${status.color} text-white gap-1`}>
+                      {status.icon} {status.label}
+                    </Badge>
+                  </CardHeader>
+                  <CardContent className="pt-2">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm font-medium">
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <FileText className="w-4 h-4" /> {a.questions.length} Qs
+                      </div>
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Calendar className="w-4 h-4 text-primary" /> {a.deadlineDate}
+                      </div>
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Clock className="w-4 h-4 text-primary" /> {a.deadlineTime}
+                      </div>
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Timer className="w-4 h-4 text-secondary" /> {a.durationMinutes} min
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <Clock className="w-4 h-4 text-primary" /> {a.deadlineTime}
-                    </div>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <Timer className="w-4 h-4 text-secondary" /> {a.durationMinutes} min
-                    </div>
-                  </div>
-                </CardContent>
-                <CardFooter className="bg-slate-50/50 border-t mt-4 py-4 flex justify-between items-center">
-                  <span className="text-xs text-muted-foreground">Bilingual (English / Hindi) Format.</span>
-                  {status.canStart ? (
-                    <Button size="sm" className="bg-primary hover:bg-primary/90 text-white gap-2" asChild>
-                      <Link href={`/student/assignments/test?id=${a.id}`}>
-                        Start Test <ArrowRight className="w-4 h-4" />
-                      </Link>
-                    </Button>
-                  ) : (
-                    <Button size="sm" disabled variant="outline" className="gap-2">
-                      {submissions.includes(a.id) ? "Already Submitted" : "Access Closed"}
-                    </Button>
-                  )}
-                </CardFooter>
-              </Card>
-            );
-          })}
+                  </CardContent>
+                  <CardFooter className="bg-slate-50/50 border-t mt-4 py-4 flex justify-between items-center">
+                    <span className="text-xs text-muted-foreground">Bilingual (English / Hindi) Format.</span>
+                    {status.canStart ? (
+                      <Button size="sm" className="bg-primary hover:bg-primary/90 text-white gap-2" asChild>
+                        <Link href={`/student/assignments/test?id=${a.id}`}>
+                          Start Test <ArrowRight className="w-4 h-4" />
+                        </Link>
+                      </Button>
+                    ) : (
+                      <Button size="sm" disabled variant="outline" className="gap-2">
+                        {submissions.includes(a.id) ? "Already Submitted" : "Access Closed"}
+                      </Button>
+                    )}
+                  </CardFooter>
+                </Card>
+              );
+            })
+          )}
 
-          {assignments.length === 0 && (
+          {(!assignments || assignments.length === 0) && !assignmentsLoading && (
             <div className="bg-white border-2 border-dashed rounded-xl p-20 text-center opacity-40">
               <CheckCircle2 className="w-16 h-16 mx-auto mb-4 text-green-500" />
               <h3 className="text-xl font-bold">All caught up!</h3>

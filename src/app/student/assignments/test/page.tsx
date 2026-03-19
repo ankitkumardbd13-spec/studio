@@ -1,13 +1,14 @@
+
 "use client";
 
 import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { Timer, Send, AlertCircle, Loader2, CheckCircle, Languages } from 'lucide-react';
+import { Timer, Send, Loader2, CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Navbar } from '@/components/layout/Navbar';
 
@@ -49,7 +50,6 @@ function AssignmentTestContent() {
     const saved = localStorage.getItem('mpiti_assignments');
     const results = JSON.parse(localStorage.getItem('mpiti_results') || '[]');
     
-    // Check if already attempted
     const alreadyDone = results.some((r: any) => r.assignmentId === id);
     if (alreadyDone) {
       toast({ variant: 'destructive', title: 'Already Attempted', description: 'You have already completed this test.' });

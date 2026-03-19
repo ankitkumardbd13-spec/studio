@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -108,7 +109,7 @@ export default function StudentAssignmentsPage() {
                   <span className="text-xs text-muted-foreground">Bilingual (English / Hindi) Format.</span>
                   {status.canStart ? (
                     <Button size="sm" className="bg-primary hover:bg-primary/90 text-white gap-2" asChild>
-                      <Link href={`/student/assignments/${a.id}`}>
+                      <Link href={`/student/assignments/test?id=${a.id}`}>
                         Start Test <ArrowRight className="w-4 h-4" />
                       </Link>
                     </Button>

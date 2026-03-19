@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -13,6 +14,9 @@ import { Separator } from '@/components/ui/separator';
 import { Plus, Trash2, Calendar, Clock, Wand2, FileText, Loader2, Save, X, Timer, Languages } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { generateAssignmentAndMockTest } from '@/ai/flows/admin-assignment-mock-test-generator';
+import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, addDoc, serverTimestamp, deleteDoc, doc, query, orderBy } from 'firebase/firestore';
+import { addDocumentNonBlocking, deleteDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 
 interface Question {
   id: string;
@@ -32,12 +36,21 @@ interface Assignment {
   deadlineTime: string;
   durationMinutes: number;
   questions: Question[];
-  createdAt: string;
+  createdAt: any;
 }
 
 export default function AdminAssignmentsPage() {
   const { toast } = useToast();
-  const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const db = useFirestore();
+  
+  // Firestore Data
+  const assignmentsQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return query(collection(db, 'assignments'), orderBy('createdAt', 'desc'));
+  }, [db]);
+
+  const { data: assignments, isLoading: assignmentsLoading } = useCollection<Assignment>(assignmentsQuery);
+
   const [isAdding, setIsAdding] = useState(false);
   const [loadingAI, setLoadingAI] = useState(false);
 
@@ -51,19 +64,15 @@ export default function AdminAssignmentsPage() {
   const [durationMinutes, setDurationMinutes] = useState(60);
   const [questions, setQuestions] = useState<Question[]>([]);
 
-  useEffect(() => {
-    const saved = localStorage.getItem('mpiti_assignments');
-    if (saved) setAssignments(JSON.parse(saved));
-  }, []);
-
   const handleSaveAssignment = () => {
     if (!title || !deadlineDate || questions.length === 0) {
       toast({ variant: 'destructive', title: 'Missing Information', description: 'Please fill title, deadline and add questions.' });
       return;
     }
 
-    const newAssignment: Assignment = {
-      id: Date.now().toString(),
+    if (!db) return;
+
+    const assignmentData = {
       title,
       trade,
       year: parseInt(year),
@@ -72,21 +81,19 @@ export default function AdminAssignmentsPage() {
       deadlineTime,
       durationMinutes,
       questions,
-      createdAt: new Date().toISOString()
+      createdAt: serverTimestamp()
     };
 
-    const updated = [newAssignment, ...assignments];
-    setAssignments(updated);
-    localStorage.setItem('mpiti_assignments', JSON.stringify(updated));
+    addDocumentNonBlocking(collection(db, 'assignments'), assignmentData);
+    
     resetForm();
     setIsAdding(false);
     toast({ title: 'Assignment Created', description: 'Students can now view this bilingual test.' });
   };
 
   const deleteAssignment = (id: string) => {
-    const updated = assignments.filter(a => a.id !== id);
-    setAssignments(updated);
-    localStorage.setItem('mpiti_assignments', JSON.stringify(updated));
+    if (!db) return;
+    deleteDocumentNonBlocking(doc(db, 'assignments', id));
     toast({ title: 'Assignment Deleted', variant: 'destructive' });
   };
 
@@ -305,31 +312,35 @@ export default function AdminAssignmentsPage() {
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {assignments.map(a => (
-              <Card key={a.id} className="border-none shadow-sm hover:shadow-md transition-shadow">
-                <CardHeader className="pb-2">
-                  <div className="flex justify-between items-start">
-                    <Badge variant="outline" className="bg-primary/5 text-primary">{a.trade} - Y{a.year}</Badge>
-                    <Button variant="ghost" size="sm" onClick={() => deleteAssignment(a.id)} className="text-red-400 h-8 w-8 p-0"><Trash2 className="w-4 h-4" /></Button>
-                  </div>
-                  <CardTitle className="text-xl mt-2">{a.title}</CardTitle>
-                  <CardDescription className="text-secondary font-bold uppercase text-[10px] tracking-widest">{a.subject}</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <FileText className="w-4 h-4" /> {a.questions.length} Bilingual MCQs
-                   </div>
-                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Timer className="w-4 h-4" /> Duration: {a.durationMinutes} Minutes
-                   </div>
-                   <div className="flex items-center gap-2 text-sm font-bold text-secondary">
-                      <Calendar className="w-4 h-4" /> Deadline: {a.deadlineDate} @ {a.deadlineTime}
-                   </div>
-                   <Button variant="outline" className="w-full">View Submissions</Button>
-                </CardContent>
-              </Card>
-            ))}
-            {assignments.length === 0 && (
+            {assignmentsLoading ? (
+               <div className="col-span-full flex justify-center py-20"><Loader2 className="animate-spin w-10 h-10 text-primary" /></div>
+            ) : (
+              assignments?.map(a => (
+                <Card key={a.id} className="border-none shadow-sm hover:shadow-md transition-shadow">
+                  <CardHeader className="pb-2">
+                    <div className="flex justify-between items-start">
+                      <Badge variant="outline" className="bg-primary/5 text-primary">{a.trade} - Y{a.year}</Badge>
+                      <Button variant="ghost" size="sm" onClick={() => deleteAssignment(a.id)} className="text-red-400 h-8 w-8 p-0"><Trash2 className="w-4 h-4" /></Button>
+                    </div>
+                    <CardTitle className="text-xl mt-2">{a.title}</CardTitle>
+                    <CardDescription className="text-secondary font-bold uppercase text-[10px] tracking-widest">{a.subject}</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <FileText className="w-4 h-4" /> {a.questions.length} Bilingual MCQs
+                     </div>
+                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Timer className="w-4 h-4" /> Duration: {a.durationMinutes} Minutes
+                     </div>
+                     <div className="flex items-center gap-2 text-sm font-bold text-secondary">
+                        <Calendar className="w-4 h-4" /> Deadline: {a.deadlineDate} @ {a.deadlineTime}
+                     </div>
+                     <Button variant="outline" className="w-full">View Submissions</Button>
+                  </CardContent>
+                </Card>
+              ))
+            )}
+            {(!assignments || assignments.length === 0) && !assignmentsLoading && (
               <div className="col-span-full bg-white border-2 border-dashed rounded-xl p-20 text-center opacity-40">
                 <FileText className="w-12 h-12 mx-auto mb-4" />
                 <p>No assignments published. Click "New Assignment" to start.</p>

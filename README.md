@@ -3,29 +3,35 @@
 
 Official management and student portal for Maharana Pratap ITI, Rankhandi, Saharanpur.
 
-## 🛠 Tech Stack (किसमें कोडिंग है)
-- **Framework**: Next.js 15 (App Router)
+## 🚀 FREE HOSTING GUIDE (वेबसाइट लाइव कैसे करें)
+
+अगर आपको Firebase का "Welcome" पेज दिख रहा है, तो इन 3 स्टेप्स को फॉलो करें:
+
+1. **Purana Page Delete Karein**: Terminal mein ye command chalayein:
+   `rm public/index.html`
+   (Yeh file aapki asli website ko block karti hai).
+
+2. **HTML Generate Karein**:
+   `npm run build`
+   (Isse `out` folder banega jisme aapki puri website HTML mein convert ho jayegi).
+
+3. **Deploy Karein**:
+   `firebase deploy`
+
+## 🛠 Tech Stack (तकनीकी जानकारी)
+- **Framework**: Next.js 15 (Static Export Mode)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS & ShadCN UI
-- **Database**: Firebase Firestore
+- **Database**: Firebase Firestore (Real-time)
 - **Authentication**: Firebase Auth
-- **AI Engine**: Google Genkit (Gemini 2.5 Flash)
-- **Deployment**: Firebase Hosting & GitHub Actions
-
-## 🚀 CRITICAL: Fix "Welcome to Firebase" Page
-If you see the default Firebase "Welcome" page instead of your app, follow these 3 steps:
-1. **Delete Placeholder**: Open your terminal and run `rm public/index.html`. This file blocks your real app.
-2. **Build Your App**: Run `npm run build`. This creates the `out` folder with your real website.
-3. **Deploy**: Run `firebase deploy`.
+- **AI Engine**: Google Genkit (Gemini 1.5 Flash)
 
 ## 🤖 GitHub Automatic Updates
-1. Go to your GitHub Repository > Settings > Secrets and variables > Actions.
-2. Add a **New repository secret** named `FIREBASE_SERVICE_ACCOUNT_MPITI_PORTAL`.
-3. Paste your Firebase Service Account JSON key.
-4. Every push to the `main` branch will now automatically update your live website.
+1. GitHub Repo > Settings > Secrets > Actions mein jayein.
+2. `FIREBASE_SERVICE_ACCOUNT_MPITI_PORTAL` naam ka secret add karein.
+3. Ab har push par website apne aap update hogi.
 
 ## 🛠 Features
-- **Full Stack**: Powered by Firebase Auth and Firestore.
-- **Bilingual**: English and Hindi support.
-- **Admin Panel**: Manage students, fees, and AI-generated assignments.
-- **Student Portal**: Access digital ID cards and exam results.
+- **Full Stack**: Firebase se connect hai.
+- **Bilingual**: English aur Hindi dono mein.
+- **Student Portal**: ID Card, Result aur Assignments access karein.

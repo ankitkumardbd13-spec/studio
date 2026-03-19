@@ -3,10 +3,10 @@
 
 Official management and student portal for Maharana Pratap ITI, Rankhandi, Saharanpur.
 
-## 🚀 How to Make Your Web Live
-If you see the default Firebase "Welcome" page instead of your app, follow these steps:
-1. **Delete Placeholder**: Delete the file `public/index.html` from your project. This is a default file created by Firebase that hides your real app.
-2. **Build Your App**: Run `npm run build` in your terminal. This creates the `out` folder.
+## 🚀 CRITICAL: Fix "Welcome to Firebase" Page
+If you see the default Firebase "Welcome" page instead of your app, follow these 3 steps:
+1. **Delete Placeholder**: Open your terminal and run `rm public/index.html` (or delete it manually in your folder). This file is a default placeholder that blocks your real app.
+2. **Build Your App**: Run `npm run build`. This creates the `out` folder containing your real website.
 3. **Deploy**: Run `firebase deploy`.
 
 ## 🤖 GitHub Automatic Updates

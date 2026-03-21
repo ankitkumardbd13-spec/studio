@@ -10,7 +10,6 @@ import { useFirestore } from '@/firebase/provider';
 import { collection, addDoc, getDocs, query, where, deleteDoc, doc, Timestamp } from 'firebase/firestore';
 import { Loader2, Download, Plus, Bot, Clock, CalendarDays, BookOpen, FileText } from 'lucide-react';
 import { downloadExcel } from '@/lib/excel';
-import { generateQuestionsTarget } from './actions';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
 
 export default function AssignmentsPage() {
@@ -23,9 +22,15 @@ export default function AssignmentsPage() {
   const [lastDate, setLastDate] = useState("");
   const [timerMinutes, setTimerMinutes] = useState("30");
   
-  const [isGenerating, setIsGenerating] = useState(false);
   const [questionsPreview, setQuestionsPreview] = useState<any[]>([]);
   const [isSaving, setIsSaving] = useState(false);
+  
+  const [questionText, setQuestionText] = useState("");
+  const [opt0, setOpt0] = useState("");
+  const [opt1, setOpt1] = useState("");
+  const [opt2, setOpt2] = useState("");
+  const [opt3, setOpt3] = useState("");
+  const [correctIndex, setCorrectIndex] = useState("0");
   
   const [assignments, setAssignments] = useState<any[]>([]);
   const [loadingAssignments, setLoadingAssignments] = useState(true);
@@ -47,25 +52,22 @@ export default function AssignmentsPage() {
     }
   };
 
-  const handleGenerate = async () => {
-    if (!subject || !topic) {
-      return toast({ title: "Missing Fields", description: "Please enter Subject and Topic.", variant: "destructive" });
+  const handleAddQuestion = () => {
+    if (!questionText || !opt0 || !opt1 || !opt2 || !opt3) {
+      return toast({ title: "Incomplete", description: "Fill out the question and all 4 options.", variant: "destructive" });
     }
-    const safeTitle = title || `${subject} - ${topic} Mock Test`;
-    setTitle(safeTitle);
+    const newQ = {
+      question: questionText,
+      options: [opt0, opt1, opt2, opt3],
+      correctAnswerIndex: parseInt(correctIndex)
+    };
+    setQuestionsPreview([...questionsPreview, newQ]);
     
-    setIsGenerating(true);
-    setQuestionsPreview([]);
-    
-    const res = await generateQuestionsTarget(subject, topic);
-    setIsGenerating(false);
-    
-    if (res.success && res.questions) {
-      setQuestionsPreview(res.questions);
-      toast({ title: "Generated", description: `Successfully generated ${res.questions.length} questions.` });
-    } else {
-      toast({ title: "Error", description: res.error, variant: "destructive" });
-    }
+    // Reset question form
+    setQuestionText("");
+    setOpt0(""); setOpt1(""); setOpt2(""); setOpt3("");
+    setCorrectIndex("0");
+    toast({ title: "Added", description: `Added question ${questionsPreview.length + 1}.` });
   };
 
   const handleSave = async () => {
@@ -179,8 +181,8 @@ export default function AssignmentsPage() {
         {/* Create Assignment Form */}
         <Card className="shadow-md border-t-4 border-t-primary h-fit">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2"><Bot className="w-5 h-5"/> AI-Powered Generator</CardTitle>
-            <CardDescription>Generate 30 objective questions based on a subject and topic.</CardDescription>
+            <CardTitle className="flex items-center gap-2"><Plus className="w-5 h-5"/> Manual Assignment Creator</CardTitle>
+            <CardDescription>Manually add questions for a new assignment.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
@@ -192,34 +194,52 @@ export default function AssignmentsPage() {
                  <Label>Topic</Label>
                  <Input placeholder="e.g. Basic Wiring" value={topic} onChange={(e) => setTopic(e.target.value)} />
               </div>
+              <div className="space-y-2 col-span-2">
+                 <Label>Assignment Title</Label>
+                 <Input placeholder="Enter Title" value={title} onChange={(e) => setTitle(e.target.value)} />
+              </div>
+              <div className="space-y-2">
+                 <Label>Last Submission Date</Label>
+                 <Input type="date" value={lastDate} onChange={(e) => setLastDate(e.target.value)} />
+              </div>
+              <div className="space-y-2">
+                 <Label>Timer (Minutes)</Label>
+                 <Input type="number" value={timerMinutes} onChange={(e) => setTimerMinutes(e.target.value)} />
+              </div>
             </div>
             
-            <Button 
-                onClick={handleGenerate} 
-                disabled={isGenerating || !subject || !topic} 
-                variant="outline" 
-                className="w-full border-primary text-primary hover:bg-primary/5"
-            >
-              {isGenerating ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Generating AI Questions...</> : <><Bot className="w-4 h-4 mr-2" /> Generate 30 Questions (Gemini)</>}
-            </Button>
+            <div className="pt-4 mt-4 border-t space-y-4">
+              <h3 className="font-semibold text-sm text-primary">Add a Question ({questionsPreview.length} Added)</h3>
+              <div className="space-y-2">
+                <Label>Question</Label>
+                <Input placeholder="Type question here..." value={questionText} onChange={(e) => setQuestionText(e.target.value)} />
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <Input placeholder="Option 1" value={opt0} onChange={(e) => setOpt0(e.target.value)} />
+                <Input placeholder="Option 2" value={opt1} onChange={(e) => setOpt1(e.target.value)} />
+                <Input placeholder="Option 3" value={opt2} onChange={(e) => setOpt2(e.target.value)} />
+                <Input placeholder="Option 4" value={opt3} onChange={(e) => setOpt3(e.target.value)} />
+              </div>
+              <div className="space-y-2">
+                 <Label>Correct Answer</Label>
+                 <select 
+                   className="w-full h-10 px-3 py-2 border rounded-md text-sm"
+                   value={correctIndex} 
+                   onChange={(e) => setCorrectIndex(e.target.value)}
+                 >
+                   <option value="0">Option 1</option>
+                   <option value="1">Option 2</option>
+                   <option value="2">Option 3</option>
+                   <option value="3">Option 4</option>
+                 </select>
+              </div>
+              <Button onClick={handleAddQuestion} variant="outline" className="w-full text-primary border-primary">
+                <Plus className="w-4 h-4 mr-2" /> Add Question to Assignment
+              </Button>
+            </div>
             
             {questionsPreview.length > 0 && (
               <div className="pt-4 mt-4 border-t space-y-4">
-                <div className="space-y-2">
-                   <Label>Assignment Title</Label>
-                   <Input value={title} onChange={(e) => setTitle(e.target.value)} />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                     <Label>Last Submission Date</Label>
-                     <Input type="date" value={lastDate} onChange={(e) => setLastDate(e.target.value)} />
-                  </div>
-                  <div className="space-y-2">
-                     <Label>Timer (Minutes)</Label>
-                     <Input type="number" value={timerMinutes} onChange={(e) => setTimerMinutes(e.target.value)} />
-                  </div>
-                </div>
-                
                 <Accordion type="single" collapsible className="w-full bg-slate-50 p-2 rounded border">
                   <AccordionItem value="preview" className="border-none">
                     <AccordionTrigger className="text-sm font-semibold p-2 hover:no-underline"><span className="flex items-center gap-2"><FileText className="w-4 h-4"/>Preview {questionsPreview.length} Questions</span></AccordionTrigger>

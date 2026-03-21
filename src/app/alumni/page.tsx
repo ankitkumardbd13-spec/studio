@@ -10,7 +10,6 @@ import { useToast } from '@/hooks/use-toast';
 import { useFirestore } from '@/firebase/provider';
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
 import { Loader2, Send, Star } from 'lucide-react';
-import { validateAlumniReview } from './actions';
 import { Navbar } from '@/components/layout/Navbar';
 
 export default function AlumniSubmissionPage() {
@@ -44,23 +43,7 @@ export default function AlumniSubmissionPage() {
     setIsSubmitting(true);
     
     try {
-      // 1. AI Validation
-      toast({ title: "Validating", description: "Running AI moderation on your message..." });
-      const aiRes = await validateAlumniReview(formData.message);
-      
-      if (!aiRes.success || !aiRes.result) {
-        throw new Error("AI moderation failed to respond.");
-      }
-      
-      const { isAppropriate, reason } = aiRes.result;
-      
-      if (!isAppropriate) {
-        toast({ title: "Message Rejected", description: `Your message was flagged: ${reason}`, variant: "destructive", duration: 7000 });
-        setIsSubmitting(false);
-        return;
-      }
-
-      // 2. Save to Firestore as pending
+      // 1. Save to Firestore as pending
       await addDoc(collection(firestore, 'alumniReviews'), {
         ...formData,
         status: 'pending',
@@ -104,7 +87,7 @@ export default function AlumniSubmissionPage() {
             <Card className="shadow-lg border-t-4 border-t-primary">
               <CardHeader>
                 <CardTitle>Submit Your Review</CardTitle>
-                <CardDescription>All submissions are moderated by AI to ensure appropriate content.</CardDescription>
+                <CardDescription>Share your honest experience to help prospective students.</CardDescription>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-6">

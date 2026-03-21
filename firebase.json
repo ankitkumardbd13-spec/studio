@@ -5,13 +5,17 @@
   "storage": {
     "rules": "storage.rules"
   },
-  "apphosting": {
-    "backendId": "mpiti-web",
-    "rootDir": "/",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ]
-  }
+  "apphosting": [
+    {
+      "backendId": "mpiti-web",
+      "rootDir": "/",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "functions"
+      ]
+    }
+  ]
 }

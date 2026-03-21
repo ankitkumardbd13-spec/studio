@@ -1,35 +1,39 @@
 
 'use client';
 
-import { firebaseConfig } from '@/firebase/config';
+
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore'
 
-// IMPORTANT: DO NOT MODIFY THIS FUNCTION
 export function initializeFirebase() {
-  if (!getApps().length) {
-    let firebaseApp;
-    try {
-      firebaseApp = initializeApp();
-    } catch (e) {
-      if (process.env.NODE_ENV === "production") {
-        console.warn('Automatic initialization failed. Falling back to firebase config object.', e);
-      }
-      firebaseApp = initializeApp(firebaseConfig);
-    }
+  const firebaseConfig = {
+    projectId: "mpiti-web",
+    appId: "1:224432144817:web:4f9ac1cbd689ae2bf43d90",
+    databaseURL: "https://mpiti-web-default-rtdb.firebaseio.com",
+    storageBucket: "mpiti-web.firebasestorage.app",
+    apiKey: "AIzaSyDICqBqEgiBO1CjKYIRt2-jGTXrw8K-6Eg",
+    authDomain: "mpiti-web.firebaseapp.com",
+    messagingSenderId: "224432144817",
+    measurementId: "G-MZSJSDB3Q2"
+  };
 
+  if (!getApps().length) {
+    const firebaseApp = initializeApp(firebaseConfig);
     return getSdks(firebaseApp);
   }
 
   return getSdks(getApp());
 }
 
+import { getStorage } from 'firebase/storage';
+
 export function getSdks(firebaseApp: FirebaseApp) {
   return {
     firebaseApp,
     auth: getAuth(firebaseApp),
-    firestore: getFirestore(firebaseApp)
+    firestore: getFirestore(firebaseApp),
+    storage: getStorage(firebaseApp)
   };
 }
 

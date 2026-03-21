@@ -1,208 +1,104 @@
-
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { 
-  LayoutDashboard, 
-  FileText, 
-  Bell, 
-  CreditCard, 
-  BookOpen, 
-  Award, 
-  User, 
-  IdCard,
-  LogOut,
-  ChevronRight,
-  BookMarked,
-  ShieldCheck,
-  AlertCircle
-} from 'lucide-react';
+import React from 'react';
+import { useStudent } from './layout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { BookOpen, Calendar, CheckCircle2, Bookmark, CreditCard } from 'lucide-react';
 
-export default function StudentDashboard() {
-  const studentPhoto = PlaceHolderImages.find(img => img.id === 'student-1')?.imageUrl;
-  const [assignmentCount, setAssignmentCount] = useState(0);
-
-  useEffect(() => {
-    const saved = localStorage.getItem('mpiti_assignments');
-    if (saved) {
-      const all = JSON.parse(saved);
-      // Mocked user trade filter
-      const filtered = all.filter((a: any) => a.trade === 'Electrician' && a.year === 1);
-      setAssignmentCount(filtered.length);
-    }
-  }, []);
-
-  const quickLinks = [
-    { title: 'My Assignments', icon: <FileText className="w-5 h-5" />, href: '/student/assignments', color: 'bg-blue-500', count: assignmentCount },
-    { title: 'Fee Payment', icon: <CreditCard className="w-5 h-5" />, href: '/student/fees', color: 'bg-green-500' },
-    { title: 'View Syllabus', icon: <BookOpen className="w-5 h-5" />, href: '/student/syllabus', color: 'bg-amber-500' },
-    { title: 'Exam Results', icon: <Award className="w-5 h-5" />, href: '/student/results', color: 'bg-purple-500' },
-    { title: 'Digital ID Card', icon: <IdCard className="w-5 h-5" />, href: '/student/id-card', color: 'bg-red-500' },
-  ];
-
-  const notifications = [
-    { text: 'Mock Test for Electrician Year 1 starts tomorrow.', date: '2 hours ago' },
-    { text: 'Fees for Semester 2 last date is 30th May.', date: '1 day ago' },
-    { text: 'New assignment uploaded for Engineering Drawing.', date: '2 days ago' },
-  ];
+export default function StudentDashboardHome() {
+  const student = useStudent()!;
 
   return (
-    <div className="min-h-screen bg-muted/30 flex">
-      {/* Sidebar */}
-      <aside className="hidden lg:flex flex-col w-72 bg-primary text-primary-foreground border-r">
-        <div className="p-6">
-          <h2 className="font-headline text-2xl font-bold">MPITI Connect</h2>
+    <div className="space-y-8 animate-in fade-in duration-500">
+      <div className="bg-primary text-primary-foreground rounded-2xl p-8 shadow-xl relative overflow-hidden">
+        {/* Decorative background circle */}
+        <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-32 h-32 bg-secondary/30 rounded-full blur-2xl" />
+        
+        <div className="relative z-10">
+          <h1 className="text-4xl md:text-5xl font-headline font-black mb-2">
+            Welcome back, <span className="text-secondary">{student.name.split(' ')[0]}</span>!
+          </h1>
+          <p className="text-lg text-primary-foreground/90 font-medium">
+            Academic Session {student.session} | {student.trade}
+          </p>
         </div>
-        <nav className="flex-1 px-4 space-y-1">
-          <Link href="/student/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-lg bg-white/10 text-white font-medium">
-            <LayoutDashboard className="w-5 h-5" /> Dashboard
-          </Link>
-          <Link href="/student/profile" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 transition-colors">
-            <User className="w-5 h-5" /> My Profile
-          </Link>
-          <Link href="/student/assignments" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 transition-colors">
-            <FileText className="w-5 h-5" /> Assignments
-          </Link>
-          <Link href="/student/syllabus" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 transition-colors">
-            <BookMarked className="w-5 h-5" /> View Syllabus
-          </Link>
-          <Link href="/student/id-card" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 transition-colors">
-            <IdCard className="w-5 h-5" /> Digital ID Card
-          </Link>
-        </nav>
-        <div className="p-4 border-t border-white/10 space-y-2">
-          <Button variant="ghost" className="w-full justify-start gap-3 text-white hover:bg-white/5" asChild>
-            <Link href="/login?type=admin"><ShieldCheck className="w-5 h-5" /> Admin Login</Link>
-          </Button>
-          <Button variant="ghost" className="w-full justify-start gap-3 text-white hover:bg-white/5" asChild>
-            <Link href="/login"><LogOut className="w-5 h-5" /> Logout</Link>
-          </Button>
-        </div>
-      </aside>
+      </div>
 
-      {/* Main Content */}
-      <main className="flex-1 p-4 md:p-8">
-        {/* Header / Welcome */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
-          <div className="flex items-center gap-4">
-            <div className="w-20 h-20 rounded-full overflow-hidden border-4 border-white shadow-lg">
-              {studentPhoto && <Image src={studentPhoto} alt="Student" width={80} height={80} className="object-cover" />}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card className="border-none shadow-md hover:shadow-lg transition-shadow bg-blue-50/50">
+          <CardHeader className="pb-2">
+            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-2">
+              <CheckCircle2 className="w-6 h-6 text-blue-600" />
             </div>
-            <div>
-              <h1 className="font-headline text-3xl text-primary font-bold">Welcome, Rahul Kumar</h1>
-              <p className="text-muted-foreground font-medium">Trade: Electrician (2023-25) | Year: 1st</p>
+            <CardTitle className="text-lg">Admission</CardTitle>
+            <CardDescription className="font-bold text-green-600">Approved</CardDescription>
+          </CardHeader>
+        </Card>
+        
+        <Card className="border-none shadow-md hover:shadow-lg transition-shadow bg-amber-50/50">
+          <CardHeader className="pb-2">
+            <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center mb-2">
+              <Bookmark className="w-6 h-6 text-amber-600" />
             </div>
-          </div>
-          <Button variant="outline" className="border-primary text-primary hover:bg-primary/5" asChild>
-            <Link href="/student/profile">Edit Profile</Link>
-          </Button>
-        </div>
-
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Quick Stats & Progress */}
-          <div className="lg:col-span-2 space-y-8">
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {quickLinks.map((link, idx) => (
-                <Link key={idx} href={link.href}>
-                  <Card className="hover:shadow-md transition-shadow h-full cursor-pointer relative overflow-hidden">
-                    {link.count !== undefined && link.count > 0 && (
-                      <div className="absolute top-2 right-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] text-white font-bold">
-                        {link.count}
-                      </div>
-                    )}
-                    <CardContent className="pt-6 flex flex-col items-center text-center">
-                      <div className={`p-3 rounded-xl mb-3 text-white ${link.color}`}>
-                        {link.icon}
-                      </div>
-                      <p className="font-bold text-sm">{link.title}</p>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
+            <CardTitle className="text-lg">Trade</CardTitle>
+            <CardDescription className="text-slate-700 font-bold">{student.trade}</CardDescription>
+          </CardHeader>
+        </Card>
+        
+        <Card className="border-none shadow-md hover:shadow-lg transition-shadow bg-purple-50/50">
+          <CardHeader className="pb-2">
+            <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-2">
+              <BookOpen className="w-6 h-6 text-purple-600" />
             </div>
+            <CardTitle className="text-lg">Assignments</CardTitle>
+            <CardDescription className="text-slate-700">Check Assignment tab</CardDescription>
+          </CardHeader>
+        </Card>
+        
+        <Card className="border-none shadow-md hover:shadow-lg transition-shadow bg-emerald-50/50">
+          <CardHeader className="pb-2">
+            <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center mb-2">
+              <Calendar className="w-6 h-6 text-emerald-600" />
+            </div>
+            <CardTitle className="text-lg">Session</CardTitle>
+            <CardDescription className="text-slate-700 font-bold">{student.session}</CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
 
-            <Card className="border-none shadow-sm">
-              <CardHeader>
-                <CardTitle>Course Progress</CardTitle>
-                <CardDescription>Your current academic status for Semester 2</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div>
-                  <div className="flex justify-between mb-2 text-sm font-medium">
-                    <span>Practical Skills Training</span>
-                    <span>75%</span>
-                  </div>
-                  <Progress value={75} className="h-2" />
-                </div>
-                <div>
-                  <div className="flex justify-between mb-2 text-sm font-medium">
-                    <span>Theory Completion</span>
-                    <span>60%</span>
-                  </div>
-                  <Progress value={60} className="h-2" />
-                </div>
-                <div>
-                  <div className="flex justify-between mb-2 text-sm font-medium">
-                    <span>Assignments Submitted</span>
-                    <span>8/10</span>
-                  </div>
-                  <Progress value={80} className="h-2" />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+      <div className="grid md:grid-cols-2 gap-8 pt-4">
+         <Card className="border border-slate-200 shadow-sm">
+           <CardHeader>
+             <CardTitle>Important Notices</CardTitle>
+             <CardDescription>Updates from the administration</CardDescription>
+           </CardHeader>
+           <CardContent>
+             <div className="bg-slate-50 p-4 rounded-lg border border-slate-100 text-sm space-y-2">
+                <p className="font-bold text-primary">1. ID Cards Updated</p>
+                <p className="text-slate-600">Your digital ID card profile data has been finalized. Please verify your details in the &quot;My Profile&quot; tab.</p>
+             </div>
+           </CardContent>
+         </Card>
 
-          {/* Side Notifications */}
-          <div className="space-y-8">
-            <Card className="border-none shadow-sm">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-xl">Notifications</CardTitle>
-                <Bell className="w-5 h-5 text-secondary" />
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {notifications.map((n, idx) => (
-                  <div key={idx} className="flex gap-4 p-3 rounded-lg bg-accent/20 border-l-4 border-secondary">
-                    <div>
-                      <p className="text-sm font-medium leading-snug">{n.text}</p>
-                      <span className="text-xs text-muted-foreground mt-1 block">{n.date}</span>
-                    </div>
-                  </div>
-                ))}
-                <Button variant="ghost" className="w-full text-primary font-bold text-xs" asChild>
-                  <Link href="/student/notifications">View All Notifications <ChevronRight className="w-3 h-3 ml-1" /></Link>
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="border-none shadow-sm bg-primary text-primary-foreground">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                   <AlertCircle className="w-5 h-5" /> Upcoming Deadlines
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {assignmentCount > 0 ? (
-                  <div className="bg-white/10 p-4 rounded-lg mb-4">
-                    <p className="font-bold">You have {assignmentCount} pending assignments.</p>
-                    <p className="text-sm opacity-80 mt-1">Check the Assignments tab to submit before the last date.</p>
-                  </div>
-                ) : (
-                  <p className="text-sm opacity-80">No immediate deadlines. Keep up the good work!</p>
-                )}
-                <Button variant="secondary" className="w-full font-bold" asChild>
-                  <Link href="/student/assignments">View Assignments</Link>
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </main>
+         <Card className="border border-slate-200 shadow-sm">
+           <CardHeader>
+             <CardTitle>Quick Actions</CardTitle>
+           </CardHeader>
+           <CardContent className="space-y-4">
+             <div className="flex gap-4">
+                <div className="flex-1 bg-slate-50 border border-slate-100 p-4 rounded-lg text-center cursor-pointer hover:bg-primary/5 transition-colors">
+                  <BookOpen className="w-6 h-6 mx-auto mb-2 text-primary" />
+                  <p className="font-bold text-sm text-slate-700">View Syllabus</p>
+                </div>
+                <div className="flex-1 bg-slate-50 border border-slate-100 p-4 rounded-lg text-center cursor-pointer hover:bg-primary/5 transition-colors">
+                  <CreditCard className="w-6 h-6 mx-auto mb-2 text-primary" />
+                  <p className="font-bold text-sm text-slate-700">Check Fees</p>
+                </div>
+             </div>
+           </CardContent>
+         </Card>
+      </div>
     </div>
   );
 }

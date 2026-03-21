@@ -1,0 +1,96 @@
+
+> mpiti-portal@0.1.0 build
+> next build
+
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of C:\Users\User\package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * C:\Users\User\Downloads\NEW 30 SEP 2025\project\pnpm-lock.yaml
+
+▲ Next.js 16.2.1-canary.2 (Turbopack)
+- Environments: .env
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 13.6s
+  Running TypeScript ...
+  Finished TypeScript in 9.7s ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/25) ...
+⚠ Unsupported metadata viewport is configured in metadata export in /admin/dashboard/alumni. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+⚠ Unsupported metadata viewport is configured in metadata export in /_not-found. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+⚠ Unsupported metadata viewport is configured in metadata export in /admin/dashboard/approvals. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+⚠ Unsupported metadata viewport is configured in metadata export in /admin/dashboard/assignments. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+⚠ Unsupported metadata viewport is configured in metadata export in /admin/dashboard/fees. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+⚠ Unsupported metadata viewport is configured in metadata export in /admin/dashboard/gallery. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+⚠ Unsupported metadata viewport is configured in metadata export in /admin/dashboard/notifications. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+  Generating static pages using 7 workers (6/25) 
+⚠ Unsupported metadata viewport is configured in metadata export in /admin/dashboard. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+⚠ Unsupported metadata viewport is configured in metadata export in /admin/dashboard/settings. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+⚠ Unsupported metadata viewport is configured in metadata export in /admin/dashboard/students. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+⚠ Unsupported metadata viewport is configured in metadata export in /admission. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+⚠ Unsupported metadata viewport is configured in metadata export in /alumni. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+⚠ Unsupported metadata viewport is configured in metadata export in /contact. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+⚠ Unsupported metadata viewport is configured in metadata export in /login. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+  Generating static pages using 7 workers (12/25) 
+⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+⚠ Unsupported metadata viewport is configured in metadata export in /signup. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+⚠ Unsupported metadata viewport is configured in metadata export in /student/dashboard/assignments. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+⚠ Unsupported metadata viewport is configured in metadata export in /student/dashboard/fees. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+⚠ Unsupported metadata viewport is configured in metadata export in /student/dashboard. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+⚠ Unsupported metadata viewport is configured in metadata export in /student/dashboard/profile. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+  Generating static pages using 7 workers (18/25) 
+⚠ Unsupported metadata viewport is configured in metadata export in /student/dashboard/syllabus. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+✓ Generating static pages using 7 workers (25/25) in 1383ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /admin/dashboard
+├ ○ /admin/dashboard/alumni
+├ ○ /admin/dashboard/approvals
+├ ○ /admin/dashboard/assignments
+├ ○ /admin/dashboard/fees
+├ ○ /admin/dashboard/gallery
+├ ○ /admin/dashboard/notifications
+├ ○ /admin/dashboard/settings
+├ ○ /admin/dashboard/students
+├ ○ /admission
+├ ○ /alumni
+├ ○ /contact
+├ ○ /login
+├ ○ /robots.txt
+├ ○ /signup
+├ ○ /sitemap.xml
+├ ○ /student/dashboard
+├ ○ /student/dashboard/assignments
+├ ○ /student/dashboard/fees
+├ ○ /student/dashboard/profile
+└ ○ /student/dashboard/syllabus
+
+
+○  (Static)  prerendered as static content
+

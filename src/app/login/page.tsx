@@ -11,14 +11,21 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { useToast } from '@/hooks/use-toast';
 import { LogIn, User, ShieldCheck, Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { useAuth, useFirestore } from '@/firebase/provider';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { toast } = useToast();
+  const auth = useAuth();
+  const firestore = useFirestore();
+  
   const [loginType, setLoginType] = useState<'student' | 'admin'>('student');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const type = searchParams.get('type');
@@ -26,14 +33,46 @@ function LoginContent() {
     else setLoginType('student');
   }, [searchParams]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (loginType === 'admin') {
-      toast({ title: "Welcome Admin", description: "Successfully logged into management panel." });
-      router.push('/admin/dashboard');
-    } else {
-      toast({ title: "Welcome Back", description: "Successfully logged into student portal." });
-      router.push('/student/dashboard');
+    setLoading(true);
+    try {
+      if (loginType === 'admin') {
+        await signInWithEmailAndPassword(auth, email, password);
+        toast({ title: "Welcome Admin", description: "Successfully logged into management panel." });
+        router.push('/admin/dashboard');
+      } else {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const uid = userCredential.user.uid;
+        
+        // Check student status in Firestore
+        const studentRef = doc(firestore, 'students', uid);
+        const studentDoc = await getDoc(studentRef);
+        
+        if (studentDoc.exists()) {
+          const status = studentDoc.data().status;
+          if (status === 'pending') {
+            await auth.signOut();
+            throw new Error("Your registration is still under review by Admin.");
+          } else if (status === 'blocked') {
+            await auth.signOut();
+            throw new Error("Your account has been blocked by Admin.");
+          } else if (status !== 'approved') {
+            await auth.signOut();
+            throw new Error("Your account lacks portal access permissions.");
+          }
+        } else {
+          await auth.signOut();
+          throw new Error("Student profile not found.");
+        }
+        
+        toast({ title: "Welcome Back", description: "Successfully logged into student portal." });
+        router.push('/student/dashboard');
+      }
+    } catch (error: any) {
+      toast({ title: "Login Failed", description: error.message || "Invalid credentials", variant: "destructive" });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -79,8 +118,9 @@ function LoginContent() {
               />
             </div>
 
-            <Button type="submit" className="w-full bg-secondary hover:bg-secondary/90 text-white font-bold h-11">
-              Login Access
+            <Button type="submit" disabled={loading} className="w-full bg-secondary hover:bg-secondary/90 text-white font-bold h-11">
+              {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+              {loading ? "Authenticating..." : "Login Access"}
             </Button>
 
             <div className="text-center space-y-4 pt-2">

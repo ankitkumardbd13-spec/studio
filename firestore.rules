@@ -58,5 +58,18 @@ service cloud.firestore {
       allow read: if isAdmin() || (isSignedIn() && resource.data.studentId == request.auth.uid);
       allow write: if isAdmin();
     }
+    // Frontend mapping collections
+    match /notifications/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /gallery/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /alumni/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
   }
 }

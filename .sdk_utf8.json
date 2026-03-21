@@ -1,0 +1,19 @@
+﻿{
+  "status": "success",
+  "result": {
+    "fileName": "firebase-js-config.json",
+    "fileContents": "{\n  \"projectId\": \"mpiti-web\",\n  \"appId\": \"1:224432144817:web:4f9ac1cbd689ae2bf43d90\",\n  \"databaseURL\": \"https://mpiti-web-default-rtdb.firebaseio.com\",\n  \"storageBucket\": \"mpiti-web.firebasestorage.app\",\n  \"apiKey\": \"AIzaSyDICqBqEgiBO1CjKYIRt2-jGTXrw8K-6Eg\",\n  \"authDomain\": \"mpiti-web.firebaseapp.com\",\n  \"messagingSenderId\": \"224432144817\",\n  \"measurementId\": \"G-MZSJSDB3Q2\",\n  \"projectNumber\": \"224432144817\",\n  \"version\": \"2\"\n}",
+    "sdkConfig": {
+      "projectId": "mpiti-web",
+      "appId": "1:224432144817:web:4f9ac1cbd689ae2bf43d90",
+      "databaseURL": "https://mpiti-web-default-rtdb.firebaseio.com",
+      "storageBucket": "mpiti-web.firebasestorage.app",
+      "apiKey": "AIzaSyDICqBqEgiBO1CjKYIRt2-jGTXrw8K-6Eg",
+      "authDomain": "mpiti-web.firebaseapp.com",
+      "messagingSenderId": "224432144817",
+      "measurementId": "G-MZSJSDB3Q2",
+      "projectNumber": "224432144817",
+      "version": "2"
+    }
+  }
+}

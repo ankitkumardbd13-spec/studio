@@ -48,6 +48,59 @@
         "status": { "type": "string" },
         "timestamp": { "type": "string", "format": "date-time" }
       }
+    },
+    "Assignment": {
+      "title": "Assignment",
+      "description": "AI-generated or admin-created assignments.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "subject": { "type": "string" },
+        "topic": { "type": "string" },
+        "lastDate": { "type": "string", "format": "date" },
+        "timerMinutes": { "type": "integer" },
+        "questions": {
+           "type": "array",
+           "items": { "type": "object" }
+        }
+      }
+    },
+    "Result": {
+      "title": "Result",
+      "description": "Student assignment submission result.",
+      "type": "object",
+      "properties": {
+        "studentId": { "type": "string" },
+        "assignmentId": { "type": "string" },
+        "score": { "type": "integer" },
+        "total": { "type": "integer" },
+        "percentage": { "type": "number" },
+        "pass Status": { "type": "string", "enum": ["Pass", "Fail"] }
+      }
+    },
+    "Fee": {
+      "title": "Fee",
+      "description": "Student fee payment record.",
+      "type": "object",
+      "properties": {
+        "studentId": { "type": "string" },
+        "amount": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "paid"] },
+        "description": { "type": "string" },
+        "dueDate": { "type": "string", "format": "date" }
+      }
+    },
+    "Alumni": {
+      "title": "Alumni",
+      "description": "Alumni reviews and info.",
+      "type": "object",
+      "properties": {
+        "studentId": { "type": "string" },
+        "name": { "type": "string" },
+        "message": { "type": "string" },
+        "photo": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "approved"] }
+      }
     }
   },
   "auth": {
@@ -69,6 +122,22 @@
     "/roles_admin/{adminUid}": {
       "schema": { "type": "object", "properties": {} },
       "description": "Admin registry for DBAC."
+    },
+    "/assignments/{assignmentId}": {
+      "schema": { "$ref": "#/backend/entities/Assignment" },
+      "description": "Assignments matching the AI generated structures."
+    },
+    "/results/{resultId}": {
+      "schema": { "$ref": "#/backend/entities/Result" },
+      "description": "Submission results from students. One per assignment per student."
+    },
+    "/fees/{feeId}": {
+      "schema": { "$ref": "#/backend/entities/Fee" },
+      "description": "History of fees for a student."
+    },
+    "/alumni/{alumniId}": {
+      "schema": { "$ref": "#/backend/entities/Alumni" },
+      "description": "Reviews submitted by alumni, pending admin approval."
     }
   }
 }

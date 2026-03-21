@@ -1,7 +1,6 @@
 import type { NextConfig } from 'next';
 
-const nextConfig: NextConfig = {
-  output: 'export',
+const nextConfig: any = {
   images: {
     unoptimized: true,
   },

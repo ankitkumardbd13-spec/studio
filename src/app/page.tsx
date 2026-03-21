@@ -6,11 +6,12 @@ import Link from 'next/link';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { MapPin, Phone, Mail, GraduationCap, BookOpen, ClipboardList, ShieldCheck, LayoutGrid, Quote, Loader2, CheckCircle } from 'lucide-react';
+import { MapPin, Phone, Mail, GraduationCap, BookOpen, ClipboardList, ShieldCheck, LayoutGrid, Quote, Loader2, CheckCircle, Star } from 'lucide-react';
 import { Navbar } from '@/components/layout/Navbar';
-import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
-import { doc } from 'firebase/firestore';
+import { useFirestore, useDoc, useCollection, useMemoFirebase } from '@/firebase';
+import { doc, collection, query, orderBy, where } from 'firebase/firestore';
 import { useApp } from '@/components/providers/AppProviders';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from '@/components/ui/carousel';
 
 export default function Home() {
   const { language } = useApp();
@@ -21,7 +22,37 @@ export default function Home() {
     return doc(db, 'siteSettings', 'config');
   }, [db]);
 
-  const { data: siteSettings, isLoading } = useDoc(configQuery);
+  const galleryQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return query(collection(db, 'gallery'), orderBy('timestamp', 'desc'));
+  }, [db]);
+
+  const notifQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return query(collection(db, 'notifications'), orderBy('timestamp', 'desc'));
+  }, [db]);
+
+  const alumniQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return query(collection(db, 'alumniReviews'), where('status', '==', 'approved'), orderBy('createdAt', 'desc'));
+  }, [db]);
+
+  const { data: siteSettings, isLoading: isConfigLoading } = useDoc(configQuery);
+  const { data: galleryDocs } = useCollection(galleryQuery);
+  const { data: notifications } = useCollection(notifQuery);
+  const { data: alumniReviews } = useCollection(alumniQuery);
+
+  const [carouselApi, setCarouselApi] = React.useState<CarouselApi>();
+
+  React.useEffect(() => {
+    if (!carouselApi) return;
+    const interval = setInterval(() => {
+      carouselApi.scrollNext();
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [carouselApi]);
+
+  const isLoading = isConfigLoading;
 
   const defaultData = {
     address: 'Village Post Rankhandi, Deoband, Dist Saharanpur, UP, PIN 247554',
@@ -34,7 +65,8 @@ export default function Home() {
     studentMsg: 'MPITI transformed my life. The practical sessions in the Electrician lab gave me confidence.',
     studentPhoto: PlaceHolderImages.find(i => i.id === 'student-rep')?.imageUrl || '',
     heroTitle: 'Maharana Pratap ITI Saharanpur',
-    heroSub: 'Village Post Rankhandi, Deoband - Providing Excellence Since 2015'
+    heroSub: 'Village Post Rankhandi, Deoband - Providing Excellence Since 2015',
+    heroPhoto: ''
   };
 
   const data = siteSettings ? { ...defaultData, ...siteSettings } : defaultData;
@@ -60,7 +92,7 @@ export default function Home() {
       years: 'उत्कृष्टता के वर्ष',
       approved: 'DGT/NCVT स्वीकृत',
       certified: 'सरकारी प्रमाणित',
-      leadership: 'नेतृत्व संदेश',
+      leadership: 'Administration Messages',
       guiding: 'कौशल उत्कृष्टता की ओर MPITI का मार्गदर्शन',
       chairman: 'अध्यक्ष',
       principal: 'प्रधानाचार्य',
@@ -68,7 +100,11 @@ export default function Home() {
     }
   }[language];
 
-  const galleryItems = [
+  const galleryItems = galleryDocs && galleryDocs.length > 0 ? galleryDocs.map(doc => ({
+    id: doc.id,
+    url: doc.url,
+    title: 'ITI Campus Event'
+  })) : [
     { id: 'g1', url: 'https://picsum.photos/seed/ailab1/800/600', title: 'Electrical Lab' },
     { id: 'g2', url: 'https://picsum.photos/seed/aiclass1/800/600', title: 'Theory Class' },
     { id: 'g3', url: 'https://picsum.photos/seed/aiequip1/800/600', title: 'Workshop Equipment' },
@@ -87,10 +123,16 @@ export default function Home() {
     <main className="min-h-screen bg-background text-foreground">
       <Navbar />
 
+      {notifications && notifications.length > 0 && (
+        <div className="bg-secondary text-white py-3 text-center px-4 font-semibold text-sm animate-in fade-in slide-in-from-top-4">
+          🔔 <span className="mr-2 font-bold uppercase tracking-wider">{notifications[0].title}:</span> {notifications[0].message}
+        </div>
+      )}
+
       {/* Hero Section */}
       <section className="relative h-[750px] w-full flex items-center justify-center">
         <Image
-          src={PlaceHolderImages.find(img => img.id === 'iti-hero')?.imageUrl || ''}
+          src={data.heroPhoto || PlaceHolderImages.find(img => img.id === 'iti-hero')?.imageUrl || ''}
           alt="Campus"
           fill
           className="object-cover brightness-[0.35]"
@@ -103,6 +145,12 @@ export default function Home() {
           <h1 className="font-headline text-5xl md:text-8xl text-white mb-6 drop-shadow-2xl font-bold tracking-tight">
             {data.heroTitle}
           </h1>
+          
+          <div className="mb-6 flex items-center justify-center gap-2 text-white font-bold tracking-widest uppercase bg-primary/80 backdrop-blur-sm w-fit mx-auto px-6 py-2 rounded-full border border-white/20 shadow-xl">
+            <ShieldCheck className="w-5 h-5 text-yellow-400" />
+            ISO 9001:2015 Certified Institute
+          </div>
+
           <p className="text-xl md:text-3xl text-white/90 mb-10 max-w-4xl mx-auto drop-shadow-lg font-medium">
             {data.heroSub}
           </p>
@@ -194,6 +242,56 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* Alumni Reviews Carousel */}
+      {alumniReviews && alumniReviews.length > 0 && (
+        <section className="bg-slate-50 py-24 border-t">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="font-headline text-5xl text-primary font-bold mb-4">Alumni Voices</h2>
+              <p className="text-muted-foreground text-lg">Hear from our successful graduates</p>
+            </div>
+            
+            <div className="max-w-5xl mx-auto px-12 relative">
+              <Carousel setApi={setCarouselApi} opts={{ loop: true, align: "start" }} className="w-full">
+                <CarouselContent className="-ml-4">
+                  {alumniReviews.map((review: any, idx: number) => (
+                    <CarouselItem key={idx} className="pl-4 md:basis-1/2 lg:basis-1/3">
+                      <Card className="h-full border-none shadow-lg hover:shadow-xl transition-shadow bg-white">
+                        <CardContent className="p-6 flex flex-col h-full">
+                          <div className="flex gap-1 mb-4">
+                            {[...Array(5)].map((_, i) => (
+                              <Star key={i} className={`w-4 h-4 ${i < (review.rating || 5) ? 'fill-amber-400 text-amber-400' : 'text-slate-200'}`} />
+                            ))}
+                          </div>
+                          <p className="text-slate-600 italic mb-6 flex-grow">"{review.message}"</p>
+                          <div className="flex items-center gap-4 mt-auto">
+                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                              {review.alumniName?.charAt(0) || 'A'}
+                            </div>
+                            <div>
+                              <p className="font-bold text-sm text-slate-800">{review.alumniName}</p>
+                              <p className="text-xs text-slate-500">{review.trade} • Class of {review.passoutYear}</p>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="absolute -left-12 top-1/2 -translate-y-1/2 w-12 h-12" />
+                <CarouselNext className="absolute -right-12 top-1/2 -translate-y-1/2 w-12 h-12" />
+              </Carousel>
+              
+              <div className="mt-12 text-center">
+                <Button variant="outline" asChild>
+                  <Link href="/alumni">Submit Your Review</Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Footer */}
       <footer className="bg-slate-900 text-white py-16">

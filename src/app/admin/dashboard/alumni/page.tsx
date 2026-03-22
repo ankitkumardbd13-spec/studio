@@ -97,8 +97,8 @@ export default function AlumniPage() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-3xl font-headline font-bold text-primary">Alumni Management</h1>
-        <p className="text-muted-foreground mt-1">Manage alumni directory and moderate incoming reviews.</p>
+        <h1 className="text-3xl font-headline font-bold text-primary">Success Stories & Alumni</h1>
+        <p className="text-muted-foreground mt-1">Manage alumni profiles and moderate success stories/reviews.</p>
       </div>
 
       {/* Reviews Moderation Section */}

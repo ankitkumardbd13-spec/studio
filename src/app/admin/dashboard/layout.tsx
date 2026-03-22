@@ -17,12 +17,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { label: 'Manage Students', href: '/admin/dashboard/students', icon: Users },
     { label: 'Fee Management', href: '/admin/dashboard/fees', icon: CreditCard },
     { label: 'Pending Approvals', href: '/admin/dashboard/approvals', icon: CheckCircle },
+    { label: 'Success Stories & Alumni', href: '/admin/dashboard/alumni', icon: GraduationCap },
     { label: 'Syllabus & Courses', href: '/admin/dashboard/courses', icon: BookOpen },
     { label: 'Assignments', href: '/admin/dashboard/assignments', icon: FileText },
     { label: 'Gallery', href: '/admin/dashboard/gallery', icon: Image },
     { label: 'Notifications', href: '/admin/dashboard/notifications', icon: Bell },
     { label: 'Manual Submissions', href: '/admin/dashboard/manual-submissions', icon: FileText },
-    { label: 'Alumni Directory', href: '/admin/dashboard/alumni', icon: GraduationCap },
   ];
 
   return (

@@ -1,3 +1,7 @@
+"use client";
+
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, where } from 'firebase/firestore';
 import { Loader2, GraduationCap, Users, CheckCircle, BookOpen } from 'lucide-react';

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { useStudent } from './layout';
+import { useStudent } from '@/hooks/use-student';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { BookOpen, Calendar, CheckCircle2, Bookmark, CreditCard } from 'lucide-react';
 

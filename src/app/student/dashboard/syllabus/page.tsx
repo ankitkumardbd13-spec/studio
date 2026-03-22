@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { useStudent } from '../layout';
+import { useStudent } from '@/hooks/use-student';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { BookMarked, Download, Clock, Zap, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';

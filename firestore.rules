@@ -77,5 +77,9 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isAdmin();
     }
+    match /syllabus/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
   }
 }

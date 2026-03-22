@@ -32,6 +32,7 @@ export default function SignupPage() {
     aadhaar: '',
     category: '',
     personalMobile: '',
+    whatsAppMobile: '',
     email: '',
     dob: '',
     trade: '',
@@ -88,6 +89,7 @@ export default function SignupPage() {
         aadhaar: formData.aadhaar,
         category: formData.category,
         mobile: formData.personalMobile,
+        whatsApp: formData.whatsAppMobile,
         email: formData.email,
         dob: formData.dob,
         trade: formData.trade,
@@ -174,12 +176,19 @@ export default function SignupPage() {
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="personalMobile" className="text-slate-700 font-bold">Mobile Number</Label>
+                      <Label htmlFor="personalMobile" className="text-slate-700 font-bold">Personal Mobile Number</Label>
                       <div className="relative">
                         <Input id="personalMobile" type="tel" placeholder="10 Digit Number" required value={formData.personalMobile} onChange={handleChange} className="h-11 pl-11" />
                         <Phone className="absolute left-3.5 top-3 w-5 h-5 text-muted-foreground" />
                       </div>
                     </div>
+                    <div className="space-y-2">
+                    <Label htmlFor="whatsAppMobile" className="text-slate-700 font-bold">WhatsApp Number</Label>
+                    <div className="relative">
+                      <Input id="whatsAppMobile" type="tel" placeholder="WhatsApp Number" required value={formData.whatsAppMobile} onChange={handleChange} className="h-11 pl-11" />
+                      <Phone className="absolute left-3.5 top-3 w-5 h-5 text-muted-foreground" />
+                    </div>
+                  </div>
                     <div className="space-y-2">
                       <Label htmlFor="dob" className="text-slate-700 font-bold">Date of Birth</Label>
                       <div className="relative">

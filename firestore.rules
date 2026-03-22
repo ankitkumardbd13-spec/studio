@@ -53,6 +53,12 @@ service cloud.firestore {
       allow update, delete: if isAdmin();
     }
 
+    match /manual_submissions/{id} {
+      allow read: if isAdmin() || (isSignedIn() && resource.data.studentId == request.auth.uid);
+      allow create: if isSignedIn();
+      allow update, delete: if isAdmin();
+    }
+
     // Fees
     match /fees/{id} {
       allow read: if isAdmin() || (isSignedIn() && resource.data.studentId == request.auth.uid);

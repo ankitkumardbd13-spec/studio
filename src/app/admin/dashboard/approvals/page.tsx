@@ -120,6 +120,7 @@ export default function ApprovalsPage() {
                               <div><Label className="text-muted-foreground text-xs">Category</Label><p className="font-semibold">{student.category}</p></div>
                               <div><Label className="text-muted-foreground text-xs">DOB</Label><p className="font-semibold">{student.dob}</p></div>
                               <div><Label className="text-muted-foreground text-xs">Aadhaar</Label><p className="font-semibold">{student.aadhaar}</p></div>
+                              <div><Label className="text-muted-foreground text-xs">WhatsApp</Label><p className="font-semibold text-green-600">{student.whatsApp || 'N/A'}</p></div>
                               <div><Label className="text-muted-foreground text-xs">Email</Label><p className="font-semibold">{student.email}</p></div>
                            </div>
                            <hr/>

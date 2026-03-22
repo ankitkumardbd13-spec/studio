@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { CreditCard, Download, CheckCircle2, Clock, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useStudent } from '../layout';
+import { useStudent } from '@/hooks/use-student';
 import { useFirestore } from '@/firebase/provider';
 import { collection, query, getDocs, where } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';

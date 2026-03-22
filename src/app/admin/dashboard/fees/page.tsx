@@ -144,10 +144,21 @@ export default function FeesManagementPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-               <Label>Student UID / Document ID</Label>
-               <div className="flex gap-2">
-                 <Input placeholder="Search/Enter ID" value={studentId} onChange={(e) => setStudentId(e.target.value)} />
-               </div>
+               <Label>Select Student</Label>
+               <select 
+                 className="w-full h-10 px-3 py-2 border rounded-md text-sm"
+                 value={studentId} 
+                 onChange={(e) => setStudentId(e.target.value)}
+                 required
+               >
+                 <option value="">-- Select Student --</option>
+                 {Object.values(studentsCache).map((s: any) => (
+                   <option key={s.id} value={s.id}>
+                     {s.name} ({s.rollNo || 'No Roll No'})
+                   </option>
+                 ))}
+               </select>
+               <p className="text-[10px] text-muted-foreground uppercase font-bold">UID: {studentId || 'None Selected'}</p>
             </div>
             <div className="space-y-2">
                <Label>Amount (₹)</Label>
@@ -157,7 +168,7 @@ export default function FeesManagementPage() {
                <Label>Due Date</Label>
                <Input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
             </div>
-            <Button onClick={handleAddFee} disabled={isSaving} className="w-full bg-primary text-white">
+            <Button onClick={handleAddFee} disabled={isSaving || !studentId} className="w-full bg-primary text-white">
               {isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Plus className="w-4 h-4 mr-2" />} Create Fee Record
             </Button>
           </CardContent>

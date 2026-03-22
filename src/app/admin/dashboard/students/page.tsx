@@ -132,6 +132,7 @@ export default function StudentsPage() {
                             <div><Label className="text-muted-foreground text-xs">Father's Name</Label><p className="font-semibold">{student.fatherName}</p></div>
                             <div><Label className="text-muted-foreground text-xs">DOB</Label><p className="font-semibold">{student.dob}</p></div>
                             <div><Label className="text-muted-foreground text-xs">Aadhaar</Label><p className="font-semibold">{student.aadhaar}</p></div>
+                            <div><Label className="text-muted-foreground text-xs">WhatsApp</Label><p className="font-semibold text-green-600">{student.whatsApp || 'N/A'}</p></div>
                             <div><Label className="text-muted-foreground text-xs">Mobile</Label><p className="font-semibold">{student.mobile}</p></div>
                             <div className="col-span-2"><Label className="text-muted-foreground text-xs">Email</Label><p className="font-semibold">{student.email}</p></div>
                          </div>

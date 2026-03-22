@@ -9,31 +9,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 
-export interface StudentData {
-  id: string;
-  name: string;
-  fatherName: string;
-  email: string;
-  mobile: string;
-  dob: string;
-  aadhaar: string;
-  category: string;
-  rollNo: string;
-  trade: string;
-  session: string;
-  photo: string;
-  status: string;
-  address: {
-    state: string;
-    district: string;
-    tehsil: string;
-    pincode: string;
-    fullAddress: string;
-  };
-}
-
-const StudentContext = createContext<StudentData | null>(null);
-export const useStudent = () => useContext(StudentContext);
+import { StudentData, StudentContext } from '@/hooks/use-student';
 
 export default function StudentDashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -101,7 +77,11 @@ export default function StudentDashboardLayout({ children }: { children: React.R
       <Link href="/student/dashboard/syllabus" className={`flex items-center gap-3 px-4 py-3 rounded-lg font-bold transition-colors ${pathname === '/student/dashboard/syllabus' ? 'bg-primary text-primary-foreground shadow' : 'text-slate-600 hover:bg-primary/5 hover:text-primary'}`}>
         <Bookmark className="w-5 h-5" /> Syllabus
       </Link>
+      <Link href="/student/dashboard/id-card" className={`flex items-center gap-3 px-4 py-3 rounded-lg font-bold transition-colors ${pathname === '/student/dashboard/id-card' ? 'bg-primary text-primary-foreground shadow' : 'text-slate-600 hover:bg-primary/5 hover:text-primary'}`}>
+        <CreditCard className="w-5 h-5" /> Digital ID Card
+      </Link>
     </>
+
   );
 
   return (

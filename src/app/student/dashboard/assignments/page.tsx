@@ -4,12 +4,15 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { FileText, Download, PlayCircle, Clock, CheckCircle2, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useStudent } from '../layout';
+import { useStudent } from '@/hooks/use-student';
 import { useFirestore } from '@/firebase/provider';
 import { collection, query, getDocs, addDoc, where, Timestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Upload, Loader2 } from 'lucide-react';
+import { compressImage } from '@/lib/image-compress';
 
 export default function StudentAssignmentsPage() {
   const student = useStudent();
@@ -18,7 +21,9 @@ export default function StudentAssignmentsPage() {
 
   const [assignments, setAssignments] = useState<any[]>([]);
   const [results, setResults] = useState<Record<string, any>>({});
+  const [manualSubmissions, setManualSubmissions] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(true);
+  const [uploadingId, setUploadingId] = useState<string | null>(null);
 
   // Test Taking State
   const [activeTest, setActiveTest] = useState<any>(null);
@@ -52,12 +57,11 @@ export default function StudentAssignmentsPage() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      // Fetch Assignments
       const qA = query(collection(firestore, 'assignments'));
       const snapA = await getDocs(qA);
       const allAssignments = snapA.docs.map(d => ({ id: d.id, ...d.data() }));
 
-      // Fetch Results for this student
+      // Fetch Results/Test Scores for this student
       const qR = query(collection(firestore, 'results'), where('studentId', '==', student?.id));
       const snapR = await getDocs(qR);
       const resultsMap: Record<string, any> = {};
@@ -66,13 +70,63 @@ export default function StudentAssignmentsPage() {
         resultsMap[data.assignmentId] = data;
       });
 
+      // Fetch Manual Submissions for this student
+      const qM = query(collection(firestore, 'manual_submissions'), where('studentId', '==', student?.id));
+      const snapM = await getDocs(qM);
+      const manualMap: Record<string, any> = {};
+      snapM.docs.forEach(d => {
+        const data = d.data();
+        manualMap[data.assignmentId] = data;
+      });
+
       setAssignments(allAssignments);
       setResults(resultsMap);
+      setManualSubmissions(manualMap);
     } catch (err) {
       console.error(err);
-      toast({ title: "Error", description: "Could not load assignments.", variant: "destructive" });
+      toast({ title: "Error", description: "Could not load assignments data.", variant: "destructive" });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleManualUpload = async (assignmentId: string, e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setUploadingId(assignmentId);
+      
+      try {
+        let fileData: string;
+        if (file.type.startsWith('image/')) {
+          fileData = await compressImage(file, 200); // Higher limit for assignments
+        } else {
+          // For non-images, just convert to base64 if not too large (limit ~2MB for simplicity in Firestore)
+          if (file.size > 2 * 1024 * 1024) throw new Error("File too large. Max 2MB allowed.");
+          fileData = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = reject;
+          });
+        }
+
+        const submission = {
+          assignmentId,
+          studentId: student?.id,
+          fileUrl: fileData,
+          fileName: file.name,
+          submittedAt: Timestamp.now(),
+          status: 'Submitted'
+        };
+
+        await addDoc(collection(firestore, 'manual_submissions'), submission);
+        setManualSubmissions(prev => ({ ...prev, [assignmentId]: submission }));
+        toast({ title: "Uploaded", description: "Assignment submitted successfully!" });
+      } catch (err: any) {
+        toast({ title: "Upload Failed", description: err.message, variant: "destructive" });
+      } finally {
+        setUploadingId(null);
+      }
     }
   };
 
@@ -183,64 +237,146 @@ export default function StudentAssignmentsPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      <div>
-        <h1 className="text-3xl font-headline font-bold text-primary">Assignments & Mock Tests</h1>
-        <p className="text-muted-foreground mt-1">Complete your objective assessments below. Tests can only be attempted once.</p>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <h1 className="text-3xl font-headline font-bold text-primary">Academic Portal</h1>
+          <p className="text-muted-foreground mt-1">Access your assignments, mock tests, and submit your work.</p>
+        </div>
       </div>
 
-      {assignments.length === 0 ? (
-        <div className="text-center p-10 bg-white rounded-lg border border-dashed border-slate-300">
-           <h3 className="text-lg font-bold text-slate-600">No Assignments Yet</h3>
-           <p className="text-sm text-slate-500">Check back later for new mock tests.</p>
-        </div>
-      ) : (
-        <div className="grid gap-6 lg:grid-cols-2">
-          {assignments.map(a => {
-            const result = results[a.id];
-            const isCompleted = !!result;
+      <Tabs defaultValue="tests" className="w-full">
+        <TabsList className="bg-slate-100 p-1 mb-6">
+          <TabsTrigger value="tests" className="font-bold gap-2">
+            <Clock className="w-4 h-4" /> Mock Tests
+          </TabsTrigger>
+          <TabsTrigger value="assignments" className="font-bold gap-2">
+            <FileText className="w-4 h-4" /> Manual Assignments
+          </TabsTrigger>
+        </TabsList>
 
-            return (
-              <Card key={a.id} className={`border border-slate-200 shadow-sm transition-colors ${isCompleted ? 'opacity-80' : 'hover:border-primary/50'}`}>
-                <CardContent className="p-6 flex flex-col gap-4">
-                  <div className="flex gap-4">
-                    <div className={`w-14 h-14 rounded-xl flex items-center justify-center shrink-0 ${isCompleted ? 'bg-slate-100 text-slate-400' : 'bg-primary/10 text-primary'}`}>
-                      <FileText className="w-7 h-7" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-bold text-slate-800 line-clamp-1">{a.title}</h3>
-                      <p className="text-slate-500 text-sm">{a.subject} &bull; {a.topic}</p>
-                      <div className="flex items-center gap-3 mt-2">
-                        <span className="text-xs font-semibold px-2 py-0.5 bg-slate-100 rounded text-slate-600 flex items-center gap-1"><Clock className="w-3 h-3"/> {a.timerMinutes}m limit</span>
-                        {isCompleted ? (
-                           <span className={`text-xs font-bold px-2 py-0.5 rounded ${result.passStatus === 'Pass' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                             {result.passStatus}
-                           </span>
+        <TabsContent value="tests">
+          {assignments.filter(a => a.questions?.length > 0).length === 0 ? (
+            <div className="text-center p-10 bg-white rounded-lg border border-dashed border-slate-300">
+              <h3 className="text-lg font-bold text-slate-600">No Online Tests</h3>
+              <p className="text-sm text-slate-500">Scheduled mock tests will appear here.</p>
+            </div>
+          ) : (
+            <div className="grid gap-6 lg:grid-cols-2">
+              {assignments.filter(a => a.questions?.length > 0).map(a => {
+                const result = results[a.id];
+                const isCompleted = !!result;
+                return (
+                  <Card key={a.id} className={`border border-slate-200 shadow-sm transition-colors ${isCompleted ? 'opacity-80' : 'hover:border-primary/50'}`}>
+                    <CardContent className="p-6 flex flex-col gap-4">
+                      <div className="flex gap-4">
+                        <div className={`w-14 h-14 rounded-xl flex items-center justify-center shrink-0 ${isCompleted ? 'bg-slate-100 text-slate-400' : 'bg-blue-100 text-blue-600'}`}>
+                          <PlayCircle className="w-7 h-7" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-bold text-slate-800 line-clamp-1">{a.title}</h3>
+                          <p className="text-slate-500 text-sm">{a.subject} &bull; {a.topic}</p>
+                          <div className="flex items-center gap-3 mt-2">
+                            <span className="text-xs font-semibold px-2 py-0.5 bg-slate-100 rounded text-slate-600 flex items-center gap-1"><Clock className="w-3 h-3"/> {a.timerMinutes}m limit</span>
+                            {isCompleted ? (
+                              <span className={`text-xs font-bold px-2 py-0.5 rounded ${result.passStatus === 'Pass' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                {result.passStatus}
+                              </span>
+                            ) : (
+                              <span className="text-xs font-bold px-2 py-0.5 bg-amber-100 text-amber-700 rounded">Pending</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      {isCompleted ? (
+                        <div className="bg-slate-50 border rounded p-3 flex justify-between items-center mt-2">
+                          <div className="flex items-center gap-2">
+                            {result.passStatus === 'Pass' ? <CheckCircle2 className="w-5 h-5 text-green-600"/> : <XCircle className="w-5 h-5 text-red-600"/>}
+                            <span className="font-semibold text-sm">Score: {result.score}/{result.total}</span>
+                          </div>
+                          <span className="text-lg font-bold text-slate-700">{result.percentage}%</span>
+                        </div>
+                      ) : (
+                        <Button onClick={() => startTest(a)} className="w-full bg-blue-600 hover:bg-blue-700 text-white gap-2 mt-2">
+                          Start Mock Test
+                        </Button>
+                      )}
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="assignments">
+           <div className="grid gap-6 lg:grid-cols-2">
+              {assignments.filter(a => !a.questions || a.questions.length === 0).length === 0 ? (
+                <div className="col-span-full text-center p-10 bg-white rounded-lg border border-dashed border-slate-300">
+                  <h3 className="text-lg font-bold text-slate-600">No Manual Assignments</h3>
+                  <p className="text-sm text-slate-500">Assignments requiring file uploads will show up here.</p>
+                </div>
+              ) : (
+                assignments.filter(a => !a.questions || a.questions.length === 0).map(a => {
+                  const submission = manualSubmissions[a.id];
+                  const isSubmitted = !!submission;
+                  return (
+                    <Card key={a.id} className="border border-slate-200 shadow-sm">
+                      <CardContent className="p-6 flex flex-col gap-4">
+                        <div className="flex gap-4">
+                          <div className={`w-14 h-14 rounded-xl flex items-center justify-center shrink-0 ${isSubmitted ? 'bg-green-100 text-green-600' : 'bg-primary/10 text-primary'}`}>
+                            <FileText className="w-7 h-7" />
+                          </div>
+                          <div>
+                            <h3 className="text-lg font-bold text-slate-800">{a.title}</h3>
+                            <p className="text-slate-500 text-sm">{a.subject} &bull; {a.topic}</p>
+                            <div className="flex items-center gap-3 mt-2">
+                               <span className="text-xs font-semibold px-2 py-0.5 bg-slate-100 rounded text-slate-600">Due: {a.lastDate || 'No deadline'}</span>
+                               <span className={`text-xs font-bold px-2 py-0.5 rounded ${isSubmitted ? 'bg-green-100 text-green-600' : 'bg-amber-100 text-amber-600'}`}>
+                                 {isSubmitted ? 'Submitted' : 'Pending'}
+                               </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {isSubmitted ? (
+                          <div className="bg-slate-50 border border-slate-200 p-3 rounded-lg flex items-center justify-between">
+                             <div className="flex items-center gap-2 text-sm font-medium truncate max-w-[200px]">
+                                <CheckCircle2 className="w-4 h-4 text-green-600 shrinnk-0"/>
+                                <span className="truncate">{submission.fileName}</span>
+                             </div>
+                             <p className="text-[10px] text-slate-400 font-bold uppercase shrink-0">Accepted</p>
+                          </div>
                         ) : (
-                           <span className="text-xs font-bold px-2 py-0.5 bg-amber-100 text-amber-700 rounded">Pending</span>
+                          <div className="mt-2">
+                            <label className="block w-full">
+                              <input 
+                                type="file" 
+                                className="hidden" 
+                                disabled={uploadingId === a.id}
+                                onChange={(e) => handleManualUpload(a.id, e)}
+                                accept=".pdf,image/*"
+                              />
+                              <div className={`w-full h-11 border-2 border-dashed rounded-lg flex items-center justify-center gap-2 cursor-pointer transition-all ${uploadingId === a.id ? 'opacity-50 cursor-not-allowed bg-slate-50' : 'border-primary/20 hover:border-primary/50 hover:bg-primary/5'}`}>
+                                 {uploadingId === a.id ? (
+                                   <Loader2 className="w-4 h-4 animate-spin" />
+                                 ) : (
+                                   <Upload className="w-4 h-4 text-primary" />
+                                 )}
+                                 <span className="text-sm font-bold text-slate-700">
+                                   {uploadingId === a.id ? 'Uploading...' : 'Upload Submission (PDF/Image)'}
+                                 </span>
+                              </div>
+                            </label>
+                          </div>
                         )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {isCompleted ? (
-                    <div className="bg-slate-50 border rounded p-3 flex justify-between items-center mt-2">
-                      <div className="flex items-center gap-2">
-                        {result.passStatus === 'Pass' ? <CheckCircle2 className="w-5 h-5 text-green-600"/> : <XCircle className="w-5 h-5 text-red-600"/>}
-                        <span className="font-semibold text-sm">Score: {result.score}/{result.total}</span>
-                      </div>
-                      <span className="text-lg font-bold text-slate-700">{result.percentage}%</span>
-                    </div>
-                  ) : (
-                    <Button onClick={() => startTest(a)} className="w-full bg-primary hover:bg-primary/90 text-white gap-2 mt-2">
-                      <PlayCircle className="w-4 h-4" /> Start Assignment
-                    </Button>
-                  )}
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-      )}
+                      </CardContent>
+                    </Card>
+                  );
+                })
+              )}
+           </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

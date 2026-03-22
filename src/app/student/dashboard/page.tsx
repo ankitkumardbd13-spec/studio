@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import Link from 'next/link';
 import { useStudent } from './layout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { BookOpen, Calendar, CheckCircle2, Bookmark, CreditCard } from 'lucide-react';
@@ -46,15 +47,17 @@ export default function StudentDashboardHome() {
           </CardHeader>
         </Card>
         
-        <Card className="border-none shadow-md hover:shadow-lg transition-shadow bg-purple-50/50">
-          <CardHeader className="pb-2">
-            <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-2">
-              <BookOpen className="w-6 h-6 text-purple-600" />
-            </div>
-            <CardTitle className="text-lg">Assignments</CardTitle>
-            <CardDescription className="text-slate-700">Check Assignment tab</CardDescription>
-          </CardHeader>
-        </Card>
+        <Link href="/student/dashboard/assignments">
+          <Card className="border-none shadow-md hover:shadow-lg transition-shadow bg-purple-50/50 cursor-pointer h-full">
+            <CardHeader className="pb-2">
+              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-2">
+                <BookOpen className="w-6 h-6 text-purple-600" />
+              </div>
+              <CardTitle className="text-lg">Assignments</CardTitle>
+              <CardDescription className="text-slate-700 font-bold">Open Test Portal</CardDescription>
+            </CardHeader>
+          </Card>
+        </Link>
         
         <Card className="border-none shadow-md hover:shadow-lg transition-shadow bg-emerald-50/50">
           <CardHeader className="pb-2">
@@ -87,14 +90,18 @@ export default function StudentDashboardHome() {
            </CardHeader>
            <CardContent className="space-y-4">
              <div className="flex gap-4">
-                <div className="flex-1 bg-slate-50 border border-slate-100 p-4 rounded-lg text-center cursor-pointer hover:bg-primary/5 transition-colors">
-                  <BookOpen className="w-6 h-6 mx-auto mb-2 text-primary" />
-                  <p className="font-bold text-sm text-slate-700">View Syllabus</p>
-                </div>
-                <div className="flex-1 bg-slate-50 border border-slate-100 p-4 rounded-lg text-center cursor-pointer hover:bg-primary/5 transition-colors">
-                  <CreditCard className="w-6 h-6 mx-auto mb-2 text-primary" />
-                  <p className="font-bold text-sm text-slate-700">Check Fees</p>
-                </div>
+                <Link href="/student/dashboard/syllabus" className="flex-1">
+                  <div className="bg-slate-50 border border-slate-100 p-4 rounded-lg text-center cursor-pointer hover:bg-primary/5 transition-colors h-full">
+                    <BookOpen className="w-6 h-6 mx-auto mb-2 text-primary" />
+                    <p className="font-bold text-sm text-slate-700">View Syllabus</p>
+                  </div>
+                </Link>
+                <Link href="/student/dashboard/fees" className="flex-1">
+                  <div className="bg-slate-50 border border-slate-100 p-4 rounded-lg text-center cursor-pointer hover:bg-primary/5 transition-colors h-full">
+                    <CreditCard className="w-6 h-6 mx-auto mb-2 text-primary" />
+                    <p className="font-bold text-sm text-slate-700">Check Fees</p>
+                  </div>
+                </Link>
              </div>
            </CardContent>
          </Card>

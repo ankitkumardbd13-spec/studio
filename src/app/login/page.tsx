@@ -124,11 +124,6 @@ function LoginContent() {
             </Button>
 
             <div className="text-center space-y-4 pt-2">
-              {loginType === 'student' && (
-                <p className="text-sm">
-                  New Student? <Link href="/signup" className="text-primary font-bold hover:underline">Register for Portal</Link>
-                </p>
-              )}
               <button 
                 type="button"
                 onClick={() => setLoginType(loginType === 'student' ? 'admin' : 'student')}

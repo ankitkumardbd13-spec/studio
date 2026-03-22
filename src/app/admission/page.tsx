@@ -164,13 +164,6 @@ export default function AdmissionPage() {
                   </Button>
                 </div>
                 
-                <div className="mt-8 p-4 bg-accent/30 rounded-lg flex items-start gap-4">
-                  <GraduationCap className="w-6 h-6 text-primary flex-shrink-0 mt-1" />
-                  <div className="text-sm">
-                    <p className="font-bold text-primary">Already a student?</p>
-                    <p className="text-muted-foreground">If you are already admitted to MPITI and want to register for the student portal, please use the <Link href="/signup" className="text-secondary underline font-bold">Portal Registration Form</Link>.</p>
-                  </div>
-                </div>
               </form>
             </CardContent>
           </Card>

@@ -8,6 +8,8 @@ import { Users, BookOpen, Settings, FileText, CheckCircle, Image, Bell, Graduati
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import { AdminGuard } from '@/components/auth/AdminGuard';
+
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
@@ -54,7 +56,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         {/* Main Content */}
         <main className="flex-1 space-y-6">
-          {children}
+          <AdminGuard>
+            {children}
+          </AdminGuard>
         </main>
       </div>
     </div>

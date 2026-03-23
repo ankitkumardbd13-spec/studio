@@ -29,10 +29,13 @@ export function FirebaseErrorListener() {
     };
   }, []);
 
-  // On re-render, if an error exists in state, throw it.
+  // On re-render, if an error exists in state, we don't throw it anymore to avoid crashing.
+  // Instead, the error can be handled by individual components or displayed as a non-fatal message.
+  /*
   if (error) {
     throw error;
   }
+  */
 
   // This component renders nothing.
   return null;

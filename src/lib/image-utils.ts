@@ -2,7 +2,7 @@
  * Utility to compress images to a target file size (approx 50KB) 
  * and return as a Base64 string.
  */
-export async function compressImage(file: File, targetKB: number = 50): Promise<string> {
+export async function compressImage(file: File, maxSizeKB: number = 50): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -14,9 +14,9 @@ export async function compressImage(file: File, targetKB: number = 50): Promise<
         let width = img.width;
         let height = img.height;
 
-        // Initial scale down if very large
-        const MAX_WIDTH = 800;
-        const MAX_HEIGHT = 800;
+        // Max dimensions to speed up
+        const MAX_WIDTH = 1200;
+        const MAX_HEIGHT = 1200;
         if (width > MAX_WIDTH || height > MAX_HEIGHT) {
           if (width > height) {
             height = Math.round((height * MAX_WIDTH) / width);
@@ -38,9 +38,9 @@ export async function compressImage(file: File, targetKB: number = 50): Promise<
         let quality = 0.7;
         let dataUrl = canvas.toDataURL('image/jpeg', quality);
         
-        // Simple heuristic: if string length / 1.33 > targetKB * 1024, reduce quality
+        // Simple heuristic: if string length / 1.33 > maxSizeKB * 1024, reduce quality
         // Base64 is ~33% larger than binary
-        while (dataUrl.length / 1.33 > targetKB * 1024 && quality > 0.1) {
+        while (dataUrl.length / 1.33 > maxSizeKB * 1024 && quality > 0.1) {
           quality -= 0.1;
           dataUrl = canvas.toDataURL('image/jpeg', quality);
         }

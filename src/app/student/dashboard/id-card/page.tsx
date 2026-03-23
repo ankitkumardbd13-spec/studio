@@ -4,14 +4,32 @@ import React from 'react';
 import { useStudent } from '@/hooks/use-student';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Printer, Download, ShieldCheck, MapPin, Phone, Calendar } from 'lucide-react';
+import { Printer, Download, ShieldCheck, MapPin, Phone, Calendar, Loader2 } from 'lucide-react';
+import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { doc } from 'firebase/firestore';
 
 export default function StudentIDCardPage() {
   const student = useStudent()!;
+  const db = useFirestore();
+
+  const configQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return doc(db, 'siteSettings', 'config');
+  }, [db]);
+
+  const { data: siteSettings, isLoading } = useDoc(configQuery);
 
   const handlePrint = () => {
     window.print();
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-10 h-10 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500 max-w-4xl mx-auto pb-12">
@@ -35,6 +53,13 @@ export default function StudentIDCardPage() {
              <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl" />
              <div className="absolute top-20 -left-10 w-32 h-32 bg-secondary/20 rounded-full blur-xl" />
           </div>
+
+          {/* Watermark Logo */}
+          {siteSettings?.logo && (
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 opacity-[0.05] pointer-events-none z-0">
+               <img src={siteSettings.logo} alt="Watermark" className="w-full h-full object-contain grayscale" />
+            </div>
+          )}
 
           <div className="relative z-10 px-8 pt-8 text-center">
             <h2 className="text-white font-headline text-xl font-bold leading-tight">MAHARANA PRATAP ITI</h2>
@@ -94,11 +119,15 @@ export default function StudentIDCardPage() {
                     This is a digitally generated identity card for Maharana Pratap ITI Portal access.
                   </p>
                </div>
-               <div className="w-16 h-16 bg-slate-50 border border-slate-100 rounded-lg flex items-center justify-center">
-                 <div className="text-[8px] font-bold text-slate-300 text-center uppercase leading-none">
-                    Seal &<br/>Sign
-                 </div>
-               </div>
+                <div className="w-20 h-20 bg-slate-50 border border-slate-100 rounded-lg flex items-center justify-center relative overflow-hidden">
+                 {siteSettings?.stamp ? (
+                   <img src={siteSettings.stamp} alt="Stamp" className="w-full h-full object-contain mix-blend-multiply opacity-80" />
+                 ) : (
+                   <div className="text-[8px] font-bold text-slate-300 text-center uppercase leading-none">
+                      Seal &<br/>Sign
+                   </div>
+                 )}
+                </div>
             </div>
           </div>
 

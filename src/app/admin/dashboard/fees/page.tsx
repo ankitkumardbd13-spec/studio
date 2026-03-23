@@ -29,6 +29,18 @@ export default function FeesManagementPage() {
     fetchData();
   }, [firestore]);
 
+  useEffect(() => {
+    if (studentId && studentsCache[studentId]) {
+      const student = studentsCache[studentId];
+      const trade = student.trade?.toLowerCase() || '';
+      if (trade.includes('electrician') || trade.includes('fitter')) {
+        setAmount("36000");
+      } else if (trade.includes('hsi') || trade.includes('his')) {
+        setAmount("18000");
+      }
+    }
+  }, [studentId, studentsCache]);
+
   const fetchData = async () => {
     try {
       // Fetch students for mapping names

@@ -283,6 +283,8 @@ export default function SignupPage() {
                           <SelectItem value="2022-24">2022 - 2024</SelectItem>
                           <SelectItem value="2023-25">2023 - 2025</SelectItem>
                           <SelectItem value="2024-26">2024 - 2026</SelectItem>
+                          <SelectItem value="2025-27">2025 - 2027</SelectItem>
+                          <SelectItem value="2026-28">2026 - 2028</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>

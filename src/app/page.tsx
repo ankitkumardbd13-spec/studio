@@ -91,12 +91,6 @@ export default function Home() {
       years: 'Years of Excellence',
       approved: 'DGT/NCVT Approved',
       certified: 'Government Certified',
-      leadership: 'Leadership Messages',
-      guiding: 'Guiding MPITI Rankhandi towards skill excellence',
-      chairman: 'Chairman',
-      principal: 'Principal',
-      success: 'Success Story'
-    },
       leadership: 'Administration',
       guiding: 'Guiding MPITI Rankhandi towards skill excellence',
       chairman: 'Chairman',

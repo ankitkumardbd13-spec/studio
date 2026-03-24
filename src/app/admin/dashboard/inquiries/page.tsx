@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { useFirestore } from '@/firebase';
-import { collection, query, getDocs, orderBy, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { collection, query, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { Loader2, Trash2, Phone, MapPin, Search, Calendar, User, BookOpen, CheckCircle2, Clock } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
@@ -18,16 +18,28 @@ export default function InquiriesPage() {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    fetchInquiries();
+    if (db) {
+      fetchInquiries();
+    }
   }, [db]);
 
   const fetchInquiries = async () => {
-    if (!db) return;
     setLoading(true);
     try {
-      const q = query(collection(db, 'inquiries'), orderBy('timestamp', 'desc'));
+      // Remove orderBy to prevent issues if timestamp is missing or needs indexing
+      const q = query(collection(db, 'inquiries'));
       const snap = await getDocs(q);
-      setInquiries(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      
+      const data = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      
+      // Sort in memory instead
+      data.sort((a, b) => {
+        const timeA = a.timestamp?.seconds || 0;
+        const timeB = b.timestamp?.seconds || 0;
+        return b - a;
+      });
+      
+      setInquiries(data);
     } catch (err) {
       console.error(err);
       toast({ title: "Error", description: "Failed to load inquiries.", variant: "destructive" });
@@ -63,6 +75,17 @@ export default function InquiriesPage() {
     i.mobile?.includes(searchTerm) ||
     i.trade?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const formatDate = (timestamp: any) => {
+    if (!timestamp) return 'Recent';
+    try {
+      if (timestamp.toDate) return timestamp.toDate().toLocaleString();
+      if (timestamp.seconds) return new Date(timestamp.seconds * 1000).toLocaleString();
+      return 'Recent';
+    } catch (e) {
+      return 'Recent';
+    }
+  };
 
   if (loading) return <div className="p-12 flex justify-center"><Loader2 className="w-8 h-8 animate-spin" /></div>;
 
@@ -122,7 +145,7 @@ export default function InquiriesPage() {
                 </div>
                 <div className="flex items-center gap-3 text-xs text-muted-foreground border-t pt-3">
                   <Calendar className="w-3 h-3" />
-                  {inquiry.timestamp?.toDate ? inquiry.timestamp.toDate().toLocaleString() : 'Recent'}
+                  {formatDate(inquiry.timestamp)}
                 </div>
               </CardContent>
               <div className="p-4 bg-muted/10 border-t flex justify-between items-center gap-2">

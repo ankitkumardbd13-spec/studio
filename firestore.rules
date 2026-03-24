@@ -73,9 +73,10 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isAdmin();
     }
-    match /alumni/{id} {
+    match /alumniReviews/{id} {
       allow read: if true;
-      allow write: if isAdmin();
+      allow create: if true;
+      allow update, delete: if isAdmin();
     }
     match /syllabus/{id} {
       allow read: if true;

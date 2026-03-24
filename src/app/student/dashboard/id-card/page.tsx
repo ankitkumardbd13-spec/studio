@@ -102,11 +102,15 @@ export default function StudentIDCardPage() {
                </div>
                <div>
                   <p className="text-[8px] font-bold text-slate-400 uppercase tracking-tighter">Date of Birth</p>
-                  <p className="text-[11px] font-bold text-slate-700">{student.dob}</p>
+                  <p className="text-[11px] font-bold text-slate-700">
+                    {student.dob ? student.dob.split('-').reverse().join('-') : 'N/A'}
+                  </p>
                </div>
                <div>
                   <p className="text-[8px] font-bold text-slate-400 uppercase tracking-tighter">Aadhaar No.</p>
-                  <p className="text-[11px] font-bold text-slate-700">{student.aadhaar || 'N/A'}</p>
+                  <p className="text-[11px] font-bold text-slate-700">
+                    {student.aadhaar ? `XXXX-XXXX-${student.aadhaar.slice(-4)}` : 'N/A'}
+                  </p>
                </div>
                <div>
                   <p className="text-[8px] font-bold text-slate-400 uppercase tracking-tighter">Mobile</p>
@@ -137,12 +141,14 @@ export default function StudentIDCardPage() {
                     This identity card is electronically generated. Institutional validation required for physical use.
                   </p>
                </div>
-                <div className="w-16 h-16 bg-slate-50 border border-slate-100 rounded flex items-center justify-center relative shadow-sm">
+                <div className="w-20 h-20 flex items-center justify-center relative">
                  {siteSettings?.stamp ? (
-                   <img src={siteSettings.stamp} alt="Stamp" className="w-full h-full object-contain mix-blend-multiply opacity-90 transform -rotate-12" />
+                   <img src={siteSettings.stamp} alt="Stamp" className="w-full h-full object-contain mix-blend-multiply opacity-95 transform -rotate-12" />
                  ) : (
-                   <div className="text-[7px] font-bold text-slate-300 text-center uppercase leading-none">
-                      Institutional<br/>Seal
+                   <div className="w-16 h-16 bg-slate-50 border border-slate-100 rounded flex items-center justify-center">
+                     <div className="text-[7px] font-bold text-slate-300 text-center uppercase leading-none">
+                        Institutional<br/>Seal
+                     </div>
                    </div>
                  )}
                 </div>

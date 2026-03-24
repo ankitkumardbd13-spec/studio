@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useFirestore, useFirebaseApp } from '@/firebase';
-import { collection, query, getDocs, addDoc, updateDoc, doc, where, deleteDoc } from 'firebase/firestore';
+import { collection, query, getDocs, addDoc, updateDoc, doc, where, deleteDoc, Timestamp } from 'firebase/firestore';
 import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
 import { compressImage } from '@/lib/image-utils';
 import { Loader2, Plus, User, CheckCircle, XCircle, Star, MessageSquare, Trash2, Clock } from 'lucide-react';
@@ -84,7 +84,7 @@ export default function AlumniPage() {
         ...newReview,
         photo: photoUrl,
         status: 'approved', // Admin created stories are pre-approved
-        timestamp: new Date().toISOString()
+        createdAt: Timestamp.now()
       });
 
       toast({ title: "Success", description: "Success story created successfully!" });

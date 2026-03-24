@@ -37,13 +37,23 @@ export default function Home() {
 
   const alumniQuery = useMemoFirebase(() => {
     if (!db) return null;
-    return query(collection(db, 'alumniReviews'), where('status', '==', 'approved'), orderBy('createdAt', 'desc'));
+    return query(collection(db, 'alumniReviews'), where('status', '==', 'approved'));
   }, [db]);
 
   const { data: siteSettings, isLoading: isConfigLoading } = useDoc(configQuery);
   const { data: galleryDocs } = useCollection(galleryQuery);
   const { data: notifications } = useCollection(notifQuery);
-  const { data: alumniReviews } = useCollection(alumniQuery);
+  const { data: rawAlumniReviews } = useCollection(alumniQuery);
+
+  // Robust sorting in memory to handle different timestamp formats and missing fields
+  const alumniReviews = React.useMemo(() => {
+    if (!rawAlumniReviews) return [];
+    return [...rawAlumniReviews].sort((a, b) => {
+      const dateA = a.createdAt?.toDate?.() || new Date(a.createdAt || a.timestamp || 0);
+      const dateB = b.createdAt?.toDate?.() || new Date(b.createdAt || b.timestamp || 0);
+      return dateB.getTime() - dateA.getTime();
+    });
+  }, [rawAlumniReviews]);
 
   const [carouselApi, setCarouselApi] = React.useState<CarouselApi>();
 

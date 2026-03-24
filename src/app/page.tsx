@@ -278,12 +278,16 @@ export default function Home() {
                           </div>
                           <p className="text-slate-600 italic mb-6 flex-grow">"{review.message}"</p>
                           <div className="flex items-center gap-4 mt-auto">
-                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
-                              {review.alumniName?.charAt(0) || 'A'}
-                            </div>
+                            {review.photo ? (
+                              <img src={review.photo} className="w-10 h-10 rounded-full object-cover border border-slate-200" alt={review.alumniName} />
+                            ) : (
+                              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                                {review.alumniName?.charAt(0) || 'A'}
+                              </div>
+                            )}
                             <div>
-                              <p className="font-bold text-sm text-slate-800">{review.alumniName}</p>
-                              <p className="text-xs text-slate-500">{review.trade} • Class of {review.passoutYear}</p>
+                               <p className="font-bold text-sm text-slate-800">{review.alumniName}</p>
+                               <p className="text-xs text-slate-500">{review.trade} • Class of {review.passoutYear}</p>
                             </div>
                           </div>
                         </CardContent>

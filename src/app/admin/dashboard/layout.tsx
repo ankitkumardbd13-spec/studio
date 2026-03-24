@@ -21,7 +21,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { label: 'Fee Management', href: '/admin/dashboard/fees', icon: CreditCard },
     { label: 'Pending Approvals', href: '/admin/dashboard/approvals', icon: CheckCircle },
 
-    { label: 'Success Stories & Alumni', href: '/admin/dashboard/alumni', icon: GraduationCap },
+    { label: 'Manage Success Stories', href: '/admin/dashboard/alumni', icon: GraduationCap },
     { label: 'Syllabus & Courses', href: '/admin/dashboard/courses', icon: BookOpen },
     { label: 'Assignments', href: '/admin/dashboard/assignments', icon: FileText },
     { label: 'Gallery', href: '/admin/dashboard/gallery', icon: Image },

@@ -3,6 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { FirebaseClientProvider } from "@/firebase";
 import { AppProviders } from "@/components/providers/AppProviders";
+import { AdSenseInterstitial } from "@/components/ui/AdSenseInterstitial";
 
 export const metadata: Metadata = {
   title: 'Maharana Pratap ITI Rankhandi, Saharanpur | Best ITI in UP (Est. 2015)',
@@ -27,11 +28,18 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+        {/* Google AdSense */}
+        <script 
+          async 
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4054187337667749" 
+          crossOrigin="anonymous"
+        ></script>
       </head>
       <body className="font-body antialiased">
         <FirebaseClientProvider>
           <AppProviders>
             {children}
+            <AdSenseInterstitial />
             <Toaster />
           </AppProviders>
         </FirebaseClientProvider>

@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useApp } from '@/components/providers/AppProviders';
+import { GoogleTranslate } from '@/components/ui/GoogleTranslate';
 import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -78,18 +79,8 @@ export function Navbar() {
               {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
             </Button>
 
-            {/* Language Toggle */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="gap-2 rounded-full">
-                  <Globe className="w-4 h-4" /> {labels.langName} <ChevronDown className="w-3 h-3" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setLanguage('en')}>English</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setLanguage('hi')}>हिंदी (Hindi)</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {/* Google Translate Integration */}
+            <GoogleTranslate />
 
             <Button variant="ghost" asChild size="sm">
               <Link href="/login" className="gap-2">
@@ -122,9 +113,8 @@ export function Navbar() {
               <div className="mt-8 space-y-6">
                 <div className="space-y-4">
                   <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Select Language</h3>
-                  <div className="flex gap-2">
-                    <Button variant={language === 'en' ? 'default' : 'outline'} size="sm" onClick={() => setLanguage('en')} className="flex-1">English</Button>
-                    <Button variant={language === 'hi' ? 'default' : 'outline'} size="sm" onClick={() => setLanguage('hi')} className="flex-1">हिंदी</Button>
+                  <div className="flex justify-center p-2 bg-muted/30 rounded-xl">
+                    <GoogleTranslate />
                   </div>
                 </div>
                 <div className="h-px bg-border w-full" />
